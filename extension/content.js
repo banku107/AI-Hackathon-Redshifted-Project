@@ -8,20 +8,40 @@
   const ask = (offset) =>
     new Promise((resolve) => chrome.runtime.sendMessage({ type: "scamshield-get", offset }, resolve));
 
-  // Wait for the extension to finish downloading (up to about 60 s).
+  // The page may finish loading after us, so every message waits until the
+  // page says its listener is attached ("scamshield-page-ready").
+  const pageReady = new Promise((resolve) => {
+    const onMessage = (event) => {
+      if (event.source !== window || event.data?.source !== "scamshield-page-ready") return;
+      window.removeEventListener("message", onMessage);
+      resolve();
+    };
+    window.addEventListener("message", onMessage);
+    window.postMessage({ source: "scamshield-extension-hello" }, location.origin);
+  });
+
+  // Tell the page when nothing is coming, so it can say so instead of
+  // sitting on an empty form.
+  const fail = async () => {
+    await pageReady;
+    window.postMessage({ source: "scamshield-extension-failed" }, location.origin);
+  };
+
+  // Wait for the extension to finish downloading (up to 3 minutes: a 50 MB
+  // video on a slow connection takes a while).
   let first;
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < 360; i++) {
     first = await ask(0);
     if (!first || first.status !== "pending") break;
     await new Promise((r) => setTimeout(r, 500));
   }
-  if (!first || first.status !== "ready") return;
+  if (!first || first.status !== "ready") return fail();
 
   let base64 = first.chunk;
   let response = first;
   while (!response.done) {
     response = await ask(base64.length);
-    if (!response || response.status !== "ready") return;
+    if (!response || response.status !== "ready") return fail();
     base64 += response.chunk;
   }
 
@@ -33,14 +53,6 @@
   }
 
   const payload = { source: "scamshield-extension", item: first.item, bytes: bytes ? bytes.buffer : null };
-  const send = () => window.postMessage(payload, location.origin, bytes ? [payload.bytes] : []);
-
-  // The page says when its listener is attached; it may hydrate after us.
-  let sent = false;
-  window.addEventListener("message", (event) => {
-    if (sent || event.source !== window || event.data?.source !== "scamshield-page-ready") return;
-    sent = true;
-    send();
-  });
-  window.postMessage({ source: "scamshield-extension-hello" }, location.origin);
+  await pageReady;
+  window.postMessage(payload, location.origin, bytes ? [payload.bytes] : []);
 })();

@@ -299,6 +299,14 @@ export default function HomePage() {
         ready();
         return;
       }
+      if (data?.source === "scamshield-extension-failed" && !extensionHandled.current) {
+        extensionHandled.current = true;
+        window.history.replaceState(null, "", "/");
+        setNotice(
+          "We could not get what you right-clicked. Save the picture or video and add it here, or paste the text.",
+        );
+        return;
+      }
       if (data?.source !== "scamshield-extension" || !data.item || extensionHandled.current) return;
       extensionHandled.current = true;
       window.history.replaceState(null, "", "/");

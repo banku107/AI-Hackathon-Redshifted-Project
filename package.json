@@ -44,5 +44,10 @@
   },
   "allowScripts": {
     "@contentauth/c2pa-node@0.10.0": true
+  },
+  "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.5"
+    }
   }
 }
