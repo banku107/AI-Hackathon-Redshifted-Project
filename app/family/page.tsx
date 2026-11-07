@@ -34,6 +34,7 @@ import {
   type FamilyFeedItem,
   type WatchedPerson,
 } from "@/lib/family-feed";
+import { EvidenceDot } from "@/components/evidence-dot";
 import { cn } from "@/lib/utils";
 
 const TONES = {
@@ -360,7 +361,7 @@ function AlertCard({
                   <span className="block text-sm font-bold text-accent">
                     Do this now
                   </span>
-                  <span className="mt-0.5 block text-lg font-semibold leading-relaxed">
+                  <span className="mt-0.5 block text-lg font-bold leading-relaxed">
                     {alert.suggestedAction}
                   </span>
                 </span>
@@ -396,10 +397,7 @@ function AlertCard({
               <ul className="mt-3.5 space-y-3">
                 {item.reasons.map((reason, i) => (
                   <li key={i} className="flex gap-3 text-lg leading-relaxed">
-                    <span
-                      className="mt-[0.7rem] size-1.5 shrink-0 rounded-full bg-ink-faint"
-                      aria-hidden
-                    />
+                    <EvidenceDot tone={alert.riskLevel} />
                     <span>{reason}</span>
                   </li>
                 ))}
@@ -459,7 +457,7 @@ function AlertCard({
 }
 
 const FIELD =
-  "mt-2 min-h-12 w-full rounded-[var(--radius-control)] border-2 border-line-strong bg-paper px-4 text-lg font-semibold text-ink placeholder:font-normal placeholder:text-ink-faint focus:border-accent focus:outline-none";
+  "mt-2 min-h-12 w-full rounded-[var(--radius-control)] border-2 border-line-strong bg-paper px-4 text-lg font-bold text-ink placeholder:font-normal placeholder:text-ink-faint focus:border-accent focus:outline-none";
 
 /**
  * Where the "Call" number comes from. Alerts carry no phone number, so the

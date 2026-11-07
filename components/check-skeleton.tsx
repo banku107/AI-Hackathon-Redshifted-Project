@@ -11,11 +11,11 @@ export function CheckSkeleton({ rows = 3 }: { rows?: number }) {
       {Array.from({ length: rows }, (_, index) => (
         <div key={index} className="border-l-2 border-line pl-4">
           <div
-            className="h-4 rounded-full bg-surface-sunk motion-safe:animate-pulse"
+            className="h-4 rounded-full bg-surface-sunk"
             style={{ width: `${72 - index * 11}%` }}
           />
           <div
-            className="mt-2.5 h-3 rounded-full bg-surface-sunk motion-safe:animate-pulse"
+            className="mt-2.5 h-3 rounded-full bg-surface-sunk"
             style={{ width: `${52 - index * 7}%` }}
           />
         </div>

@@ -5,11 +5,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowCounterClockwise,
   CaretRight,
-  DeviceMobile,
   ImageSquare,
   PaperPlaneTilt,
   SealCheck,
-  SpeakerHigh,
   VideoCamera,
   X,
 } from "@phosphor-icons/react";
@@ -17,6 +15,7 @@ import { AppBar } from "@/components/app-bar";
 import { CheckSkeleton } from "@/components/check-skeleton";
 import { Timeline } from "@/components/timeline";
 import { VerdictCard } from "@/components/verdict-card";
+import { VerdictPreview } from "@/components/verdict-preview";
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
 import { useAppState } from "@/lib/app-state";
@@ -41,12 +40,6 @@ const MODES: { value: Mode; label: string; icon: typeof PaperPlaneTilt }[] = [
   { value: "message", label: "A message", icon: PaperPlaneTilt },
   { value: "picture", label: "A picture", icon: ImageSquare },
   { value: "video", label: "A video", icon: VideoCamera },
-];
-
-const PROMISES = [
-  { icon: DeviceMobile, text: "Works on any phone" },
-  { icon: SealCheck, text: "Free, no account" },
-  { icon: SpeakerHigh, text: "Can be read out loud" },
 ];
 
 export default function HomePage() {
@@ -395,41 +388,31 @@ export default function HomePage() {
            * centred hero over a form is the shape every generated page takes.
            */
           <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-4">
-            {/* 12 columns of 77px with 16px gutters = 1100px. Promise 6, composer 6. */}
-            <div className="lg:sticky lg:top-28 lg:col-span-6 lg:pr-10">
+            {/* 12 columns of 77px with 16px gutters = 1100px. Left 6: the question
+                and a real answer. Right 6: the composer, then the saved examples. */}
+            <div className="lg:col-span-6 lg:row-span-2 lg:pr-10">
               <h1 className="max-w-[12ch] font-serif text-[3.1rem] leading-[0.98] tracking-[-0.015em] text-balance sm:text-[4.5rem]">
                 Not sure about a message?
               </h1>
               <p className="mt-5 max-w-[34ch] text-xl leading-relaxed text-ink">
                 Paste it, or add a picture of it. We read it and tell you, in
-                plain words, whether it is a scam.
+                plain words, whether it is a scam. Free, no account, and it can
+                read the answer out loud.
               </p>
 
-              <ul className="mt-6 space-y-3">
-                {PROMISES.map(({ icon: Icon, text: promise }) => (
-                  <li
-                    key={promise}
-                    className="flex items-center gap-3 text-lg font-bold text-ink"
-                  >
-                    <Icon size={22} weight="bold" className="shrink-0 text-accent" aria-hidden />
-                    {promise}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-12 hidden lg:block">
-                <DemoList onPick={handleDemo} disabled={busy} />
+              <div className="mt-10 hidden lg:block">
+                <VerdictPreview />
               </div>
             </div>
 
             {/* The composer. One border wraps the choice, the input and the
                 action, so the screen has one object instead of a stack of
                 equally-important cards. */}
-            <div className="mt-8 overflow-hidden rounded-[var(--radius-card)] bg-surface lg:col-span-6 lg:mt-0">
+            <div className="mt-8 overflow-hidden rounded-[var(--radius-card)] bg-surface lg:col-span-6 lg:col-start-7 lg:mt-0">
               <div
                 role="tablist"
                 aria-label="What are you checking?"
-                className="m-2 grid grid-cols-3 gap-1 rounded-[18px] bg-surface-sunk p-1.5"
+                className="m-2 grid grid-cols-3 gap-1 rounded-[14px] bg-surface-sunk p-1.5"
               >
                 {MODES.map(({ value, label, icon: Icon }) => {
                   const selected = mode === value;
@@ -441,7 +424,7 @@ export default function HomePage() {
                       aria-selected={selected}
                       onClick={() => setMode(value)}
                       className={cn(
-                        "flex min-h-14 flex-col items-center justify-center gap-1 rounded-[14px] px-1 text-base font-bold transition-colors",
+                        "flex min-h-14 flex-col items-center justify-center gap-1 rounded-[8px] px-1 text-base font-bold transition-colors",
                         selected
                           ? "bg-paper text-ink"
                           : "text-ink-soft hover:text-ink",
@@ -575,7 +558,7 @@ export default function HomePage() {
 
                     {video && video.result.previews.length > 0 && (
                       <div>
-                        <p className="mb-2 text-base font-semibold text-ink-soft">
+                        <p className="mb-2 text-base font-bold text-ink-soft">
                           {video.result.previews.length} pictures ready, from a{" "}
                           {Math.round(video.result.durationSec)} second video
                         </p>
@@ -609,7 +592,7 @@ export default function HomePage() {
                       />
                     </label>
                     {image && (
-                      <span className="inline-flex min-h-12 max-w-full items-center gap-1 rounded-full bg-accent-soft py-1 pl-4 pr-1 text-base font-semibold text-accent">
+                      <span className="inline-flex min-h-12 max-w-full items-center gap-1 rounded-full bg-accent-soft py-1 pl-4 pr-1 text-base font-bold text-accent">
                         <span className="min-w-0 truncate">{image.name}</span>
                         <button
                           type="button"
@@ -632,7 +615,7 @@ export default function HomePage() {
                       onChange={(e) => setAlreadyActed(e.target.checked)}
                       className="size-7 shrink-0 accent-[var(--color-accent)]"
                     />
-                    <span className="text-lg font-semibold leading-snug">
+                    <span className="text-lg font-bold leading-snug">
                       I already replied, paid, or shared information
                     </span>
                   </label>
@@ -656,7 +639,7 @@ export default function HomePage() {
                 {notice && (
                   <p
                     role="status"
-                    className="rounded-[var(--radius-control)] bg-warn-soft px-4 py-3 text-base font-semibold leading-snug text-warn"
+                    className="rounded-[var(--radius-control)] bg-warn-soft px-4 py-3 text-base font-bold leading-snug text-warn"
                   >
                     {notice}
                   </p>
@@ -674,7 +657,11 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* On a phone the real answer comes after the form, then the examples. */}
             <div className="mt-10 lg:hidden">
+              <VerdictPreview />
+            </div>
+            <div className="mt-10 lg:col-span-6 lg:col-start-7 lg:mt-8">
               <DemoList onPick={handleDemo} disabled={busy} />
             </div>
           </div>
@@ -685,7 +672,7 @@ export default function HomePage() {
             {notice && (
               <p
                 role="status"
-                className="rounded-[var(--radius-control)] bg-warn-soft px-4 py-3 text-base font-semibold text-warn"
+                className="rounded-[var(--radius-control)] bg-warn-soft px-4 py-3 text-base font-bold text-warn"
               >
                 {notice}
               </p>
@@ -727,7 +714,7 @@ export default function HomePage() {
             {run.errorMessage && (
               <p
                 role="alert"
-                className="rounded-[var(--radius-control)] bg-warn-soft px-4 py-3 text-base font-semibold text-warn"
+                className="rounded-[var(--radius-control)] bg-warn-soft px-4 py-3 text-base font-bold text-warn"
               >
                 {run.errorMessage}
               </p>
@@ -736,7 +723,7 @@ export default function HomePage() {
             {notice && !run.errorMessage && (
               <p
                 role="status"
-                className="rounded-[var(--radius-control)] bg-surface px-4 py-3 text-base font-semibold text-ink-soft"
+                className="rounded-[var(--radius-control)] bg-surface px-4 py-3 text-base font-bold text-ink-soft"
               >
                 {notice}
               </p>

@@ -386,7 +386,7 @@ export default function DamageControlPage() {
                 </li>
               ))}
               <li className="flex min-h-14 items-center gap-3 rounded-[var(--radius-control)] bg-surface px-5 py-3">
-                <span className="min-w-0 text-lg font-semibold text-ink-soft">
+                <span className="min-w-0 text-lg font-bold text-ink-soft">
                   Your bank and card company — call the number on the back of the
                   card.
                 </span>

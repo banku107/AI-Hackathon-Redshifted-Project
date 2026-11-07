@@ -136,7 +136,7 @@ export function SettingsMenu() {
               id={`${panelId}-language`}
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="mt-3 min-h-12 w-full rounded-[var(--radius-control)] border-2 border-line-strong bg-surface px-3 text-lg font-semibold text-ink"
+              className="mt-3 min-h-12 w-full rounded-[var(--radius-control)] border-2 border-line-strong bg-surface px-3 text-lg font-bold text-ink"
             >
               {LANGUAGES.map((lang) => (
                 <option key={lang.code} value={lang.code}>

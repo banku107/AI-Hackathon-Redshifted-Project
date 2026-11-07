@@ -7,6 +7,7 @@ import {
   Warning,
   WarningOctagon,
 } from "@phosphor-icons/react";
+import { EvidenceDot } from "@/components/evidence-dot";
 import { ReadAloud } from "@/components/read-aloud";
 import { Button } from "@/components/ui/button";
 import type { Verdict, VerdictLevel } from "@/lib/contract";
@@ -169,22 +170,14 @@ export function VerdictCard({
 
         <section className="p-5 sm:p-7">
           <h3 className="text-xl font-bold tracking-tight">Why we think so</h3>
-          <ol className="mt-4 space-y-3">
+          <ul className="mt-4 space-y-3">
             {verdict.reasons.map((reason, index) => (
               <li key={index} className="flex gap-3 text-lg leading-relaxed">
-                <span
-                  className={cn(
-                    "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full text-base font-bold tabular-nums text-ink",
-                    tone.tint,
-                  )}
-                  aria-hidden
-                >
-                  {index + 1}
-                </span>
+                <EvidenceDot tone={verdict.level} />
                 <span>{reason}</span>
               </li>
             ))}
-          </ol>
+          </ul>
         </section>
 
         {/* Actions carry the weight of the page, so they get a raised surface
@@ -200,7 +193,7 @@ export function VerdictCard({
                 >
                   {index + 1}
                 </span>
-                <span className="font-semibold">{step}</span>
+                <span className="font-bold">{step}</span>
               </li>
             ))}
           </ol>
@@ -227,7 +220,7 @@ export function VerdictCard({
                   href={verdict.officialContact.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-12 items-center break-all text-lg font-semibold text-accent underline underline-offset-4"
+                  className="inline-flex min-h-12 items-center break-all text-lg font-bold text-accent underline underline-offset-4"
                 >
                   {verdict.officialContact.url}
                 </a>

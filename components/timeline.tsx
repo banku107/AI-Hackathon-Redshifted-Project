@@ -2,14 +2,8 @@
 
 import { Check, SpinnerGap, Warning } from "@phosphor-icons/react";
 import type { StepEntry } from "@/lib/app-state";
+import { EvidenceDot } from "@/components/evidence-dot";
 import { cn } from "@/lib/utils";
-
-const EVIDENCE_DOT: Record<string, string> = {
-  red: "bg-scam",
-  yellow: "bg-warn",
-  green: "bg-safe",
-  info: "bg-line-strong",
-};
 
 /**
  * The investigation timeline: one row per planned step, filling in as the agent
@@ -119,13 +113,7 @@ export function Timeline({
                         key={index}
                         className="flex gap-2.5 text-lg leading-snug text-ink"
                       >
-                        <span
-                          className={cn(
-                            "mt-[0.6rem] size-2 shrink-0 rounded-full",
-                            EVIDENCE_DOT[line.severity] ?? "bg-line-strong",
-                          )}
-                          aria-hidden
-                        />
+                        <EvidenceDot tone={line.severity} />
                         <span>{line.finding}</span>
                       </li>
                     ))}
