@@ -1,5 +1,5 @@
-import { isIP } from "node:net";
 import { getFamilyAlerts } from "@/lib/investigate/familyAlert";
+import { isLocalNetworkHost } from "@/lib/investigate/localNetwork";
 
 const RESPONSE_HEADERS = {
   "Cache-Control": "no-store, private",
@@ -7,19 +7,11 @@ const RESPONSE_HEADERS = {
   "X-Content-Type-Options": "nosniff",
 };
 
-function isLoopback(hostname: string): boolean {
-  const normalized = hostname.toLowerCase().replace(/^\[|\]$/g, "").replace(/\.$/, "");
-  return normalized === "localhost"
-    || normalized.endsWith(".localhost")
-    || normalized === "::1"
-    || (isIP(normalized) === 4 && normalized.startsWith("127."));
-}
-
 function isAllowedLocalRequest(request: Request): boolean {
   try {
     const requestUrl = new URL(request.url);
     if (
-      !isLoopback(requestUrl.hostname)
+      !isLocalNetworkHost(requestUrl.hostname)
       || (requestUrl.protocol !== "http:" && requestUrl.protocol !== "https:")
     ) {
       return false;

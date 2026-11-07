@@ -584,20 +584,20 @@ async function main(): Promise<void> {
     }
   });
 
-  const [{ analyzeVideo }, { POST: uploadVideo }, { resolveLocalVideoReference }] = await Promise.all([
+  const [{ analyzeVideo }, { POST: uploadVideo }, { resolveLocalVideoId }] = await Promise.all([
     import("../lib/investigate/video"),
     import("../app/api/upload/route"),
     import("../lib/investigate/localVideo"),
   ]);
-  await withEnvironment({ DETECTOR_API_KEY: undefined, BLOB_HOSTNAME: "store.public.blob.vercel-storage.com" }, async () => {
+  await withEnvironment({ DETECTOR_API_KEY: undefined }, async () => {
     await test("video analysis: missing detector key is explicit", async () => {
       const result = await analyzeVideo("invalid-reference");
       assert.equal(result.detector, null);
       assert.ok(result.credentials.error);
     });
 
-    await test("video analysis: untrusted Blob URL is rejected without fetching", async () => {
-      const result = await analyzeVideo("http://127.0.0.1/video.mp4");
+    await test("video analysis: malformed video IDs are rejected without fetching", async () => {
+      const result = await analyzeVideo("../private/video.mp4");
       assert.ok(result.credentials.error);
       assert.ok(result.metadata.error);
       assert.equal(result.detector, null);
@@ -618,20 +618,22 @@ async function main(): Promise<void> {
 
     await test("video analysis: invalid local media returns independent component errors and cleans up", async () => {
       const bytes = new Uint8Array([0, 0, 0, 16, ...new TextEncoder().encode("ftypisom"), 0, 0, 0, 0]);
-      const uploadResponse = await uploadVideo(new Request("http://localhost:3000/api/upload", {
+      const uploadResponse = await uploadVideo(new Request("http://192.168.1.23:3000/api/upload", {
         method: "POST",
-        headers: { origin: "http://localhost:3000", "content-type": "video/mp4" },
+        headers: { origin: "http://192.168.1.23:3000", "content-type": "video/mp4" },
         body: bytes,
       }));
       assert.equal(uploadResponse.status, 201);
-      const uploaded = await uploadResponse.json() as { url: string };
-      assert.ok(resolveLocalVideoReference(uploaded.url));
+      const uploaded = await uploadResponse.json() as { videoId: string; url?: string };
+      assert.match(uploaded.videoId, /^[0-9a-f-]{36}\.mp4$/i);
+      assert.equal(uploaded.url, undefined);
+      assert.ok(resolveLocalVideoId(uploaded.videoId));
 
-      const report = await analyzeVideo(uploaded.url);
+      const report = await analyzeVideo(uploaded.videoId);
       assert.equal(report.detector, null);
       assert.ok(report.credentials.error);
       assert.ok(report.metadata.error);
-      const local = resolveLocalVideoReference(uploaded.url);
+      const local = resolveLocalVideoId(uploaded.videoId);
       assert.ok(local);
       await assert.rejects(import("node:fs/promises").then(({ stat }) => stat(local.path)));
     });
@@ -946,6 +948,13 @@ async function main(): Promise<void> {
     }));
     assert.equal(remoteHost.status, 403);
     assert.equal(mismatchedOrigin.status, 403);
+  });
+
+  await test("family API: allows same-origin private LAN access for phone clients", async () => {
+    const response = await getFamilyRoute(new Request("http://192.168.1.23:3000/api/family", {
+      headers: { origin: "http://192.168.1.23:3000" },
+    }));
+    assert.equal(response.status, 200);
   });
 
   await test("family API: storage failures return a no-store error response", async () => {

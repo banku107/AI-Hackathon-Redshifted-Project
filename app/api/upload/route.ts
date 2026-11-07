@@ -1,32 +1,23 @@
 import { randomUUID } from "node:crypto";
 import { createWriteStream } from "node:fs";
 import { mkdir, open, readdir, rm, stat } from "node:fs/promises";
-import { isIP } from "node:net";
 import { join } from "node:path";
 import { Readable, Transform } from "node:stream";
 import type { ReadableStream as NodeReadableStream } from "node:stream/web";
 import { pipeline } from "node:stream/promises";
 import { z } from "zod";
 import {
-  createLocalVideoReference,
+  createLocalVideoId,
   LOCAL_VIDEO_DIRECTORY,
-  VIDEO_CONTENT_TYPES,
   type VideoContentType,
 } from "@/lib/investigate/localVideo";
+import { isLocalNetworkHost } from "@/lib/investigate/localNetwork";
 
 const MAX_FILE_BYTES = 50 * 1024 * 1024;
 const MAX_AGE_MS = 60 * 60 * 1000;
 const UPLOAD_TIMEOUT_MS = 120_000;
 const contentTypeSchema = z.enum(["video/mp4", "video/quicktime", "video/webm"]);
 const storedFileSchema = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(mp4|mov|webm)$/i;
-
-function isLoopback(hostname: string): boolean {
-  const normalized = hostname.toLowerCase().replace(/^\[|\]$/g, "").replace(/\.$/, "");
-  return normalized === "localhost"
-    || normalized.endsWith(".localhost")
-    || normalized === "::1"
-    || (isIP(normalized) === 4 && normalized.startsWith("127."));
-}
 
 function isSameOriginLocalRequest(request: Request): boolean {
   const origin = request.headers.get("origin");
@@ -35,7 +26,7 @@ function isSameOriginLocalRequest(request: Request): boolean {
     const requestUrl = new URL(request.url);
     const originUrl = new URL(origin);
     return originUrl.origin === requestUrl.origin
-      && isLoopback(requestUrl.hostname)
+      && isLocalNetworkHost(requestUrl.hostname)
       && (requestUrl.protocol === "http:" || requestUrl.protocol === "https:");
   } catch {
     return false;
@@ -90,9 +81,8 @@ export async function POST(request: Request): Promise<Response> {
   }
   if (!request.body) return jsonError("Upload body is empty.", 400);
 
-  const extension = VIDEO_CONTENT_TYPES[mimeType];
-  const id = randomUUID();
-  const path = join(/*turbopackIgnore: true*/ LOCAL_VIDEO_DIRECTORY, `${id}.${extension}`);
+  const videoId = createLocalVideoId(randomUUID(), mimeType);
+  const path = join(/*turbopackIgnore: true*/ LOCAL_VIDEO_DIRECTORY, videoId);
   let bytesWritten = 0;
   let exceededLimit = false;
 
@@ -138,7 +128,7 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     return Response.json(
-      { url: createLocalVideoReference(id, mimeType), contentType: mimeType, size: bytesWritten },
+      { videoId, contentType: mimeType, size: bytesWritten },
       { status: 201, headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {

@@ -1,25 +1,17 @@
 import { Context, Reader } from "@contentauth/c2pa-node";
 import { execFile } from "node:child_process";
-import { createWriteStream } from "node:fs";
-import { mkdtemp, rm, stat } from "node:fs/promises";
+import { rm, stat } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { Readable, Transform } from "node:stream";
-import type { ReadableStream as NodeReadableStream } from "node:stream/web";
-import { pipeline } from "node:stream/promises";
 import { z } from "zod";
 import type { AnalyzeVideo, VideoReport } from "@/lib/contract";
-import { resolveLocalVideoReference } from "@/lib/investigate/localVideo";
+import { resolveLocalVideoId } from "@/lib/investigate/localVideo";
 
 const require = createRequire(import.meta.url);
 const ffprobeStatic = require("ffprobe-static") as { path: string };
 const MAX_FILE_BYTES = 50 * 1024 * 1024;
-const DOWNLOAD_TIMEOUT_MS = 30_000;
 const FFPROBE_TIMEOUT_MS = 10_000;
-const ALLOWED_CONTENT_TYPES = new Set(["video/mp4", "video/quicktime", "video/webm"]);
 
-const inputSchema = z.string().trim().min(1).max(2048);
+const inputSchema = z.string().trim().min(1).max(100);
 const ffprobeSchema = z.object({
   streams: z.array(z.object({
     codec_type: z.string().optional(),
@@ -44,70 +36,6 @@ function failedReport(message: string): VideoReport {
     metadata: { clues: [], hasCameraInfo: false, error: message },
     detector: null,
   };
-}
-
-function publicBlobUrl(value: string): URL {
-  let url: URL;
-  try {
-    url = new URL(value);
-  } catch {
-    throw new VideoInputError("The Blob URL is invalid.");
-  }
-  const configuredHost = process.env.BLOB_HOSTNAME?.trim().toLowerCase().replace(/\.$/, "");
-  const hostname = url.hostname.toLowerCase().replace(/\.$/, "");
-  const isVercelBlobHost = hostname.endsWith(".public.blob.vercel-storage.com");
-  if (!configuredHost) throw new VideoInputError("BLOB_HOSTNAME is not configured.");
-  if (
-    url.protocol !== "https:"
-    || url.username
-    || url.password
-    || url.port
-    || url.pathname === "/"
-    || !isVercelBlobHost
-    || hostname !== configuredHost
-  ) {
-    throw new VideoInputError("The URL is not on the configured trusted Vercel Blob host.");
-  }
-  return url;
-}
-
-async function downloadBlob(url: URL, directory: string): Promise<{ path: string; mimeType: string }> {
-  const response = await fetch(url, {
-    redirect: "error",
-    signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
-  });
-  if (!response.ok) throw new Error(`Blob download failed (HTTP ${response.status}).`);
-
-  const mimeType = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase();
-  if (!mimeType || !ALLOWED_CONTENT_TYPES.has(mimeType)) {
-    throw new Error("The Blob does not contain a supported video type.");
-  }
-  const contentLength = response.headers.get("content-length");
-  if (contentLength !== null && (!/^\d+$/.test(contentLength) || Number(contentLength) > MAX_FILE_BYTES)) {
-    throw new Error("The video exceeds the 50 MB size limit or has an invalid size.");
-  }
-  if (!response.body) throw new Error("The Blob response has no video content.");
-
-  const path = join(directory, "source-video");
-  let bytesWritten = 0;
-  const sizeLimit = new Transform({
-    transform(chunk: Buffer | string, _encoding, callback) {
-      const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-      bytesWritten += buffer.length;
-      if (bytesWritten > MAX_FILE_BYTES) {
-        callback(new Error("The video exceeds the 50 MB size limit."));
-        return;
-      }
-      callback(null, buffer);
-    },
-  });
-  await pipeline(
-    Readable.fromWeb(response.body as NodeReadableStream<Uint8Array>),
-    sizeLimit,
-    createWriteStream(path, { flags: "wx" }),
-  );
-  if (bytesWritten === 0) throw new Error("The Blob contains an empty video.");
-  return { path, mimeType };
 }
 
 function cleanText(value: string, maxLength = 200): string {
@@ -290,42 +218,29 @@ async function analyzeVideoFile(path: string, mimeType: string): Promise<VideoRe
   return { credentials, metadata, detector };
 }
 
-export const analyzeVideo: AnalyzeVideo = async (blobUrl) => {
+export const analyzeVideo: AnalyzeVideo = async (videoId) => {
   const fallback = failedReport("Video analysis could not be completed.");
   try {
-    const validated = inputSchema.safeParse(blobUrl);
-    if (!validated.success) return failedReport("The Blob URL is empty or too long.");
-    const localVideo = resolveLocalVideoReference(validated.data);
-    if (localVideo) {
-      try {
-        const details = await stat(localVideo.path);
-        if (!details.isFile() || details.size === 0 || details.size > MAX_FILE_BYTES) {
-          throw new VideoInputError("The local video is empty or exceeds the 50 MB limit.");
-        }
-        return await analyzeVideoFile(localVideo.path, localVideo.mimeType);
-      } catch (error) {
-        const message = error instanceof VideoInputError
-          ? error.message
-          : "The local video upload is unavailable or invalid.";
-        return { ...failedReport(message), detector: await analyzeDetector() };
-      } finally {
-        await rm(localVideo.path, { force: true });
-      }
-    }
+    const validated = inputSchema.safeParse(videoId);
+    if (!validated.success) return failedReport("The video ID is empty or too long.");
+    const localVideo = resolveLocalVideoId(validated.data);
+    if (!localVideo) return failedReport("The video ID is invalid.");
 
-    const url = publicBlobUrl(validated.data);
-    const directory = await mkdtemp(join(tmpdir(), "scamshield-video-"));
     try {
-      const { path, mimeType } = await downloadBlob(url, directory);
-      return await analyzeVideoFile(path, mimeType);
+      const details = await stat(localVideo.path);
+      if (!details.isFile() || details.size === 0 || details.size > MAX_FILE_BYTES) {
+        throw new VideoInputError("The local video is empty or exceeds the 50 MB limit.");
+      }
+      return await analyzeVideoFile(localVideo.path, localVideo.mimeType);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "The trusted Blob could not be analyzed.";
+      const message = error instanceof VideoInputError
+        ? error.message
+        : "The local video upload is unavailable or invalid.";
       return { ...failedReport(message), detector: await analyzeDetector() };
     } finally {
-      await rm(directory, { recursive: true, force: true });
+      await rm(localVideo.path, { force: true });
     }
-  } catch (error) {
-    if (error instanceof VideoInputError) return failedReport(error.message);
+  } catch {
     return fallback;
   }
 };
