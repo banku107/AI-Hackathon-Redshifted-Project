@@ -296,7 +296,10 @@
     - bank alert = LOOKS REAL, USPS text = SCAM, jail text = SCAM + family
       alert (English and Spanish), "already sent a gift card" = SCAM +
       damage control plan, a screenshot = SCAM, a video = two answers.
+    - Extra accuracy test of 12 messages (8 scams, 4 real):  npm run accuracy
+      Result: 12/12 correct, 0 false alarms, 0 scams called safe.
     - 46 automatic tests pass:  npm run test:agent
+    - If the internet drops for a moment, the brain retries by itself.
     - Demo mode works with recorded runs (mock/demo-recording.json).
   STILL TO DO on the day:
     - P1-7: when Person 2's tools are ready, change ONE line in

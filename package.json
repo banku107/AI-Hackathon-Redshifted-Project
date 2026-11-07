@@ -11,7 +11,8 @@
     "test:agent": "tsx scripts/test-agent.ts",
     "record:demo": "tsx scripts/record-demo.ts",
     "try:agent": "tsx scripts/try-agent.ts",
-    "try:media": "tsx scripts/try-media.ts"
+    "try:media": "tsx scripts/try-media.ts",
+    "accuracy": "tsx scripts/accuracy.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",

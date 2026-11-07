@@ -27,6 +27,7 @@ npm run try:media -- screenshot shot.png     # a screenshot
 | `npm run typecheck` | Checks the TypeScript code | No |
 | `npm run lint` | Checks code style | No |
 | `npm run test:agent` | 46 tests of the brain's rules | No |
+| `npm run accuracy` | Runs 12 extra messages (8 scams, 4 real) through Claude and prints a score. Last result: 12/12, 0 false alarms | Yes, a few cents |
 | `npm run record:demo` | Runs the 5 stage demos through Claude, checks each answer, saves them for demo mode | Yes, a few cents |
 
 ## Demo mode (no internet needed)
