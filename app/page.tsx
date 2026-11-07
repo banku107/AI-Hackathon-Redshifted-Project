@@ -15,6 +15,7 @@ import {
 } from "@phosphor-icons/react";
 import { AppBar } from "@/components/app-bar";
 import { CheckSkeleton } from "@/components/check-skeleton";
+import { FamilyContactField } from "@/components/family-contact-field";
 import { SettingsMenu } from "@/components/settings-menu";
 import { Timeline } from "@/components/timeline";
 import { VerdictCard } from "@/components/verdict-card";
@@ -555,6 +556,8 @@ export default function HomePage() {
                     </div>
                   )}
                 </div>
+
+                <FamilyContactField />
 
                 {notice && (
                   <p
