@@ -4,8 +4,6 @@ import { useEffect, useId, useRef, useState } from "react";
 import {
   CaretDown,
   List,
-  Moon,
-  Sun,
   TextAa,
   Translate,
 } from "@phosphor-icons/react";
@@ -20,12 +18,6 @@ const textSizes: { value: TextSize; label: string; className: string }[] = [
   { value: "xlarge", label: "Largest", className: "text-xl" },
 ];
 
-const themes = [
-  { value: "system", label: "System" },
-  { value: "light", label: "Light" },
-  { value: "dark", label: "Dark" },
-] as const;
-
 /**
  * Reader preferences. Collapsed behind one button because the home screen
  * should show exactly one obvious action, not a control panel. The panel opens
@@ -33,7 +25,7 @@ const themes = [
  * its own height, so it stays reachable at 390px with the largest text size.
  */
 export function SettingsMenu() {
-  const { theme, setTheme, textSize, setTextSize, language, setLanguage } =
+  const { textSize, setTextSize, language, setLanguage } =
     useAppState();
   const [open, setOpen] = useState(false);
   const panelId = useId();
@@ -146,39 +138,6 @@ export function SettingsMenu() {
             </select>
           </div>
 
-          <hr className="my-5 border-line" />
-
-          <fieldset>
-            <legend className="flex items-center gap-2 text-base font-bold">
-              {theme === "dark" ? (
-                <Moon size={20} aria-hidden />
-              ) : (
-                <Sun size={20} aria-hidden />
-              )}
-              Light or dark
-            </legend>
-            <div className="mt-3 grid grid-cols-3 gap-2">
-              {themes.map((choice) => {
-                const selected = theme === choice.value;
-                return (
-                  <button
-                    key={choice.value}
-                    type="button"
-                    onClick={() => setTheme(choice.value)}
-                    aria-pressed={selected}
-                    className={cn(
-                      "min-h-12 rounded-[var(--radius-control)] border-2 text-base font-bold transition-colors",
-                      selected
-                        ? "border-accent bg-accent-soft text-accent"
-                        : "border-line-strong text-ink-soft hover:border-ink-faint",
-                    )}
-                  >
-                    {choice.label}
-                  </button>
-                );
-              })}
-            </div>
-          </fieldset>
         </div>
       )}
     </div>

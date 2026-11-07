@@ -16,14 +16,14 @@ import { cn } from "@/lib/utils";
  * 390px phone.
  */
 const buttonVariants = cva(
-  "inline-flex max-w-full shrink-0 items-center justify-center gap-2.5 rounded-full text-center font-bold transition-[background-color,color,transform] duration-150 select-none active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex max-w-full shrink-0 items-center justify-center gap-2.5 rounded-xl text-center font-bold transition-[background-color,color,transform] duration-150 select-none active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        primary: "bg-accent text-accent-ink hover:bg-accent-hover",
-        secondary: "bg-surface-sunk text-ink hover:bg-line-strong/45",
-        quiet: "text-ink-soft hover:bg-surface-sunk hover:text-ink",
-        danger: "bg-scam-soft text-scam hover:bg-scam hover:text-white",
+        primary: "btn-neon",
+        secondary: "border border-white/15 bg-white/5 text-ink hover:bg-white/10",
+        quiet: "text-ink-soft hover:bg-white/5 hover:text-ink",
+        danger: "field-scam hover:brightness-125",
       },
       size: {
         md: "min-h-12 px-6 text-base",

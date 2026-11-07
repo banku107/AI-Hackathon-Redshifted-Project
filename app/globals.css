@@ -3,52 +3,53 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * ScamShield look: the "Obsidian Cinematic" style from the team's websityer
+ * repo (github.com/KoolKucumber687/websityer). Obsidian ground with a faint
+ * grid and a green glow, translucent panels with thin white borders, neon
+ * green actions, glowing red / yellow / green results, Space Grotesk headlines,
+ * Plus Jakarta Sans text and JetBrains Mono labels.
+ *
+ * It is a dark-only look, so the light and dark token sets are the same.
+ */
 @theme {
-  --font-sans: var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  /* `font-serif` is the display face across the app (titles, answer words). */
+  --font-serif: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
-  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --color-paper: #0a0a0a;
+  --color-surface: rgb(255 255 255 / 0.035);
+  --color-surface-sunk: rgb(255 255 255 / 0.07);
+  --color-ink: #ffffff;
+  --color-ink-soft: #d4d4d4;
+  --color-ink-faint: #a3a3a3;
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-line-strong: rgb(255 255 255 / 0.2);
+  --color-accent: #22c55e;
+  --color-accent-hover: #4ade80;
+  --color-accent-ink: #0a0a0a;
+  --color-accent-soft: rgb(34 197 94 / 0.1);
 
-  /* ScamShield palette (editorial-greeting style). White ground, panels one
-     tone step off it in a pale sage taken from the shield, ink text, one deep
-     teal accent. Surfaces are told apart by tone, not by lines or shadows. */
-  --color-paper: #ffffff;
-  --color-surface: #eff4f1;
-  --color-surface-sunk: #e2eae6;
-  --color-ink: #1f201d;
-  --color-ink-soft: #4b524e;
-  --color-ink-faint: #6a716d;
-  --color-line: #dde5e1;
-  --color-line-strong: #a9b6b0;
-  --color-accent: #1b6e66;
-  --color-accent-hover: #145a53;
-  --color-accent-ink: #ffffff;
-  --color-accent-soft: #d6ebe7;
+  /* Results: bright text and marks on dark, tinted glowing boxes. */
+  --color-scam: #f87171;
+  --color-scam-soft: rgb(239 68 68 / 0.12);
+  --color-warn: #facc15;
+  --color-warn-field: rgb(234 179 8 / 0.12);
+  --color-warn-soft: rgb(234 179 8 / 0.12);
+  --color-safe: #4ade80;
+  --color-safe-field: rgb(34 197 94 / 0.12);
+  --color-safe-soft: rgb(34 197 94 / 0.12);
 
-  /* Verdict fields. The strong value is a whole field of colour behind white
-     text on the answer; the soft value is the tint for smaller marks. Red is
-     only ever "scam". */
-  --color-scam: #a3201b;
-  --color-scam-soft: #fbe5e3;
-  --color-warn: #8a4a05;
-  --color-warn-field: #f6c453;
-  --color-warn-soft: #fdf0d2;
-  --color-safe: #1d6b3c;
-  --color-safe-field: #1d6b3c;
-  --color-safe-soft: #dcf2e4;
+  --radius-card: 16px;
+  --radius-control: 12px;
 
-  --radius-card: 22px;
-  --radius-control: 16px;
-
-  /* --- shadcn/ui bridge ------------------------------------------------
-     shadcn primitives speak in these names. They point at the palette above,
-     so there is still exactly one place a colour is defined. `accent` is
-     deliberately left to the teal accent above; shadcn's own "accent" surface
-     is not used by any component we ship. */
+  /* --- shadcn/ui bridge ------------------------------------------------ */
   --color-background: var(--color-paper);
   --color-foreground: var(--color-ink);
   --color-card: var(--color-surface);
   --color-card-foreground: var(--color-ink);
-  --color-popover: var(--color-surface);
+  --color-popover: #111111;
   --color-popover-foreground: var(--color-ink);
   --color-primary: var(--color-accent);
   --color-primary-foreground: var(--color-accent-ink);
@@ -62,31 +63,6 @@
   --color-ring: var(--color-accent);
 }
 
-.dark {
-  --color-paper: #0f1412;
-  --color-surface: #18201d;
-  --color-surface-sunk: #212b27;
-  --color-ink: #eef3f0;
-  --color-ink-soft: #b3c0ba;
-  --color-ink-faint: #93a29b;
-  --color-line: #2a3531;
-  --color-line-strong: #4a5953;
-  --color-accent: #6fcdb9;
-  --color-accent-hover: #8ad8c7;
-  --color-accent-ink: #062520;
-  --color-accent-soft: #173a33;
-
-  --color-scam: #c63a33;
-  --color-scam-soft: #3d1b1a;
-  --color-warn: #f2c45d;
-  --color-warn-field: #f2c45d;
-  --color-warn-soft: #36280d;
-  --color-safe: #2f8a55;
-  /* Darker than the dark-mode text green so white labels on it pass 4.5:1 (5.5:1). */
-  --color-safe-field: #27774a;
-  --color-safe-soft: #15301f;
-}
-
 /* Large-text mode scales the root so every rem-based size grows together. */
 html[data-text="large"] {
   font-size: 118%;
@@ -98,14 +74,90 @@ html[data-text="xlarge"] {
 
 html {
   -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
 }
 
+/* Obsidian ground with a faint 40px grid (no colour wash). */
 body {
-  background: var(--color-paper);
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
   color: var(--color-ink);
   font-family: var(--font-sans);
   text-wrap: pretty;
 }
+
+/* Display type: Space Grotesk, bold capitals, tight. */
+.font-serif {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+
+/* Panels: one step lighter than the ground, with a thin white border. */
+.bg-surface {
+  border: 1px solid var(--color-line);
+}
+.bg-surface-sunk {
+  border: 1px solid var(--color-line);
+}
+
+/* Result boxes: tinted in the colour of the answer, with a soft border. The
+   colour lives here, in the answer, and nowhere else on the screen. */
+.field-scam {
+  background: rgb(69 10 10 / 0.6);
+  border: 1px solid rgb(239 68 68 / 0.35);
+  color: #fecaca;
+}
+.field-warn {
+  background: rgb(66 32 6 / 0.6);
+  border: 1px solid rgb(234 179 8 / 0.35);
+  color: #fef08a;
+}
+.field-safe {
+  background: rgb(5 46 22 / 0.6);
+  border: 1px solid rgb(34 197 94 / 0.35);
+  color: #bbf7d0;
+}
+.field-scam .field-word { color: #f87171; }
+.field-warn .field-word { color: #facc15; }
+.field-safe .field-word { color: #4ade80; }
+
+/* The one action colour: flat green, dark text (8.3:1). */
+.btn-neon {
+  background-color: #22c55e;
+  color: #0a0a0a;
+}
+.btn-neon:hover {
+  background-color: #4ade80;
+}
+
+/* The green scan line that sweeps a card while ScamShield is checking. */
+.scan-line-fx {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #22c55e;
+  box-shadow: 0 0 15px #22c55e;
+  pointer-events: none;
+  z-index: 30;
+  animation: scanLineAnim 3.2s ease-in-out infinite alternate;
+}
+@keyframes scanLineAnim {
+  0% { top: 0%; opacity: 0.3; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { top: 98%; opacity: 0.3; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #09090b; }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #22c55e; }
 
 :where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 3px solid var(--color-accent);
@@ -114,8 +166,8 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent-soft);
-  color: var(--color-ink);
+  background: rgb(34 197 94 / 0.3);
+  color: #86efac;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -127,4 +179,5 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  .scan-line-fx { display: none; }
 }

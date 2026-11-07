@@ -29,25 +29,25 @@ export function VerdictPreview() {
       <figure className="mt-4 overflow-hidden rounded-[var(--radius-card)] bg-surface">
         {/* The message, as it arrived */}
         <blockquote className="px-5 pb-4 pt-5">
-          <p className="max-w-[34ch] rounded-[16px] rounded-bl-[4px] bg-surface-sunk px-4 py-3 text-lg leading-snug text-ink">
+          <p className="max-w-[34ch] rounded-xl rounded-bl-[4px] border border-white/10 bg-black/50 px-4 py-3 text-lg leading-snug text-ink">
             {EXAMPLE.message}
           </p>
         </blockquote>
 
         {/* The two answers, in the same fields the real result uses */}
-        <div className="grid grid-cols-2 gap-1 bg-paper">
-          <div className="bg-scam px-4 pb-4 pt-3 text-white sm:px-5">
-            <p className="text-base font-bold">Is it a scam?</p>
-            <div className="mt-1.5 flex items-center gap-2">
+        <div className="grid grid-cols-2 gap-3 px-5">
+          <div className="field-scam rounded-xl px-4 pb-4 pt-3">
+            <p className="font-mono text-xs font-semibold">Is it a scam?</p>
+            <div className="field-word mt-1.5 flex items-center gap-2">
               <WarningOctagon size={28} weight="fill" aria-hidden />
-              <p className="font-serif text-[2.1rem] leading-none">Scam</p>
+              <p className="font-serif text-[1.6rem] leading-none">Scam</p>
             </div>
           </div>
-          <div className="bg-safe-field px-4 pb-4 pt-3 text-white sm:px-5">
-            <p className="text-base font-bold">Made by AI?</p>
-            <div className="mt-1.5 flex items-center gap-2">
+          <div className="field-safe rounded-xl px-4 pb-4 pt-3">
+            <p className="font-mono text-xs font-semibold">Made by AI?</p>
+            <div className="field-word mt-1.5 flex items-center gap-2">
               <ShieldCheck size={28} weight="fill" aria-hidden />
-              <p className="font-serif text-[2.1rem] leading-none">No signs</p>
+              <p className="font-serif text-[1.6rem] leading-none">No signs</p>
             </div>
           </div>
         </div>

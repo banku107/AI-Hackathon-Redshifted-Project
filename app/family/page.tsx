@@ -41,19 +41,19 @@ const TONES = {
   scam: {
     word: "Scam alert",
     icon: WarningOctagon,
-    field: "bg-scam text-white",
+    field: "field-scam",
     heading: "Why it looks wrong",
   },
   suspicious: {
     word: "Be careful",
     icon: Warning,
-    field: "bg-warn-field text-[#2b1a00]",
+    field: "field-warn",
     heading: "Why it looks wrong",
   },
   safe: {
     word: "Checked and looks safe",
     icon: ShieldCheck,
-    field: "bg-safe-field text-white",
+    field: "field-safe",
     heading: "What the check found",
   },
 } as const;
@@ -185,7 +185,7 @@ export default function FamilyPage() {
 
       <main className="mx-auto w-full max-w-[760px] px-4 py-8 sm:px-6 sm:py-14">
         <header>
-          <h1 className="max-w-[16ch] font-serif text-[2.75rem] leading-[1] tracking-[-0.015em] text-balance sm:text-[3.75rem]">
+          <h1 className="font-serif text-[2.1rem] leading-[1] text-balance sm:text-[3.25rem]">
             What your family found
           </h1>
           <p className="mt-3 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
@@ -321,7 +321,7 @@ function AlertCard({
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
             <span
               className={cn(
-                "inline-flex min-h-9 items-center gap-1.5 rounded-full bg-paper px-3.5 text-base font-bold text-ink",
+                "inline-flex min-h-9 items-center gap-1.5 rounded-full border border-current/40 bg-black/40 px-3.5 font-mono text-sm font-semibold",
               )}
             >
               <Icon size={16} weight="fill" aria-hidden />
@@ -339,7 +339,7 @@ function AlertCard({
 
           <h2
             id={headingId}
-            className="mt-4 font-serif text-[2.1rem] leading-[1.05] tracking-[-0.01em] text-balance sm:text-[2.75rem]"
+            className="mt-4 font-serif text-[1.45rem] leading-[1.08] text-balance sm:text-[2.25rem]"
           >
             {levelHeading(alert.riskLevel, watchedName)}
           </h2>

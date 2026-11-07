@@ -22,22 +22,22 @@ const TONES: Record<
 > = {
   scam: {
     word: "Scam",
-    field: "bg-scam",
-    fieldInk: "text-white",
+    field: "field-scam",
+    fieldInk: "",
     text: "text-scam",
     tint: "bg-scam-soft",
   },
   suspicious: {
     word: "Be careful",
-    field: "bg-warn-field",
-    fieldInk: "text-[#2b1a00]",
+    field: "field-warn",
+    fieldInk: "",
     text: "text-warn",
     tint: "bg-warn-soft",
   },
   safe: {
     word: "Looks real",
-    field: "bg-safe-field",
-    fieldInk: "text-white",
+    field: "field-safe",
+    fieldInk: "",
     text: "text-safe",
     tint: "bg-safe-soft",
   },
@@ -122,14 +122,14 @@ export function VerdictCard({
       {/* Two answers, before anything else, each a word on its own field of
           colour: is it a scam, and was it made by AI. Icon, word and label
           together, so colour is never the only carrier. */}
-      <div className="grid gap-1 bg-paper sm:grid-cols-2">
+      <div className="grid gap-3 p-3 sm:grid-cols-2 sm:p-4">
         <AnswerField question="Is it a scam?" word={tone.word} level={verdict.level} />
         {aiTone ? (
           <AnswerField question="Made by AI?" word={aiTone.word} level={aiTone.level} />
         ) : (
-          <div className="flex flex-col justify-center bg-surface-sunk px-6 py-6 sm:px-8">
-            <p className="text-lg font-bold text-ink-soft">Made by AI?</p>
-            <p className="mt-2 font-serif text-[2.6rem] leading-none text-ink">Not checked</p>
+          <div className="flex flex-col justify-center rounded-xl bg-surface-sunk px-5 py-5 sm:px-6">
+            <p className="font-mono text-sm font-semibold text-ink-soft">Made by AI?</p>
+            <p className="mt-2 font-serif text-[1.9rem] leading-none text-ink">Not checked</p>
           </div>
         )}
       </div>
@@ -146,7 +146,7 @@ export function VerdictCard({
         </div>
       </div>
 
-      <div className="divide-y-4 divide-paper">
+      <div className="divide-y divide-line">
         <section className="p-5 sm:p-7">
           <h3 className="text-xl font-bold tracking-tight">Why we think it is {tone.word.toLowerCase() === "scam" ? "a scam" : tone.word === "Be careful" ? "worth being careful" : "real"}</h3>
           <ul className="mt-4 space-y-3">
@@ -243,13 +243,11 @@ function AnswerField({
 }) {
   const t = TONES[level];
   return (
-    <div className={cn("px-6 pb-6 pt-5 sm:px-8 sm:pb-7 sm:pt-6", t.field, t.fieldInk)}>
-      <p className="text-lg font-bold">{question}</p>
-      <div className="mt-2 flex items-center gap-3">
-        <LevelIcon level={level} size={40} className="shrink-0" />
-        <p className="font-serif text-[2.6rem] leading-[0.95] tracking-[-0.01em] sm:text-[3rem]">
-          {word}
-        </p>
+    <div className={cn("rounded-xl px-5 pb-5 pt-4 sm:px-6", t.field, t.fieldInk)}>
+      <p className="font-mono text-sm font-semibold">{question}</p>
+      <div className="field-word mt-2 flex items-center gap-3">
+        <LevelIcon level={level} size={34} className="shrink-0" />
+        <p className="font-serif text-[1.9rem] leading-[1] sm:text-[2.15rem]">{word}</p>
       </div>
     </div>
   );

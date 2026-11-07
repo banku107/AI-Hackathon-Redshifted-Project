@@ -399,8 +399,11 @@ export default function HomePage() {
             {/* 12 columns of 77px with 16px gutters = 1100px. Left 6: the question
                 and a real answer. Right 6: the composer, then the saved examples. */}
             <div className="lg:col-span-6 lg:row-span-2 lg:pr-10">
-              <h1 className="max-w-[12ch] font-serif text-[3.1rem] leading-[0.98] tracking-[-0.015em] text-balance sm:text-[4.5rem]">
-                Not sure about a message?
+              <h1 className="font-serif text-[2.4rem] leading-[0.98] text-balance sm:text-[3.4rem] xl:text-[3.75rem]">
+                Not sure about{" "}
+                <span className="text-green-400">
+                  a message?
+                </span>
               </h1>
               <p className="mt-5 max-w-[34ch] text-xl leading-relaxed text-ink">
                 Paste it, or add a picture of it. We read it and tell you, in
@@ -417,10 +420,17 @@ export default function HomePage() {
                 action, so the screen has one object instead of a stack of
                 equally-important cards. */}
             <div className="mt-8 overflow-hidden rounded-[var(--radius-card)] bg-surface lg:col-span-6 lg:col-start-7 lg:mt-0">
+              {/* Window chrome, like the deck's extension window. */}
+              <div className="flex items-center gap-2.5 border-b border-white/10 px-5 py-3.5" aria-hidden>
+                <span className="size-3 rounded-full bg-red-500/80" />
+                <span className="size-3 rounded-full bg-yellow-500/80" />
+                <span className="size-3 rounded-full bg-green-500/80" />
+                <span className="ml-2 font-mono text-sm text-neutral-400">ScamShield</span>
+              </div>
               <div
                 role="tablist"
                 aria-label="What are you checking?"
-                className="m-2 grid grid-cols-3 gap-1 rounded-[14px] bg-surface-sunk p-1.5"
+                className="m-3 grid grid-cols-3 gap-1 rounded-xl border border-white/10 bg-black/40 p-1.5"
               >
                 {MODES.map(({ value, label, icon: Icon }) => {
                   const selected = mode === value;
@@ -434,7 +444,7 @@ export default function HomePage() {
                       className={cn(
                         "flex min-h-14 flex-col items-center justify-center gap-1 rounded-[8px] px-1 text-base font-bold transition-colors",
                         selected
-                          ? "bg-paper text-ink"
+                          ? "bg-green-500/10 text-green-400 ring-1 ring-green-500/30"
                           : "text-ink-soft hover:text-ink",
                       )}
                     >
@@ -686,7 +696,9 @@ export default function HomePage() {
               </p>
             )}
 
-            <div className="rounded-[var(--radius-card)] bg-surface p-5 sm:p-8">
+            <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-surface p-5 sm:p-8">
+              {/* The green scan line sweeps the card while the check runs. */}
+              <div className="scan-line-fx" aria-hidden />
               <Timeline
                 steps={run.steps}
                 heading={run.plan.length > 0 ? "Working through your check" : "Starting the check"}

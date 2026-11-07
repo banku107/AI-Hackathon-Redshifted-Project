@@ -1,24 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { Atkinson_Hyperlegible, Instrument_Serif } from "next/font/google";
+import { JetBrains_Mono, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { AppStateProvider } from "@/lib/app-state";
 
-// Atkinson Hyperlegible was drawn by the Braille Institute for low-vision
-// readers: every letterform is shaped so it cannot be confused with a
-// neighbour. That is exactly the audience this app is for.
-const atkinson = Atkinson_Hyperlegible({
+// The three faces of the team's websityer look, self-hosted by next/font so the
+// app still works offline: Plus Jakarta Sans for text, Space Grotesk for
+// titles and answer words, JetBrains Mono for small labels.
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-atkinson",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-jakarta",
   display: "swap",
 });
 
-// The one display face: the greeting and the verdict word, set large. Every
-// sentence a person has to read stays in Atkinson Hyperlegible.
-const instrumentSerif = Instrument_Serif({
+const grotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: "400",
-  variable: "--font-instrument-serif",
+  weight: ["500", "700"],
+  variable: "--font-grotesk",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-jetbrains",
   display: "swap",
 });
 
@@ -31,17 +36,13 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f1412" },
-  ],
+  themeColor: "#0a0a0a",
 };
 
-// Runs before paint so the stored theme and text size never flash.
+// Runs before paint so the stored text size never flashes. The look is dark
+// only, so the dark class is always set.
 const bootScript = `(function(){try{
-var t=localStorage.getItem("scamshield.theme");
-var dark=t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);
-if(dark)document.documentElement.classList.add("dark");
+document.documentElement.classList.add("dark");
 var s=localStorage.getItem("scamshield.text");
 if(s)document.documentElement.setAttribute("data-text",s);
 }catch(e){}})();`;
@@ -50,7 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${atkinson.variable} ${instrumentSerif.variable} font-sans`}
+      className={`${jakarta.variable} ${grotesk.variable} ${jetbrains.variable} dark font-sans`}
       suppressHydrationWarning
     >
       <head>

@@ -205,7 +205,7 @@ function Checklist({ steps }: { steps: DamageControlPlan["steps"] }) {
                     {/* Icon and word together: the tag survives a greyscale
                         screen and a colour-blind reader. */}
                     {step.urgent && !checked && (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-scam px-3 py-0.5 text-sm font-bold text-white">
+                      <span className="field-scam inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 font-mono text-xs font-semibold">
                         <Siren size={15} weight="fill" aria-hidden />
                         Do this first
                       </span>
@@ -333,7 +333,7 @@ export default function DamageControlPage() {
 
       <main className="mx-auto w-full max-w-[760px] px-4 py-8 sm:px-6 sm:py-14">
         <header>
-          <h1 className="max-w-[16ch] font-serif text-[2.75rem] leading-[1] tracking-[-0.015em] text-balance sm:text-[3.75rem]">
+          <h1 className="font-serif text-[1.9rem] leading-[1] text-balance sm:text-[3.25rem]">
             You can still do something about it
           </h1>
           <p className="mt-3 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
