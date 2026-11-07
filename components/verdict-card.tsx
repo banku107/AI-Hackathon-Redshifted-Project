@@ -36,7 +36,7 @@ const TONES: Record<
   },
   safe: {
     word: "Looks real",
-    field: "bg-safe",
+    field: "bg-safe-field",
     fieldInk: "text-white",
     text: "text-safe",
     tint: "bg-safe-soft",
@@ -244,7 +244,7 @@ function AnswerField({
   const t = TONES[level];
   return (
     <div className={cn("px-6 pb-6 pt-5 sm:px-8 sm:pb-7 sm:pt-6", t.field, t.fieldInk)}>
-      <p className="text-lg font-bold opacity-90">{question}</p>
+      <p className="text-lg font-bold">{question}</p>
       <div className="mt-2 flex items-center gap-3">
         <LevelIcon level={level} size={40} className="shrink-0" />
         <p className="font-serif text-[2.6rem] leading-[0.95] tracking-[-0.01em] sm:text-[3rem]">

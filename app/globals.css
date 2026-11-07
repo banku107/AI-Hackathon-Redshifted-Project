@@ -33,6 +33,7 @@
   --color-warn-field: #f6c453;
   --color-warn-soft: #fdf0d2;
   --color-safe: #1d6b3c;
+  --color-safe-field: #1d6b3c;
   --color-safe-soft: #dcf2e4;
 
   --radius-card: 22px;
@@ -81,6 +82,8 @@
   --color-warn-field: #f2c45d;
   --color-warn-soft: #36280d;
   --color-safe: #2f8a55;
+  /* Darker than the dark-mode text green so white labels on it pass 4.5:1 (5.5:1). */
+  --color-safe-field: #27774a;
   --color-safe-soft: #15301f;
 }
 

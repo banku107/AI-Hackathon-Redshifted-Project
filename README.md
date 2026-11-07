@@ -8,14 +8,12 @@ helps if money was already sent.
 
 AI Agents track, theme AI for Humanity.
 
-A plain HTML version of this page is at [docs/index.html](docs/index.html).
-
 ## What it does
 
 1. **Check.** Reads the message, screenshot, or video frames and calls
    investigation tools instead of guessing.
-2. **Explain.** Gives one verdict with reasons, next steps, and a read-aloud
-   button, in the reader's language.
+2. **Explain.** Gives two answers, "Is it a scam?" and "Made by AI?", with
+   reasons, next steps, and a read-aloud button, in the reader's language.
 3. **Alert family.** After a scam or a suspicious result, warns a trusted contact
    on the `/family` screen.
 4. **Damage control.** If money was sent, shows a recovery checklist and report
@@ -44,8 +42,10 @@ nothing and is not counted. "I am not sure" is allowed: the agent can answer
 - **LOOKS REAL.** Nothing asks for money, details, or a risky action. The contract
   name for this level is `safe`.
 
-For a video the app gives two separate answers: is the video likely made by AI, and
-is it a scam. They are independent. A real video can still be a scam.
+Every check also answers **Made by AI?**: No signs of AI, Can't tell, or Likely AI.
+Pictures and video frames go through an AI detector; text gets honest rules, since
+no tool can reliably spot AI writing. The two answers are independent: a real
+message can still be a scam.
 
 ## Running locally
 
@@ -105,8 +105,8 @@ lib/                    contract, prompt, agent/, app-state, family-sync,
 mock/                   Recorded events for demo and tests
 scripts/                try-agent, try-media, test-agent, record-demo,
                         eval, accuracy
-test-data/              Person 4's messages and demo cases
-docs/                   Contract, design notes, HTML copy of this page
+test-data/              Labelled test messages, screenshots and demo cases
+extension/              Right-click browser extension
 ```
 
 Person 2's investigation tools live in `lib/investigate/` and are switched on in
@@ -124,24 +124,8 @@ Built for older, low-vision users first, not adapted for them afterwards.
 - Text size can be raised from the header and scales the whole page.
 - Full dark theme, focus rings, and reduced-motion handling.
 
-Details and the reasoning are in [docs/DESIGN.md](docs/DESIGN.md).
-
-## Team and branches
-
-| Person | Role | Branch | Main files |
-| --- | --- | --- | --- |
-| 1 | Agent lead | `agent` | `lib/contract.ts`, `lib/prompt.ts`, `lib/agent/`, `app/api/agent/` |
-| 2 | Investigation tools | `tools` | `lib/investigate/*.ts` |
-| 3 | Frontend | `ui` | `app/page.tsx`, `app/family/`, `app/damage-control/`, `components/*` |
-| 4 | Demo, data, eval, pitch | `demo` | `test-data/`, `scripts/eval.ts`, slides |
-
-Merge to `main` only at sync points: contract agreed (Person 1 merges
-`lib/contract.ts` first), first live check running end to end, and demo data plus
-pitch frozen before rehearsal.
-
-`lib/contract.ts` belongs to Person 1. Do not change it without saying so in the
-team chat; a silent change breaks the other three branches. See
-[docs/CONTRACT.md](docs/CONTRACT.md).
+`lib/contract.ts` holds the shared types every part builds against (requests,
+tool results, the verdict and the live events).
 
 ## Safety rules
 
@@ -152,5 +136,5 @@ team chat; a silent change breaks the other three branches. See
 - Never send the person to a phone number, link, or address from the message itself.
 - Never deepfake a real person without consent. Demo videos use synthetic people.
 - Use made up people and contact details in test data.
-- Be honest in the pitch: AI detectors can be fooled, and a verdict is a helper,
-  not a guarantee.
+- Be honest: AI detectors can be fooled, and a verdict is a helper, not a
+  guarantee.

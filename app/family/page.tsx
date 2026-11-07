@@ -53,7 +53,7 @@ const TONES = {
   safe: {
     word: "Checked and looks safe",
     icon: ShieldCheck,
-    field: "bg-safe text-white",
+    field: "bg-safe-field text-white",
     heading: "What the check found",
   },
 } as const;
@@ -328,7 +328,7 @@ function AlertCard({
               {tone.word}
             </span>
             {item.sentAt !== null && now > 0 && (
-              <span className="inline-flex items-center gap-1.5 text-base font-bold opacity-90">
+              <span className="inline-flex items-center gap-1.5 text-base font-bold">
                 <Clock size={16} weight="bold" aria-hidden />
                 <time dateTime={alert.createdAt || undefined}>
                   {relativeTime(item.sentAt, now)}

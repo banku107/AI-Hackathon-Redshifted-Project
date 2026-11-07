@@ -65,7 +65,7 @@ ffmpeg -i ai-01.mp4 -map_metadata -1 -c:v libx264 ai-05.mp4
 ## Building the shared-drive collection (checklist)
 
 1. Create the `ScamShield/test-videos/` folder and share it with the 4 teammates only.
-2. Record **real-01 … real-05** on a phone, 8–15 s each, using the scripts in `manifest.json` → `notes`. Keep it short: under 60 s and under 50 MB suits the detector plans (see `docs/detector-choice.md`).
+2. Record **real-01 … real-05** on a phone, 8–15 s each, using the scripts in `manifest.json` → `notes`. Keep it short: under 60 s and under 50 MB suits the detector plans.
 3. Generate **ai-01, ai-02, ai-03, ai-04** with whatever video generator the team can access legitimately, using fictional people only. Export as `.mp4`.
 4. Create **ai-05** from ai-01 with the ffmpeg command above.
 5. Verify C2PA for every clip and update `hasCredentials`, `status` and `notes`.

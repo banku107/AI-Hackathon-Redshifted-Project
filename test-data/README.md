@@ -6,7 +6,7 @@ Owner: **Person 4 (The Proof)**. Everything here is fictional test material for 
 test-data/
 ├── messages/        30 labelled message cases, one JSON file each (P4-2)
 ├── screenshots/     7 phone-style fixtures (.svg source + .png for the API) + generate.mjs
-├── demo/            stage demo requests (P4-3), see demo/README.md
+├── demo/            stage demo requests
 ├── videos/          video manifest + collection guide (P4-5); videos live in the shared drive, NOT in Git
 └── results/         output of scripts/eval.ts (one timestamped JSON per run)
 ```

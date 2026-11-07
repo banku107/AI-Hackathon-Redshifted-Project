@@ -37,14 +37,14 @@ export function VerdictPreview() {
         {/* The two answers, in the same fields the real result uses */}
         <div className="grid grid-cols-2 gap-1 bg-paper">
           <div className="bg-scam px-4 pb-4 pt-3 text-white sm:px-5">
-            <p className="text-base font-bold opacity-90">Is it a scam?</p>
+            <p className="text-base font-bold">Is it a scam?</p>
             <div className="mt-1.5 flex items-center gap-2">
               <WarningOctagon size={28} weight="fill" aria-hidden />
               <p className="font-serif text-[2.1rem] leading-none">Scam</p>
             </div>
           </div>
-          <div className="bg-safe px-4 pb-4 pt-3 text-white sm:px-5">
-            <p className="text-base font-bold opacity-90">Made by AI?</p>
+          <div className="bg-safe-field px-4 pb-4 pt-3 text-white sm:px-5">
+            <p className="text-base font-bold">Made by AI?</p>
             <div className="mt-1.5 flex items-center gap-2">
               <ShieldCheck size={28} weight="fill" aria-hidden />
               <p className="font-serif text-[2.1rem] leading-none">No signs</p>
