@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Atkinson_Hyperlegible } from "next/font/google";
+import { Atkinson_Hyperlegible, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { AppStateProvider } from "@/lib/app-state";
 
@@ -13,6 +13,15 @@ const atkinson = Atkinson_Hyperlegible({
   display: "swap",
 });
 
+// The one display face: the greeting and the verdict word, set large. Every
+// sentence a person has to read stays in Atkinson Hyperlegible.
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-instrument-serif",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "ScamShield",
   description:
@@ -23,8 +32,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f1f4f2" },
-    { media: "(prefers-color-scheme: dark)", color: "#0c1311" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1412" },
   ],
 };
 
@@ -41,7 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${atkinson.variable} font-sans`}
+      className={`${atkinson.variable} ${instrumentSerif.variable} font-sans`}
       suppressHydrationWarning
     >
       <head>

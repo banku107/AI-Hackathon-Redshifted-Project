@@ -6,29 +6,37 @@
 @theme {
   --font-sans: var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
 
-  /* ScamShield palette. Calm paper, ink text, one teal accent. */
-  --color-paper: #f1f4f2;
-  --color-surface: #ffffff;
-  --color-surface-sunk: #e7ecea;
-  --color-ink: #131f1b;
-  --color-ink-soft: #4a5c55;
-  --color-ink-faint: #6b7d76;
-  --color-line: #d7e0dc;
-  --color-line-strong: #b7c6c0;
-  --color-accent: #0c6a55;
-  --color-accent-hover: #095645;
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+
+  /* ScamShield palette (editorial-greeting style). White ground, panels one
+     tone step off it in a pale sage taken from the shield, ink text, one deep
+     teal accent. Surfaces are told apart by tone, not by lines or shadows. */
+  --color-paper: #ffffff;
+  --color-surface: #eff4f1;
+  --color-surface-sunk: #e2eae6;
+  --color-ink: #1f201d;
+  --color-ink-soft: #4b524e;
+  --color-ink-faint: #6a716d;
+  --color-line: #dde5e1;
+  --color-line-strong: #a9b6b0;
+  --color-accent: #1b6e66;
+  --color-accent-hover: #145a53;
   --color-accent-ink: #ffffff;
-  --color-accent-soft: #d5ece4;
+  --color-accent-soft: #d6ebe7;
 
-  --color-scam: #9e2128;
-  --color-scam-soft: #fae3e4;
-  --color-warn: #7a4c00;
-  --color-warn-soft: #fdefd4;
-  --color-safe: #0d6440;
-  --color-safe-soft: #d8f0e2;
+  /* Verdict fields. The strong value is a whole field of colour behind white
+     text on the answer; the soft value is the tint for smaller marks. Red is
+     only ever "scam". */
+  --color-scam: #a3201b;
+  --color-scam-soft: #fbe5e3;
+  --color-warn: #8a4a05;
+  --color-warn-field: #f6c453;
+  --color-warn-soft: #fdf0d2;
+  --color-safe: #1d6b3c;
+  --color-safe-soft: #dcf2e4;
 
-  --radius-card: 18px;
-  --radius-control: 14px;
+  --radius-card: 22px;
+  --radius-control: 16px;
 
   /* --- shadcn/ui bridge ------------------------------------------------
      shadcn primitives speak in these names. They point at the palette above,
@@ -54,25 +62,26 @@
 }
 
 .dark {
-  --color-paper: #0c1311;
-  --color-surface: #141e1b;
-  --color-surface-sunk: #1b2723;
-  --color-ink: #e9f0ed;
-  --color-ink-soft: #a8b9b2;
-  --color-ink-faint: #8a9b94;
-  --color-line: #26332f;
-  --color-line-strong: #394943;
-  --color-accent: #5ec6a6;
-  --color-accent-hover: #79d3b7;
-  --color-accent-ink: #07211a;
-  --color-accent-soft: #16332b;
+  --color-paper: #0f1412;
+  --color-surface: #18201d;
+  --color-surface-sunk: #212b27;
+  --color-ink: #eef3f0;
+  --color-ink-soft: #b3c0ba;
+  --color-ink-faint: #93a29b;
+  --color-line: #2a3531;
+  --color-line-strong: #4a5953;
+  --color-accent: #6fcdb9;
+  --color-accent-hover: #8ad8c7;
+  --color-accent-ink: #062520;
+  --color-accent-soft: #173a33;
 
-  --color-scam: #ff9093;
-  --color-scam-soft: #3a1a1c;
-  --color-warn: #f0c063;
-  --color-warn-soft: #32250e;
-  --color-safe: #79d8a5;
-  --color-safe-soft: #13301e;
+  --color-scam: #c63a33;
+  --color-scam-soft: #3d1b1a;
+  --color-warn: #f2c45d;
+  --color-warn-field: #f2c45d;
+  --color-warn-soft: #36280d;
+  --color-safe: #2f8a55;
+  --color-safe-soft: #15301f;
 }
 
 /* Large-text mode scales the root so every rem-based size grows together. */

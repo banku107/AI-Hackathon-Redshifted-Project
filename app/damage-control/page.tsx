@@ -149,15 +149,15 @@ function Checklist({ steps }: { steps: DamageControlPlan["steps"] }) {
         />
       </div>
 
-      <ol className="mt-5 divide-y divide-line border-y border-line">
+      <ol className="mt-5 space-y-2">
         {steps.map((step, index) => {
           const checked = done.has(index);
           return (
             <li
               key={index}
               className={cn(
-                "relative",
-                step.urgent && !checked && "bg-scam-soft/45",
+                "relative overflow-hidden rounded-[var(--radius-control)] bg-paper",
+                step.urgent && !checked && "bg-scam-soft",
               )}
             >
               {step.urgent && !checked && (
@@ -168,8 +168,8 @@ function Checklist({ steps }: { steps: DamageControlPlan["steps"] }) {
               )}
               <label
                 className={cn(
-                  "flex min-h-16 cursor-pointer items-start gap-3.5 py-4 pr-1 transition-colors sm:gap-4",
-                  step.urgent && "pl-4 sm:pl-5",
+                  "flex min-h-16 cursor-pointer items-start gap-3.5 py-4 pl-4 pr-3 transition-colors sm:gap-4 sm:pl-5",
+                  step.urgent && !checked && "pl-6 sm:pl-7",
                 )}
               >
                 <input
@@ -205,7 +205,7 @@ function Checklist({ steps }: { steps: DamageControlPlan["steps"] }) {
                     {/* Icon and word together: the tag survives a greyscale
                         screen and a colour-blind reader. */}
                     {step.urgent && !checked && (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-scam/40 bg-surface px-2.5 py-0.5 text-sm font-bold text-scam">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-scam px-3 py-0.5 text-sm font-bold text-white">
                         <Siren size={15} weight="fill" aria-hidden />
                         Do this first
                       </span>
@@ -235,7 +235,7 @@ function Checklist({ steps }: { steps: DamageControlPlan["steps"] }) {
 
       {allDone && (
         <p
-          className="mt-5 flex items-start gap-3 rounded-[var(--radius-control)] border border-safe/35 bg-safe-soft px-4 py-3.5 text-lg font-bold leading-snug text-safe"
+          className="mt-5 flex items-start gap-3 rounded-[var(--radius-control)] bg-safe-soft px-4 py-3.5 text-lg font-bold leading-snug text-safe"
           role="status"
         >
           <CheckCircle size={24} weight="fill" className="mt-0.5 shrink-0" aria-hidden />
@@ -331,9 +331,9 @@ export default function DamageControlPage() {
     <div className="min-h-[100dvh]">
       <AppBar />
 
-      <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
+      <main className="mx-auto w-full max-w-[760px] px-4 py-8 sm:px-6 sm:py-14">
         <header>
-          <h1 className="text-[2rem] font-bold leading-[1.12] tracking-tight text-balance sm:text-[2.5rem]">
+          <h1 className="max-w-[16ch] font-serif text-[2.75rem] leading-[1] tracking-[-0.015em] text-balance sm:text-[3.75rem]">
             You can still do something about it
           </h1>
           <p className="mt-3 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
@@ -345,9 +345,9 @@ export default function DamageControlPage() {
         <div className="mt-8 space-y-6">
           {/* The checklist is the page. It gets the strongest border and the
               read-aloud control, so the two live together. */}
-          <Panel className="border-line-strong">
+          <Panel>
             <Checklist key={stepsKey} steps={plan.steps} />
-            <div className="mt-6 border-t border-line pt-5">
+            <div className="mt-8">
               <ReadAloud
                 text={readAloudText}
                 locale={localeFor(language)}
@@ -371,7 +371,7 @@ export default function DamageControlPage() {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex min-h-14 items-center justify-between gap-3 rounded-[var(--radius-control)] border-2 border-line-strong bg-surface px-4 py-3 text-lg font-bold text-accent transition-colors hover:border-accent hover:bg-accent-soft/40"
+                    className="flex min-h-14 items-center justify-between gap-3 rounded-[var(--radius-control)] bg-surface px-5 py-3 text-lg font-bold text-accent transition-colors hover:bg-accent-soft"
                   >
                     <span className="min-w-0 break-words">
                       {AGENCY_NAMES[agency] ?? agency}
@@ -385,7 +385,7 @@ export default function DamageControlPage() {
                   </a>
                 </li>
               ))}
-              <li className="flex min-h-14 items-center gap-3 rounded-[var(--radius-control)] border border-line px-4 py-3">
+              <li className="flex min-h-14 items-center gap-3 rounded-[var(--radius-control)] bg-surface px-5 py-3">
                 <span className="min-w-0 text-lg font-semibold text-ink-soft">
                   Your bank and card company — call the number on the back of the
                   card.
@@ -413,7 +413,7 @@ export default function DamageControlPage() {
               ref={reportRef}
               defaultValue={reportText}
               spellCheck={false}
-              className="mt-4 block min-h-64 w-full resize-y rounded-[var(--radius-control)] border-2 border-line bg-surface px-4 py-3.5 font-sans text-lg leading-relaxed text-ink"
+              className="mt-4 block min-h-64 w-full resize-y rounded-[var(--radius-control)] border-2 border-transparent bg-paper px-4 py-3.5 font-sans text-lg leading-relaxed text-ink"
             />
 
             <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">

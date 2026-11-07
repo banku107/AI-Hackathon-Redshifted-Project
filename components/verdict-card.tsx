@@ -12,50 +12,56 @@ import { Button } from "@/components/ui/button";
 import type { Verdict, VerdictLevel } from "@/lib/contract";
 import { cn } from "@/lib/utils";
 
+// The answer is a whole field of colour: the one place on the screen allowed
+// to be loud. Each field keeps icon, word and sentence, so colour is never the
+// only carrier of the verdict. Contrast: white on #a3201b is 7.1:1, white on
+// #1d6b3c 6.6:1, #2b1a00 on #f6c453 11:1.
 const TONES: Record<
   VerdictLevel,
-  { word: string; surface: string; text: string; border: string }
+  { word: string; field: string; fieldInk: string; text: string; tint: string }
 > = {
   scam: {
     word: "Scam",
-    surface: "bg-scam-soft",
+    field: "bg-scam",
+    fieldInk: "text-white",
     text: "text-scam",
-    border: "border-scam/35",
+    tint: "bg-scam-soft",
   },
   suspicious: {
     word: "Be careful",
-    surface: "bg-warn-soft",
+    field: "bg-warn-field",
+    fieldInk: "text-[#2b1a00]",
     text: "text-warn",
-    border: "border-warn/35",
+    tint: "bg-warn-soft",
   },
   safe: {
     word: "Looks real",
-    surface: "bg-safe-soft",
+    field: "bg-safe",
+    fieldInk: "text-white",
     text: "text-safe",
-    border: "border-safe/35",
+    tint: "bg-safe-soft",
   },
 };
 
+// "Made by AI" is not "scam", so the video answer never borrows the scam red:
+// likely AI is amber (stop and look), unclear is neutral, probably real is green.
 const MEDIA_TONES = {
   likely_ai: {
     answer: "Yes, likely",
-    surface: "bg-scam-soft",
-    text: "text-scam",
-    border: "border-scam/35",
-    level: "scam" as VerdictLevel,
+    surface: "bg-warn-soft",
+    text: "text-warn",
+    level: "suspicious" as VerdictLevel,
   },
   unclear: {
     answer: "Can't tell",
-    surface: "bg-warn-soft",
-    text: "text-warn",
-    border: "border-warn/35",
+    surface: "bg-surface-sunk",
+    text: "text-ink",
     level: "suspicious" as VerdictLevel,
   },
   likely_real: {
     answer: "Probably real",
     surface: "bg-safe-soft",
     text: "text-safe",
-    border: "border-safe/35",
     level: "safe" as VerdictLevel,
   },
 };
@@ -121,41 +127,36 @@ export function VerdictCard({
   const risky = verdict.level !== "safe";
 
   return (
-    <article
-      className={cn(
-        "overflow-hidden rounded-[var(--radius-card)] border bg-surface",
-        tone.border,
-      )}
-    >
-      {/* The answer, before anything else. Icon, word, sentence, so colour is
-          never the only carrier of the verdict. */}
-      <div className={cn("px-5 py-6 sm:px-7 sm:py-7", tone.surface)}>
-        <div className="flex items-center gap-2.5">
-          <LevelIcon level={verdict.level} size={30} className={tone.text} />
-          {/* Sentence case at full size. Tracked-out capitals carry no extra
-              meaning and are the first thing to fail in large-text mode. */}
-          <span className={cn("text-lg font-bold", tone.text)}>{tone.word}</span>
+    <article className="overflow-hidden rounded-[var(--radius-card)] bg-surface">
+      {/* The answer, before anything else: one word, very large, on its own
+          field of colour, then the sentence that explains it. */}
+      <div className={cn("px-6 pb-7 pt-6 sm:px-9 sm:pb-9 sm:pt-8", tone.field, tone.fieldInk)}>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <LevelIcon level={verdict.level} size={52} className="shrink-0" />
+          {/* The word is the verdict. Sentence case, in the display serif. */}
+          <p className="font-serif text-[3.4rem] leading-[0.95] tracking-[-0.01em] sm:text-[4.75rem]">
+            {tone.word}
+          </p>
         </div>
 
-        <h2
-          className={cn(
-            "mt-3 max-w-[24ch] text-[1.6rem] font-bold leading-[1.15] tracking-tight text-balance sm:text-[1.95rem]",
-            tone.text,
-          )}
-        >
+        <h2 className="mt-5 max-w-[32ch] text-[1.55rem] font-bold leading-[1.18] tracking-tight text-balance sm:text-[1.9rem]">
           {verdict.headline}
         </h2>
 
-        <p className={cn("mt-1.5 text-lg font-semibold", tone.text)}>
+        <p className="mt-2 text-lg font-bold opacity-90">
           {confidenceSentence(verdict.confidence)}
         </p>
 
-        <div className="mt-5">
-          <ReadAloud text={speech} locale={locale} />
+        <div className="mt-6">
+          <ReadAloud
+            text={speech}
+            locale={locale}
+            className="bg-white text-[#1f201d] hover:bg-white/85"
+          />
         </div>
       </div>
 
-      <div className="divide-y divide-line">
+      <div className="divide-y-4 divide-paper">
         {verdict.aiMedia && (
           <div className="p-5 sm:p-7">
             <VideoVerdict
@@ -172,7 +173,10 @@ export function VerdictCard({
             {verdict.reasons.map((reason, index) => (
               <li key={index} className="flex gap-3 text-lg leading-relaxed">
                 <span
-                  className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-surface-sunk text-base font-bold tabular-nums text-ink-soft"
+                  className={cn(
+                    "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full text-base font-bold tabular-nums text-ink",
+                    tone.tint,
+                  )}
                   aria-hidden
                 >
                   {index + 1}
@@ -185,7 +189,7 @@ export function VerdictCard({
 
         {/* Actions carry the weight of the page, so they get a raised surface
             and a larger numeral instead of a border per row. */}
-        <section className="bg-surface-sunk/55 p-5 sm:p-7">
+        <section className="bg-accent-soft p-5 sm:p-7">
           <h3 className="text-xl font-bold tracking-tight">What to do now</h3>
           <ol className="mt-4 space-y-4">
             {verdict.nextSteps.map((step, index) => (
@@ -281,9 +285,8 @@ export function VideoVerdict({
 
       <div
         className={cn(
-          "mt-3 flex items-center gap-3 rounded-[var(--radius-control)] border px-4 py-3",
+          "mt-3 flex items-center gap-3 rounded-[var(--radius-control)] px-4 py-3",
           tone.surface,
-          tone.border,
           tone.text,
         )}
       >
@@ -323,7 +326,7 @@ export function VideoVerdict({
                     alt={`Frame ${index + 1} from the video`}
                     width={128}
                     height={128}
-                    className="aspect-square w-32 rounded-lg border border-line object-cover"
+                    className="aspect-square w-32 rounded-lg object-cover"
                   />
                   <figcaption className="mt-1.5 text-base leading-snug text-ink-soft">
                     <span className="font-bold">Frame {index + 1}.</span> {note}

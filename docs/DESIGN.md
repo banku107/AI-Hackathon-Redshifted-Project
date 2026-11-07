@@ -149,3 +149,24 @@ looks like an alarm.
   reader to keep typing while they are already upset.
 - **No stock photos of smiling families.** Icons and type carry the screens. The
   only images that appear are the reader's own screenshot or video frames.
+
+## Restyle, 2026-11-07
+
+The screens were restyled for the demo (style: "editorial greeting"). Behaviour,
+copy and accessibility rules above are unchanged; these values replace the
+colour notes above where they differ.
+
+- **Ground and panels.** White page; panels one tone step off it in a pale sage
+  (`#eff4f1`). Surfaces are told apart by tone, not by borders or shadows. Form
+  fields are white inside the sage panels.
+- **One display face.** Instrument Serif, only for the screen titles and the
+  verdict word. Every sentence a person reads is still Atkinson Hyperlegible.
+- **The verdict is a field of colour.** Scam: white on `#a3201b` (7.1:1).
+  Be careful: `#2b1a00` on `#f6c453` (11:1). Looks real: white on `#1d6b3c`
+  (6.6:1). The family alert uses the same fields, so both people see the same
+  answer.
+- **Red still means scam only.** The "likely AI" video answer is now amber, not
+  red: made by AI is not the same as a scam.
+- **Buttons are fully round,** fields and panels keep 16px and 22px corners.
+- **Settings live in the top bar** on every screen, so nothing floats over the
+  form on a phone.

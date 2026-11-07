@@ -40,22 +40,19 @@ const TONES = {
   scam: {
     word: "Scam alert",
     icon: WarningOctagon,
-    stripe: "bg-scam",
-    chip: "border-scam/45 bg-scam-soft text-scam",
+    field: "bg-scam text-white",
     heading: "Why it looks wrong",
   },
   suspicious: {
     word: "Be careful",
     icon: Warning,
-    stripe: "bg-warn",
-    chip: "border-warn/45 bg-warn-soft text-warn",
+    field: "bg-warn-field text-[#2b1a00]",
     heading: "Why it looks wrong",
   },
   safe: {
     word: "Checked and looks safe",
     icon: ShieldCheck,
-    stripe: "bg-safe",
-    chip: "border-safe/45 bg-safe-soft text-safe",
+    field: "bg-safe text-white",
     heading: "What the check found",
   },
 } as const;
@@ -185,9 +182,9 @@ export default function FamilyPage() {
     <div className="min-h-[100dvh]">
       <AppBar />
 
-      <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
+      <main className="mx-auto w-full max-w-[760px] px-4 py-8 sm:px-6 sm:py-14">
         <header>
-          <h1 className="text-[2rem] font-bold leading-[1.12] tracking-tight text-balance sm:text-[2.5rem]">
+          <h1 className="max-w-[16ch] font-serif text-[2.75rem] leading-[1] tracking-[-0.015em] text-balance sm:text-[3.75rem]">
             What your family found
           </h1>
           <p className="mt-3 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
@@ -199,7 +196,7 @@ export default function FamilyPage() {
         <div className="mt-8">
           {!hydrated ? (
             <div
-              className="rounded-[var(--radius-card)] border border-line bg-surface p-5 sm:p-6"
+              className="rounded-[var(--radius-card)] bg-surface p-5 sm:p-7"
               aria-busy="true"
               aria-label="Loading alerts"
             >
@@ -225,7 +222,7 @@ export default function FamilyPage() {
               ))}
             </ol>
           ) : (
-            <div className="rounded-[var(--radius-card)] border border-line bg-surface">
+            <div className="overflow-hidden rounded-[var(--radius-card)] bg-surface">
               <div className="p-6 sm:p-7">
                 <h2 className="text-xl font-bold">Nothing here yet</h2>
                 <p className="mt-2 max-w-[42ch] text-lg leading-relaxed text-ink-soft">
@@ -255,7 +252,7 @@ export default function FamilyPage() {
                 </ol>
               </div>
 
-              <div className="border-t border-line bg-surface-sunk/60 px-6 py-5">
+              <div className="bg-surface-sunk px-6 py-5">
                 <Button asChild variant="secondary" className="w-full sm:w-auto">
                   <Link href="/">Check a message yourself</Link>
                 </Button>
@@ -315,22 +312,22 @@ function AlertCard({
     <div className="space-y-5">
       <section
         aria-labelledby={headingId}
-        className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface"
+        className="overflow-hidden rounded-[var(--radius-card)] bg-surface"
       >
-        <div className={cn("h-1.5", tone.stripe)} aria-hidden />
-        <div className="p-5 sm:p-6">
+        {/* Same answer field as the checker: the family member sees the
+            verdict in the colour and word their relative saw. */}
+        <div className={cn("p-5 sm:p-7", tone.field)}>
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
             <span
               className={cn(
-                "inline-flex min-h-8 items-center gap-1.5 rounded-full border px-3 text-sm font-bold",
-                tone.chip,
+                "inline-flex min-h-9 items-center gap-1.5 rounded-full bg-paper px-3.5 text-base font-bold text-ink",
               )}
             >
               <Icon size={16} weight="fill" aria-hidden />
               {tone.word}
             </span>
             {item.sentAt !== null && now > 0 && (
-              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-ink-soft">
+              <span className="inline-flex items-center gap-1.5 text-base font-bold opacity-90">
                 <Clock size={16} weight="bold" aria-hidden />
                 <time dateTime={alert.createdAt || undefined}>
                   {relativeTime(item.sentAt, now)}
@@ -341,7 +338,7 @@ function AlertCard({
 
           <h2
             id={headingId}
-            className="mt-3 text-[1.5rem] font-bold leading-[1.18] tracking-tight text-balance sm:text-[1.75rem]"
+            className="mt-4 font-serif text-[2.1rem] leading-[1.05] tracking-[-0.01em] text-balance sm:text-[2.75rem]"
           >
             {levelHeading(alert.riskLevel, watchedName)}
           </h2>
@@ -350,11 +347,11 @@ function AlertCard({
         </div>
 
         {(alert.suggestedAction || callHref) && (
-          <div className="border-t border-line bg-accent-soft/70 px-5 py-4 sm:px-6">
+          <div className="bg-accent-soft px-5 py-5 sm:px-7">
             {alert.suggestedAction && (
               <p className="flex items-start gap-3">
                 <span
-                  className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-accent"
+                  className="mt-1 flex shrink-0 text-accent"
                   aria-hidden
                 >
                   <Phone size={20} weight="fill" />
@@ -430,7 +427,7 @@ function AlertCard({
               {alert.riskLevel !== "safe" && (
                 <Link
                   href="/damage-control"
-                  className="mt-4 flex min-h-12 items-center justify-between gap-3 rounded-[var(--radius-control)] border-2 border-line-strong px-4 py-2.5 text-base font-bold text-accent hover:border-accent"
+                  className="mt-4 flex min-h-12 items-center justify-between gap-3 rounded-[var(--radius-control)] bg-paper px-4 py-2.5 text-base font-bold text-accent transition-colors hover:bg-accent-soft"
                 >
                   <span className="min-w-0">
                     Already sent money or card numbers? Open the recovery steps
@@ -462,7 +459,7 @@ function AlertCard({
 }
 
 const FIELD =
-  "mt-2 min-h-12 w-full rounded-[var(--radius-control)] border-2 border-line-strong bg-surface px-3 text-lg font-semibold text-ink placeholder:font-normal placeholder:text-ink-faint focus:border-accent focus:outline-none";
+  "mt-2 min-h-12 w-full rounded-[var(--radius-control)] border-2 border-line-strong bg-paper px-4 text-lg font-semibold text-ink placeholder:font-normal placeholder:text-ink-faint focus:border-accent focus:outline-none";
 
 /**
  * Where the "Call" number comes from. Alerts carry no phone number, so the

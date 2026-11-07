@@ -16,19 +16,18 @@ import { cn } from "@/lib/utils";
  * 390px phone.
  */
 const buttonVariants = cva(
-  "inline-flex max-w-full shrink-0 items-center justify-center gap-2.5 rounded-[var(--radius-control)] text-center font-bold transition-colors select-none active:translate-y-px disabled:pointer-events-none disabled:opacity-45 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex max-w-full shrink-0 items-center justify-center gap-2.5 rounded-full text-center font-bold transition-[background-color,color,transform] duration-150 select-none active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         primary: "bg-accent text-accent-ink hover:bg-accent-hover",
-        secondary:
-          "border-2 border-line-strong bg-surface text-ink hover:border-ink-faint hover:bg-surface-sunk",
+        secondary: "bg-surface-sunk text-ink hover:bg-line-strong/45",
         quiet: "text-ink-soft hover:bg-surface-sunk hover:text-ink",
-        danger: "border-2 border-scam/40 bg-scam-soft text-scam hover:border-scam",
+        danger: "bg-scam-soft text-scam hover:bg-scam hover:text-white",
       },
       size: {
-        md: "min-h-12 px-5 text-base",
-        lg: "min-h-16 px-6 text-lg",
+        md: "min-h-12 px-6 text-base",
+        lg: "min-h-16 px-8 text-lg",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

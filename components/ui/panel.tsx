@@ -15,15 +15,15 @@ export function Panel({
   tone?: "plain" | "sunk" | "accent";
 }) {
   const tones = {
-    plain: "bg-surface border-line",
-    sunk: "bg-surface-sunk border-line",
-    accent: "bg-accent-soft border-accent/25",
+    plain: "bg-surface",
+    sunk: "bg-surface-sunk",
+    accent: "bg-accent-soft",
   } as const;
 
   return (
     <section
       className={clsx(
-        "rounded-[var(--radius-card)] border p-5 sm:p-6",
+        "rounded-[var(--radius-card)] p-5 sm:p-7",
         tones[tone],
         className,
       )}
@@ -56,7 +56,7 @@ export function StackedSection({
   return (
     <div
       className={clsx(
-        "divide-y divide-line rounded-[var(--radius-card)] border border-line bg-surface",
+        "divide-y-4 divide-paper overflow-hidden rounded-[var(--radius-card)] bg-surface",
         className,
       )}
     >

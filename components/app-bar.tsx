@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BellSimple, ShieldCheck, Siren } from "@phosphor-icons/react";
+import { SettingsMenu } from "@/components/settings-menu";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -24,8 +25,8 @@ export function AppBar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-paper/95 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 w-full max-w-5xl items-center gap-2 px-3 sm:gap-4 sm:px-6">
+    <header className="sticky top-0 z-30 bg-paper">
+      <div className="mx-auto flex h-16 w-full max-w-[1100px] items-center gap-1 px-3 sm:h-20 sm:gap-4 sm:px-6 xl:px-0">
         <Link
           href="/"
           aria-label="ScamShield, back to the checker"
@@ -40,7 +41,7 @@ export function AppBar() {
           {/* Truncating the wordmark is the last resort, not the layout: at
               390px the two links and the wordmark fit side by side, and even in
               the largest text setting nothing pushes past the edge. */}
-          <span className="truncate text-[0.95rem] sm:text-lg">ScamShield</span>
+          <span className="truncate text-[0.95rem] sm:text-xl">ScamShield</span>
         </Link>
 
         <nav aria-label="Main" className="ml-auto flex shrink-0 items-center gap-1">
@@ -52,7 +53,7 @@ export function AppBar() {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex min-h-12 items-center gap-1.5 rounded-full px-2.5 text-base font-bold whitespace-nowrap transition-colors sm:gap-2 sm:px-4",
+                  "flex min-h-12 items-center gap-1.5 rounded-full px-2 text-base font-bold whitespace-nowrap transition-colors sm:gap-2 sm:px-4",
                   active
                     ? "bg-accent-soft text-accent"
                     : "text-ink-soft hover:bg-surface-sunk hover:text-ink",
@@ -66,6 +67,7 @@ export function AppBar() {
               </Link>
             );
           })}
+          <SettingsMenu />
         </nav>
       </div>
     </header>

@@ -13,10 +13,12 @@ export function ReadAloud({
   text,
   locale,
   label = "Read this out loud",
+  className,
 }: {
   text: string;
   locale: string;
   label?: string;
+  className?: string;
 }) {
   const [supported, setSupported] = useState(true);
   const [speaking, setSpeaking] = useState(false);
@@ -45,6 +47,7 @@ export function ReadAloud({
     <>
       <Button
         variant="secondary"
+        className={className}
         onClick={() => {
           if (speaking) {
             stopSpeaking();

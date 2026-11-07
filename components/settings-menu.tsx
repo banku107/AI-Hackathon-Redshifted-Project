@@ -67,14 +67,15 @@ export function SettingsMenu() {
     <div ref={wrapperRef} className="relative">
       <Button
         ref={buttonRef}
-        variant="secondary"
+        variant="quiet"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={panelId}
-        className="shadow-[0_4px_16px_rgba(9,40,33,0.12)]"
+        aria-label="Reader settings: text size, colours and language"
+        className="px-3 sm:px-4"
       >
         <List size={20} weight="bold" aria-hidden />
-        Settings
+        <span className="hidden sm:inline">Settings</span>
         <CaretDown
           size={16}
           weight="bold"
@@ -88,7 +89,7 @@ export function SettingsMenu() {
           id={panelId}
           role="dialog"
           aria-label="Reader settings"
-          className="absolute right-0 bottom-full z-40 mb-2 max-h-[calc(100dvh-6rem)] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-[var(--radius-card)] border border-line bg-surface p-5 shadow-[0_12px_40px_rgba(9,40,33,0.18)]"
+          className="absolute right-0 top-full z-40 mt-2 max-h-[calc(100dvh-6rem)] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-[var(--radius-card)] bg-paper p-5 shadow-[0_12px_40px_rgba(9,40,33,0.18)]"
         >
           <fieldset>
             <legend className="flex items-center gap-2 text-base font-bold">

@@ -110,7 +110,6 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setTextSizeState(readStored<TextSize>("scamshield.text", "normal"));
     setLanguageState(readStored<string>("scamshield.language", "en"));
     /* eslint-enable react-hooks/set-state-in-effect */
-    hydrated.current = true;
   }, []);
 
   useEffect(() => {
@@ -140,6 +139,13 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     if (!hydrated.current) return;
     window.localStorage.setItem("scamshield.language", language);
   }, [language]);
+
+  // Declared after the save effects on purpose: effects run in order, so on
+  // the first commit the saves above still see `false` and cannot overwrite
+  // the stored choices with the defaults before the loaded values arrive.
+  useEffect(() => {
+    hydrated.current = true;
+  }, []);
 
   const setTheme = useCallback((t: ThemeChoice) => setThemeState(t), []);
   const setTextSize = useCallback((s: TextSize) => setTextSizeState(s), []);

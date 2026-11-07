@@ -15,7 +15,6 @@ import {
 } from "@phosphor-icons/react";
 import { AppBar } from "@/components/app-bar";
 import { CheckSkeleton } from "@/components/check-skeleton";
-import { SettingsMenu } from "@/components/settings-menu";
 import { Timeline } from "@/components/timeline";
 import { VerdictCard } from "@/components/verdict-card";
 import { Button } from "@/components/ui/button";
@@ -290,7 +289,7 @@ export default function HomePage() {
     <>
       <AppBar />
 
-      <main className="mx-auto w-full max-w-5xl px-4 pb-28 pt-7 sm:px-6 sm:pt-12">
+      <main className="mx-auto w-full max-w-[1100px] px-4 pb-24 pt-6 sm:px-6 sm:pt-14 xl:px-0">
         {step === "input" && (
           /*
            * Two columns above `lg`: the promise stays put on the left while the
@@ -298,12 +297,13 @@ export default function HomePage() {
            * simply stacks. The headline is deliberately not centred — a
            * centred hero over a form is the shape every generated page takes.
            */
-          <div className="lg:grid lg:grid-cols-[minmax(0,32rem)_minmax(0,24rem)] lg:items-start lg:justify-between lg:gap-12">
-            <div className="lg:sticky lg:top-24">
-              <h1 className="max-w-[16ch] text-[2.1rem] font-bold leading-[1.08] tracking-tight text-balance sm:text-[2.75rem]">
+          <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-4">
+            {/* 12 columns of 77px with 16px gutters = 1100px. Promise 6, composer 6. */}
+            <div className="lg:sticky lg:top-28 lg:col-span-6 lg:pr-10">
+              <h1 className="max-w-[12ch] font-serif text-[3.1rem] leading-[0.98] tracking-[-0.015em] text-balance sm:text-[4.5rem]">
                 Not sure about a message?
               </h1>
-              <p className="mt-4 max-w-[38ch] text-lg leading-relaxed text-ink-soft">
+              <p className="mt-5 max-w-[34ch] text-xl leading-relaxed text-ink">
                 Paste it, or add a picture of it. We read it and tell you, in
                 plain words, whether it is a scam.
               </p>
@@ -312,15 +312,15 @@ export default function HomePage() {
                 {PROMISES.map(({ icon: Icon, text: promise }) => (
                   <li
                     key={promise}
-                    className="flex items-center gap-3 text-lg font-semibold text-ink-soft"
+                    className="flex items-center gap-3 text-lg font-bold text-ink"
                   >
-                    <Icon size={20} weight="bold" className="shrink-0 text-accent" aria-hidden />
+                    <Icon size={22} weight="bold" className="shrink-0 text-accent" aria-hidden />
                     {promise}
                   </li>
                 ))}
               </ul>
 
-              <div className="mt-8 hidden border-t border-line pt-8 lg:block">
+              <div className="mt-12 hidden lg:block">
                 <DemoList onPick={handleDemo} disabled={busy} />
               </div>
             </div>
@@ -328,11 +328,11 @@ export default function HomePage() {
             {/* The composer. One border wraps the choice, the input and the
                 action, so the screen has one object instead of a stack of
                 equally-important cards. */}
-            <div className="mt-8 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface shadow-[0_1px_2px_rgba(9,40,33,0.05)] lg:mt-0">
+            <div className="mt-8 overflow-hidden rounded-[var(--radius-card)] bg-surface lg:col-span-6 lg:mt-0">
               <div
                 role="tablist"
                 aria-label="What are you checking?"
-                className="grid grid-cols-3 gap-1 border-b border-line bg-surface-sunk p-1.5"
+                className="m-2 grid grid-cols-3 gap-1 rounded-[18px] bg-surface-sunk p-1.5"
               >
                 {MODES.map(({ value, label, icon: Icon }) => {
                   const selected = mode === value;
@@ -344,9 +344,9 @@ export default function HomePage() {
                       aria-selected={selected}
                       onClick={() => setMode(value)}
                       className={cn(
-                        "flex min-h-14 flex-col items-center justify-center gap-1 rounded-[10px] px-1 text-base font-bold transition-colors",
+                        "flex min-h-14 flex-col items-center justify-center gap-1 rounded-[14px] px-1 text-base font-bold transition-colors",
                         selected
-                          ? "bg-surface text-ink shadow-[0_1px_2px_rgba(9,40,33,0.12)]"
+                          ? "bg-paper text-ink"
                           : "text-ink-soft hover:text-ink",
                       )}
                     >
@@ -357,7 +357,7 @@ export default function HomePage() {
                 })}
               </div>
 
-              <div className="space-y-3.5 p-4 sm:p-5">
+              <div className="space-y-4 p-4 sm:p-6">
                 {mode === "message" && (
                   <div>
                     <label
@@ -372,7 +372,7 @@ export default function HomePage() {
                       onChange={(e) => setText(e.target.value)}
                       rows={6}
                       placeholder="Include the odd parts too. The link, the phone number, the words that worried you."
-                      className="w-full resize-y rounded-[var(--radius-control)] border-2 border-line-strong bg-surface px-4 py-3.5 text-lg leading-relaxed text-ink placeholder:text-ink-faint"
+                      className="w-full resize-y rounded-[var(--radius-control)] border-2 border-transparent bg-paper px-4 py-3.5 text-lg leading-relaxed text-ink placeholder:text-ink-faint hover:border-line-strong focus:border-accent"
                     />
                   </div>
                 )}
@@ -384,7 +384,7 @@ export default function HomePage() {
                         "flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-[var(--radius-control)] border-2 border-dashed px-5 py-9 text-center transition-colors",
                         image
                           ? "border-accent bg-accent-soft"
-                          : "border-line-strong bg-surface hover:border-ink-faint hover:bg-surface-sunk/60",
+                          : "border-line-strong bg-paper hover:border-accent",
                       )}
                     >
                       <ImageSquare size={32} weight="duotone" className="text-accent" aria-hidden />
@@ -431,7 +431,7 @@ export default function HomePage() {
                         "flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-[var(--radius-control)] border-2 border-dashed px-5 py-9 text-center transition-colors",
                         video
                           ? "border-accent bg-accent-soft"
-                          : "border-line-strong bg-surface hover:border-ink-faint hover:bg-surface-sunk/60",
+                          : "border-line-strong bg-paper hover:border-accent",
                       )}
                     >
                       <VideoCamera size={32} weight="duotone" className="text-accent" aria-hidden />
@@ -501,7 +501,7 @@ export default function HomePage() {
 
                 {mode !== "picture" && (
                   <div className="flex flex-wrap items-center gap-2.5">
-                    <label className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-[var(--radius-control)] border-2 border-line-strong px-3.5 font-semibold text-ink hover:border-ink-faint">
+                    <label className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full bg-paper px-5 font-bold text-ink transition-colors hover:bg-surface-sunk focus-within:outline-3 focus-within:outline-offset-3 focus-within:outline-accent">
                       <ImageSquare size={20} weight="bold" aria-hidden />
                       Add a screenshot
                       <input
@@ -527,8 +527,8 @@ export default function HomePage() {
                   </div>
                 )}
 
-                <div className="border-t border-line pt-4">
-                  <label className="flex min-h-14 cursor-pointer items-center gap-3">
+                <div>
+                  <label className="flex min-h-14 cursor-pointer items-center gap-3 rounded-[var(--radius-control)] bg-paper px-4 py-2">
                     <input
                       type="checkbox"
                       checked={alreadyActed}
@@ -550,7 +550,7 @@ export default function HomePage() {
                         onChange={(e) => setActionDetails(e.target.value)}
                         rows={2}
                         placeholder="For example: I sent one $500 gift card."
-                        className="w-full resize-y rounded-[10px] border-2 border-line-strong bg-surface px-3 py-2.5 text-lg text-ink placeholder:text-ink-faint"
+                        className="w-full resize-y rounded-[var(--radius-control)] border-2 border-transparent bg-paper px-4 py-3 text-lg text-ink placeholder:text-ink-faint hover:border-line-strong focus:border-accent"
                       />
                     </div>
                   )}
@@ -559,14 +559,14 @@ export default function HomePage() {
                 {notice && (
                   <p
                     role="status"
-                    className="rounded-[10px] border border-warn/40 bg-warn-soft px-4 py-3 text-base font-semibold leading-snug text-warn"
+                    className="rounded-[var(--radius-control)] bg-warn-soft px-4 py-3 text-base font-semibold leading-snug text-warn"
                   >
                     {notice}
                   </p>
                 )}
               </div>
 
-              <div className="border-t border-line bg-surface-sunk/50 p-4 sm:p-5">
+              <div className="px-4 pb-5 sm:px-6 sm:pb-6">
                 <Button size="lg" onClick={handleCheck} disabled={!canCheck} className="w-full">
                   <SealCheck size={24} weight="bold" aria-hidden />
                   {busy ? "Working on it…" : "Check this for me"}
@@ -577,24 +577,24 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="mt-8 border-t border-line pt-7 lg:hidden">
+            <div className="mt-10 lg:hidden">
               <DemoList onPick={handleDemo} disabled={busy} />
             </div>
           </div>
         )}
 
         {step === "reading" && (
-          <div className="mx-auto max-w-2xl space-y-6">
+          <div className="mx-auto max-w-[760px] space-y-6">
             {notice && (
               <p
                 role="status"
-                className="rounded-[var(--radius-control)] border border-warn/40 bg-warn-soft px-4 py-3 text-base font-semibold text-warn"
+                className="rounded-[var(--radius-control)] bg-warn-soft px-4 py-3 text-base font-semibold text-warn"
               >
                 {notice}
               </p>
             )}
 
-            <div className="rounded-[var(--radius-card)] border border-line bg-surface p-5 sm:p-6">
+            <div className="rounded-[var(--radius-card)] bg-surface p-5 sm:p-8">
               <Timeline
                 steps={run.steps}
                 heading={run.plan.length > 0 ? "Working through your check" : "Starting the check"}
@@ -605,7 +605,7 @@ export default function HomePage() {
               {run.steps.length === 0 && <CheckSkeleton />}
 
               {run.plan.length > 0 && run.steps.length === 0 && (
-                <section className="mt-6 border-t border-line pt-5">
+                <section className="mt-6 rounded-[var(--radius-control)] bg-paper p-5">
                   <h3 className="text-lg font-bold">What we will check</h3>
                   <ol className="mt-3 space-y-2">
                     {run.plan.map((line, index) => (
@@ -626,11 +626,11 @@ export default function HomePage() {
         )}
 
         {step === "result" && (
-          <div ref={resultRef} className="mx-auto max-w-2xl space-y-6 scroll-mt-24">
+          <div ref={resultRef} className="mx-auto max-w-[760px] space-y-6 scroll-mt-24">
             {run.errorMessage && (
               <p
                 role="alert"
-                className="rounded-[var(--radius-control)] border border-warn/40 bg-warn-soft px-4 py-3 text-base font-semibold text-warn"
+                className="rounded-[var(--radius-control)] bg-warn-soft px-4 py-3 text-base font-semibold text-warn"
               >
                 {run.errorMessage}
               </p>
@@ -639,7 +639,7 @@ export default function HomePage() {
             {notice && !run.errorMessage && (
               <p
                 role="status"
-                className="rounded-[var(--radius-control)] border border-line bg-surface-sunk px-4 py-3 text-base font-semibold text-ink-soft"
+                className="rounded-[var(--radius-control)] bg-surface px-4 py-3 text-base font-semibold text-ink-soft"
               >
                 {notice}
               </p>
@@ -674,7 +674,7 @@ export default function HomePage() {
             )}
 
             {alertResult && (
-              <section className="rounded-[var(--radius-card)] border border-accent/25 bg-accent-soft p-5">
+              <section className="rounded-[var(--radius-card)] bg-accent-soft p-5 sm:p-7">
                 <h2 className="flex items-center gap-2 text-lg font-bold text-accent">
                   <SealCheck size={22} weight="bold" aria-hidden />
                   A heads-up was sent
@@ -691,7 +691,7 @@ export default function HomePage() {
             )}
 
             {run.steps.length > 0 && (
-              <details className="group rounded-[var(--radius-card)] border border-line bg-surface px-5 py-2">
+              <details className="group rounded-[var(--radius-card)] bg-surface px-5 py-2 sm:px-7">
                 <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 text-lg font-bold marker:content-none">
                   See every step we took
                   <CaretRight
@@ -715,9 +715,6 @@ export default function HomePage() {
         )}
       </main>
 
-      <div className="fixed bottom-4 right-4 z-30 sm:bottom-6 sm:right-6">
-        <SettingsMenu />
-      </div>
     </>
   );
 }
@@ -736,20 +733,20 @@ function DemoList({
 }) {
   return (
     <section aria-labelledby="demo-heading">
-      <h2 id="demo-heading" className="text-lg font-bold">
+      <h2 id="demo-heading" className="text-xl font-bold">
         Or try a saved example
       </h2>
       <p className="mt-1.5 text-base leading-snug text-ink-soft">
         No typing needed. These are recordings, not live checks.
       </p>
-      <ul className="mt-3 divide-y divide-line overflow-hidden rounded-[var(--radius-control)] border border-line bg-surface">
+      <ul className="mt-4 space-y-2">
         {DEMO_BUTTONS.map(({ scenario, label, note }) => (
           <li key={scenario}>
             <button
               type="button"
               onClick={() => onPick(scenario)}
               disabled={disabled}
-              className="flex min-h-16 w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-surface-sunk disabled:opacity-45"
+              className="flex min-h-16 w-full items-center gap-3 rounded-[var(--radius-control)] bg-surface px-5 py-4 text-left transition-[background-color,transform] duration-150 hover:bg-surface-sunk active:scale-[0.99] disabled:opacity-45"
             >
               <span className="min-w-0 flex-1">
                 <span className="block text-lg font-bold leading-snug">{label}</span>
