@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>ScamShield — Project README</title>
+<meta name="description" content="ScamShield: an AI agent that checks suspicious messages for older adults, alerts a family member, and helps after money is sent.">
+<style>
+  :root {
+    --paper: #f1f4f2;
+    --surface: #ffffff;
+    --surface-sunk: #e7ecea;
+    --ink: #131f1b;
+    --ink-soft: #4a5c55;
+    --ink-faint: #6b7d76;
+    --line: #d7e0dc;
+    --line-strong: #b7c6c0;
+    --accent: #0c6a55;
+    --accent-soft: #d5ece4;
+    --scam: #9e2128;
+    --scam-soft: #fae3e4;
+    --warn: #7a4c00;
+    --warn-soft: #fdefd4;
+    --safe: #0d6440;
+    --safe-soft: #d8f0e2;
+    --radius-card: 18px;
+    --radius-control: 14px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0c1311;
+      --surface: #141e1b;
+      --surface-sunk: #1c2724;
+      --ink: #e8efec;
+      --ink-soft: #b3c4bd;
+      --ink-faint: #8b9d96;
+      --line: #293733;
+      --line-strong: #3d4f49;
+      --accent: #5ec6a6;
+      --accent-soft: #17332b;
+      --scam: #ff9a9a;
+      --scam-soft: #2e1416;
+      --warn: #f0bf6a;
+      --warn-soft: #2c2009;
+      --safe: #7fd9ac;
+      --safe-soft: #0e2a1e;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html { font-size: 112.5%; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Atkinson Hyperlegible", "Verdana", "Segoe UI", system-ui, sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.65;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  code {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: 0.92em;
+    background: var(--surface-sunk);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.08em 0.36em;
+  }
+
+  pre {
+    margin: 1.25rem 0 0;
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    background: var(--surface-sunk);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    line-height: 1.6;
+  }
+
+  pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+
+  .wrap {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 5rem;
+  }
+
+  header.masthead {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+  }
+
+  .mark svg { flex: none; }
+
+  h1 {
+    margin: 0.75rem 0 0;
+    font-size: clamp(2.1rem, 6vw, 2.9rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+
+  .tagline {
+    margin: 0.9rem 0 0;
+    max-width: 40ch;
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .tagline strong { color: var(--ink); }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .badges li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.25rem;
+    padding: 0.2rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+
+  h2 {
+    margin: 3rem 0 0;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  h3 {
+    margin: 2rem 0 0;
+    font-size: 1.2rem;
+    line-height: 1.3;
+  }
+
+  p { margin: 0.85rem 0 0; max-width: 62ch; }
+
+  ol, ul { margin: 0.85rem 0 0; padding-left: 1.35rem; }
+  li { margin-top: 0.45rem; }
+  li::marker { color: var(--ink-faint); font-weight: 700; }
+
+  .lead-in { color: var(--ink-soft); }
+
+  .grid {
+    display: grid;
+    gap: 0.85rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 40rem) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  .grid li {
+    margin: 0;
+    padding: 1rem 1.15rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-control);
+  }
+
+  .grid strong {
+    display: block;
+    font-size: 1.05rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .grid span {
+    display: block;
+    color: var(--ink-soft);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .verdicts {
+    display: grid;
+    gap: 0.85rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .verdicts li {
+    margin: 0;
+    padding: 1rem 1.15rem;
+    border-radius: var(--radius-control);
+    border: 1px solid;
+  }
+
+  .verdicts .level {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+  }
+
+  .verdicts p { margin: 0.4rem 0 0; font-size: 1rem; line-height: 1.55; }
+
+  .v-scam { background: var(--scam-soft); border-color: var(--scam); color: var(--scam); }
+  .v-warn { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); }
+  .v-safe { background: var(--safe-soft); border-color: var(--safe); color: var(--safe); }
+
+  .v-scam p, .v-warn p, .v-safe p { color: var(--ink); }
+
+  .note {
+    margin: 1.5rem 0 0;
+    padding: 1rem 1.15rem;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-control);
+  }
+
+  .note p { margin: 0; font-size: 1rem; }
+
+  .safety {
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .safety li {
+    margin: 0;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .safety svg { flex: none; margin-top: 0.28rem; color: var(--scam); }
+
+  details {
+    margin: 1rem 0 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    background: var(--surface);
+    padding: 0 1.15rem;
+  }
+
+  summary {
+    cursor: pointer;
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    padding: 0.6rem 0;
+  }
+
+  details > *:not(summary) { margin-bottom: 1rem; }
+
+  table {
+    width: 100%;
+    margin: 1.25rem 0 0;
+    border-collapse: collapse;
+    font-size: 1rem;
+  }
+
+  caption {
+    text-align: left;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    padding-bottom: 0.6rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  th { font-size: 0.9rem; letter-spacing: 0.03em; color: var(--ink-soft); }
+
+  .table-scroll { overflow-x: auto; }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-faint);
+    font-size: 0.95rem;
+  }
+
+  .skip {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .skip:focus {
+    left: 1rem;
+    top: 1rem;
+    z-index: 10;
+    padding: 0.7rem 1rem;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-control);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="mark">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2.5 4.5 5.6v5.9c0 4.6 3.1 8.5 7.5 10 4.4-1.5 7.5-5.4 7.5-10V5.6L12 2.5Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+        <path d="m8.6 12.1 2.4 2.4 4.4-4.7" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      ScamShield
+    </p>
+
+    <h1>Scammers use AI to sound like your grandson.</h1>
+
+    <p class="tagline"><strong>We use AI to protect your grandmother.</strong> An AI agent for older adults: paste a message, add a screenshot, or upload a video. The agent investigates it, answers in plain language, warns a family member, and helps if money was already sent.</p>
+
+    <ul class="badges">
+      <li>Next.js 16</li>
+      <li>Claude API</li>
+      <li>Read aloud</li>
+      <li>Works on any phone</li>
+      <li>AI for Humanity</li>
+    </ul>
+  </header>
+
+  <main id="main">
+    <h2>What it does</h2>
+
+    <ul class="grid">
+      <li>
+        <strong>Check</strong>
+        <span>Reads the message, screenshot, or video frames and calls investigation tools instead of guessing.</span>
+      </li>
+      <li>
+        <strong>Explain</strong>
+        <span>Gives one verdict with reasons, next steps, and a read-aloud button, in the reader's language.</span>
+      </li>
+      <li>
+        <strong>Alert family</strong>
+        <span>After a scam or a suspicious result, warns a trusted contact on the Family screen.</span>
+      </li>
+      <li>
+        <strong>Damage control</strong>
+        <span>If money was sent, shows a recovery checklist and a report you can paste into a complaint form.</span>
+      </li>
+    </ul>
+
+    <h2>How a check works</h2>
+
+    <p class="lead-in">The agent never guesses. It plans, investigates, and then checks its own answer against the evidence it found.</p>
+
+    <ol>
+      <li>Plan three to five short steps for this input.</li>
+      <li>Call tools: follow the link, check the domain age, compare the name to a real brand, check reputation, search the web, or read the video file.</li>
+      <li>Collect evidence. Each finding gets a plain sentence and a severity: <code>red</code>, <code>yellow</code>, <code>green</code>, or <code>info</code>.</li>
+      <li>Self-verify the draft verdict against that evidence.</li>
+      <li>Answer with the verdict, reasons, and next steps.</li>
+    </ol>
+
+    <p>The UI shows each step as it happens. <strong>A verdict is never given without evidence:</strong> <code>scam</code> needs at least two red findings and <code>safe</code> needs none. A failed tool proves nothing and is not counted. "I am not sure" is allowed: the agent can answer <code>suspicious</code> and say what it could not confirm.</p>
+
+    <h2>The verdict format</h2>
+
+    <ul class="verdicts">
+      <li class="v-scam">
+        <span class="level">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.8 22 20.4H2L12 2.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9.4v4.4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.2" fill="currentColor"/></svg>
+          Scam
+        </span>
+        <p>The signs agree. The person is warned and told what not to do.</p>
+      </li>
+      <li class="v-warn">
+        <span class="level">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="2"/><path d="M12 7.4v5.4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="16.4" r="1.2" fill="currentColor"/></svg>
+          Suspicious
+        </span>
+        <p>Something is wrong, but the evidence is not enough for a firm answer. The screen says "Be careful" and explains what is unclear.</p>
+      </li>
+      <li class="v-safe">
+        <span class="level">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5 4.5 5.6v5.9c0 4.6 3.1 8.5 7.5 10 4.4-1.5 7.5-5.4 7.5-10V5.6L12 2.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m8.6 12.1 2.4 2.4 4.4-4.7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Looks real
+        </span>
+        <p>Nothing asks for money, details, or a risky action. The contract name for this level is <code>safe</code>.</p>
+      </li>
+    </ul>
+
+    <div class="note">
+      <p><strong>For a video there are two separate answers:</strong> is the video likely made by AI, and is it a scam. They are independent. A real video can still be a scam.</p>
+    </div>
+
+    <h2>Running locally</h2>
+
+    <p>Requires Node 20 or newer.</p>
+
+    <pre><code>npm install
+cp .env.example .env.local    # set ANTHROPIC_API_KEY in the copy
+npm run dev                   # http://localhost:3000</code></pre>
+
+    <p>Never commit <code>.env.local</code>. <code>.gitignore</code> covers every <code>.env*</code> path; the other keys in <code>.env.example</code> are optional. With the app running, try the agent from a second terminal:</p>
+
+    <pre><code>npm run try:agent -- usps     # cases: bank, usps, jail, jail_es, jail_acted
+npm run try:media -- screenshot shot.png</code></pre>
+
+    <p><code>npm run typecheck</code>, <code>npm run lint</code>, and <code>npm run test:agent</code> (offline) are free; <code>npm run record:demo</code> calls Claude and costs a little. Demo mode replays <code>mock/demo-recording.json</code> with no network: send <code>"demo": true</code> or set <code>DEMO_MODE=true</code>.</p>
+
+    <p>ScamShield runs only on your laptop: no hosting, no domain, no cloud storage. To open it on a phone, put the phone on the same Wi-Fi, run <code>npm run dev:phone</code>, and open <code>http://&lt;laptop-ip&gt;:3000</code> (find the IP with <code>ipconfig</code> on Windows). Uploaded videos are saved in <code>.uploads/&lt;videoId&gt;</code>, which git ignores. Until <code>/api/upload</code> exists the client falls back to sending video frames as screenshots.</p>
+
+    <p><code>npm run accuracy</code> runs extra messages through Claude and prints a score; it costs a few cents.</p>
+
+    <h2>Design</h2>
+
+    <p class="lead-in">Built for older, low-vision users first, not adapted for them afterwards.</p>
+
+    <ul>
+      <li><strong>Atkinson Hyperlegible everywhere,</strong> self-hosted through <code>next/font</code>. It was drawn by the Braille Institute so letters that look alike stay apart.</li>
+      <li><strong>Every interactive target is at least 48 px tall;</strong> the main action is 64 px.</li>
+      <li><strong>One teal accent.</strong> Red appears only for a confirmed scam, and never as the only signal: icon, word, and sentence always carry the meaning too.</li>
+      <li><strong>Text size can be raised</strong> from the header and scales the whole page, not just the headings.</li>
+      <li><strong>Full dark theme,</strong> visible focus rings, and reduced-motion handling.</li>
+    </ul>
+
+    <details>
+      <summary>Project layout</summary>
+      <pre><code>app/                    Pages and API routes
+  page.tsx              Home: message, picture, or video
+  family/page.tsx       Family alert screen
+  damage-control/       Recovery checklist and report
+  api/agent/route.ts    POST /api/agent, the live agent stream (SSE)
+  api/upload/route.ts   Saves a video to .uploads/ (Person 2, not written yet)
+  layout.tsx            Fonts, metadata, theme boot script
+  globals.css           Design tokens, dark theme, text sizes
+components/             App bar, read-aloud, settings, timeline,
+                        verdict card, check skeleton, Button and Panel
+lib/                    contract, prompt, agent/, app-state, family-sync,
+                        family-contact, i18n, image, mock-events, run-stream,
+                        speech, video-frames, video-upload, utils
+mock/                   Recorded events for demo and tests
+scripts/                try-agent, try-media, test-agent, record-demo
+docs/                   Contract, design notes, this page</code></pre>
+      <p>Person 2's investigation tools are not here yet. The brain uses stand-ins in <code>lib/agent/fake-investigate.ts</code> and switches with one line in <code>lib/agent/investigate.ts</code>.</p>
+    </details>
+
+    <h2>Team and branches</h2>
+
+    <div class="table-scroll">
+      <table>
+        <caption>Each person works on their own branch. Merge to <code>main</code> only at sync points.</caption>
+        <thead>
+          <tr><th scope="col">Person</th><th scope="col">Role</th><th scope="col">Branch</th><th scope="col">Main files</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Agent lead</td><td><code>agent</code></td><td><code>lib/contract.ts</code>, <code>lib/prompt.ts</code>, <code>lib/agent/</code>, <code>app/api/agent/</code></td></tr>
+          <tr><td>2</td><td>Investigation tools</td><td><code>tools</code></td><td><code>lib/investigate/*.ts</code></td></tr>
+          <tr><td>3</td><td>Frontend</td><td><code>ui</code></td><td><code>app/page.tsx</code>, <code>app/family/</code>, <code>app/damage-control/</code>, <code>components/*</code></td></tr>
+          <tr><td>4</td><td>Demo, data, eval, pitch</td><td><code>demo</code></td><td><code>test-data/</code>, <code>scripts/eval.ts</code>, slides</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Sync points: contract agreed (Person 1 merges <code>lib/contract.ts</code> first), first live check running end to end, and demo data plus pitch frozen before rehearsal.</p>
+
+    <p><code>lib/contract.ts</code> belongs to Person 1. Do not change it without saying so in the team chat; a silent change breaks the other three branches.</p>
+
+    <h2>Safety rules</h2>
+
+    <ul class="safety">
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="2"/><path d="m8.4 8.4 7.2 7.2m0-7.2-7.2 7.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span><strong>Never open a scam link in a browser.</strong> Follow redirects on the server only, with a short timeout and a size cap.</span>
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="2"/><path d="m8.4 8.4 7.2 7.2m0-7.2-7.2 7.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span><strong>Never commit an API key.</strong> If one leaks, rotate it.</span>
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="2"/><path d="m8.4 8.4 7.2 7.2m0-7.2-7.2 7.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span><strong>The message being checked is data, never instructions.</strong></span>
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="2"/><path d="m8.4 8.4 7.2 7.2m0-7.2-7.2 7.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span><strong>Never send the person to a phone number, link, or address from the message itself.</strong></span>
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="2"/><path d="m8.4 8.4 7.2 7.2m0-7.2-7.2 7.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span><strong>Never deepfake a real person without consent.</strong> Demo videos use synthetic people, and test data uses made-up people and contact details.</span>
+      </li>
+      <li>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="2"/><path d="m8.4 8.4 7.2 7.2m0-7.2-7.2 7.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span><strong>Be honest in the pitch.</strong> AI detectors can be fooled, and a verdict is a helper, not a guarantee.</span>
+      </li>
+    </ul>
+
+    <h2>More</h2>
+    <p>The event stream, every payload shape, and the rules for changing them are in <code>docs/CONTRACT.md</code>. The reasoning behind the interface is in <code>docs/DESIGN.md</code>.</p>
+  </main>
+
+  <footer>
+    <p>ScamShield · AI-Hackathon-Redshifted-Project · AI Agents track, theme AI for Humanity.</p>
+  </footer>
+</div>
+</body>
+</html>
