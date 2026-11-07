@@ -123,10 +123,12 @@ export interface Verdict {
   nextSteps: string[];
   scamType: ScamType;
   officialContact?: { org: string; phone?: string; url?: string };
+  // The second answer, "Made by AI?", given on every check (text, picture
+  // or video). Optional only so older recordings still load.
   aiMedia?: {
     level: AiMediaLevel;
     signals: string[];
-    flaggedFrames: { index: number; note: string }[];
+    flaggedFrames: { index: number; note: string }[]; // video frames only
   };
 }
 

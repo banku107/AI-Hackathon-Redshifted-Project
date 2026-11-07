@@ -83,7 +83,13 @@ export async function detectAiFrames(frames: InputImage[] | undefined): Promise<
   const scores: number[] = [];
   for (const [i, frame] of chosen.entries()) {
     if (i > 0) await new Promise((resolve) => setTimeout(resolve, FREE_PLAN_GAP_MS));
-    const result = await scoreFrame(frame, keys.user, keys.secret);
+    let result = await scoreFrame(frame, keys.user, keys.secret);
+    if (typeof result === "string") {
+      // One retry after the free plan's 1-second gap: a network blip or a
+      // rate-limit hit should not cost the "Made by AI?" answer.
+      await new Promise((resolve) => setTimeout(resolve, FREE_PLAN_GAP_MS));
+      result = await scoreFrame(frame, keys.user, keys.secret);
+    }
     if (typeof result === "string") return failure(result);
     scores.push(result);
   }

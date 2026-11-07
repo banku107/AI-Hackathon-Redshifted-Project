@@ -31,6 +31,7 @@ const scamVerdict: Verdict = {
   reasons: ["Asks for gift cards.", "Asks for secrecy."],
   nextSteps: ["Do not reply."],
   scamType: "grandparent",
+  aiMedia: { level: "likely_real", signals: ["No signs of AI were found."], flaggedFrames: [] },
 };
 
 async function main() {
@@ -74,6 +75,21 @@ async function main() {
     check("verdict: scam with 1 red rejected", checkVerdict(s, scamVerdict).some((p) => p.includes("2 red")));
     s.evidence.push({ id: "message", finding: "secrecy", severity: "red" });
     check("verdict: scam with 2 red accepted", checkVerdict(s, scamVerdict).length === 0, checkVerdict(s, scamVerdict));
+    // The second answer, "Made by AI?", is required on every check.
+    const { aiMedia: _omit, ...noAi } = scamVerdict;
+    void _omit;
+    check("verdict: missing AI answer rejected", checkVerdict(s, noAi).some((p) => p.includes("aiMedia")));
+    check(
+      "verdict: AI answer without a reason rejected",
+      checkVerdict(s, { ...scamVerdict, aiMedia: { level: "unclear", signals: [], flaggedFrames: [] } }).length > 0,
+    );
+    check(
+      "verdict: flagged frames without a video rejected",
+      checkVerdict(s, {
+        ...scamVerdict,
+        aiMedia: { level: "likely_ai", signals: ["warped hands"], flaggedFrames: [{ index: 0, note: "hands" }] },
+      }).some((p) => p.includes("only for video")),
+    );
     check(
       "verdict: safe with red evidence rejected",
       checkVerdict(s, { ...scamVerdict, level: "safe", scamType: "none" }).length > 0,

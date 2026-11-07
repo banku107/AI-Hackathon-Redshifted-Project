@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  MagnifyingGlass,
   Phone,
   ShieldCheck,
   Warning,
@@ -44,27 +43,15 @@ const TONES: Record<
   },
 };
 
-// "Made by AI" is not "scam", so the video answer never borrows the scam red:
-// likely AI is amber (stop and look), unclear is neutral, probably real is green.
-const MEDIA_TONES = {
-  likely_ai: {
-    answer: "Yes, likely",
-    surface: "bg-warn-soft",
-    text: "text-warn",
-    level: "suspicious" as VerdictLevel,
-  },
-  unclear: {
-    answer: "Can't tell",
-    surface: "bg-surface-sunk",
-    text: "text-ink",
-    level: "suspicious" as VerdictLevel,
-  },
-  likely_real: {
-    answer: "Probably real",
-    surface: "bg-safe-soft",
-    text: "text-safe",
-    level: "safe" as VerdictLevel,
-  },
+// The second answer, "Made by AI?", uses the same three fields as the scam
+// answer: good (no signs of AI), warning (can't tell), bad (likely AI).
+const AI_TONES: Record<
+  NonNullable<Verdict["aiMedia"]>["level"],
+  { word: string; level: VerdictLevel }
+> = {
+  likely_real: { word: "No signs of AI", level: "safe" },
+  unclear: { word: "Can't tell", level: "suspicious" },
+  likely_ai: { word: "Likely AI", level: "scam" },
 };
 
 /**
@@ -120,7 +107,10 @@ export function VerdictCard({
   frameUrls?: string[];
 }) {
   const tone = TONES[verdict.level];
+  const aiTone = verdict.aiMedia ? AI_TONES[verdict.aiMedia.level] : null;
   const speech = toSpeech([
+    `Is it a scam? ${tone.word}`,
+    ...(aiTone ? [`Made by AI? ${aiTone.word}`] : []),
     verdict.headline,
     ...verdict.reasons,
     ...verdict.nextSteps,
@@ -129,47 +119,36 @@ export function VerdictCard({
 
   return (
     <article className="overflow-hidden rounded-[var(--radius-card)] bg-surface">
-      {/* The answer, before anything else: one word, very large, on its own
-          field of colour, then the sentence that explains it. */}
-      <div className={cn("px-6 pb-7 pt-6 sm:px-9 sm:pb-9 sm:pt-8", tone.field, tone.fieldInk)}>
-        <div className="flex items-center gap-3 sm:gap-4">
-          <LevelIcon level={verdict.level} size={52} className="shrink-0" />
-          {/* The word is the verdict. Sentence case, in the display serif. */}
-          <p className="font-serif text-[3.4rem] leading-[0.95] tracking-[-0.01em] sm:text-[4.75rem]">
-            {tone.word}
-          </p>
-        </div>
+      {/* Two answers, before anything else, each a word on its own field of
+          colour: is it a scam, and was it made by AI. Icon, word and label
+          together, so colour is never the only carrier. */}
+      <div className="grid gap-1 bg-paper sm:grid-cols-2">
+        <AnswerField question="Is it a scam?" word={tone.word} level={verdict.level} />
+        {aiTone ? (
+          <AnswerField question="Made by AI?" word={aiTone.word} level={aiTone.level} />
+        ) : (
+          <div className="flex flex-col justify-center bg-surface-sunk px-6 py-6 sm:px-8">
+            <p className="text-lg font-bold text-ink-soft">Made by AI?</p>
+            <p className="mt-2 font-serif text-[2.6rem] leading-none text-ink">Not checked</p>
+          </div>
+        )}
+      </div>
 
-        <h2 className="mt-5 max-w-[32ch] text-[1.55rem] font-bold leading-[1.18] tracking-tight text-balance sm:text-[1.9rem]">
+      <div className="px-6 pb-7 pt-6 sm:px-9 sm:pb-8">
+        <h2 className="max-w-[34ch] text-[1.55rem] font-bold leading-[1.18] tracking-tight text-balance sm:text-[1.9rem]">
           {verdict.headline}
         </h2>
-
-        <p className="mt-2 text-lg font-bold opacity-90">
+        <p className="mt-2 text-lg font-bold text-ink-soft">
           {confidenceSentence(verdict.confidence)}
         </p>
-
-        <div className="mt-6">
-          <ReadAloud
-            text={speech}
-            locale={locale}
-            className="bg-white text-[#1f201d] hover:bg-white/85"
-          />
+        <div className="mt-5">
+          <ReadAloud text={speech} locale={locale} />
         </div>
       </div>
 
       <div className="divide-y-4 divide-paper">
-        {verdict.aiMedia && (
-          <div className="p-5 sm:p-7">
-            <VideoVerdict
-              media={verdict.aiMedia}
-              locale={locale}
-              frameUrls={frameUrls}
-            />
-          </div>
-        )}
-
         <section className="p-5 sm:p-7">
-          <h3 className="text-xl font-bold tracking-tight">Why we think so</h3>
+          <h3 className="text-xl font-bold tracking-tight">Why we think it is {tone.word.toLowerCase() === "scam" ? "a scam" : tone.word === "Be careful" ? "worth being careful" : "real"}</h3>
           <ul className="mt-4 space-y-3">
             {verdict.reasons.map((reason, index) => (
               <li key={index} className="flex gap-3 text-lg leading-relaxed">
@@ -179,6 +158,10 @@ export function VerdictCard({
             ))}
           </ul>
         </section>
+
+        {verdict.aiMedia && (
+          <AiReasons media={verdict.aiMedia} frameUrls={frameUrls} />
+        )}
 
         {/* Actions carry the weight of the page, so they get a raised surface
             and a larger numeral instead of a border per row. */}
@@ -249,61 +232,55 @@ export function VerdictCard({
   );
 }
 
-export function VideoVerdict({
+function AnswerField({
+  question,
+  word,
+  level,
+}: {
+  question: string;
+  word: string;
+  level: VerdictLevel;
+}) {
+  const t = TONES[level];
+  return (
+    <div className={cn("px-6 pb-6 pt-5 sm:px-8 sm:pb-7 sm:pt-6", t.field, t.fieldInk)}>
+      <p className="text-lg font-bold opacity-90">{question}</p>
+      <div className="mt-2 flex items-center gap-3">
+        <LevelIcon level={level} size={40} className="shrink-0" />
+        <p className="font-serif text-[2.6rem] leading-[0.95] tracking-[-0.01em] sm:text-[3rem]">
+          {word}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** Why we gave the AI answer, plus any video frames that stood out. */
+function AiReasons({
   media,
-  locale,
   frameUrls,
 }: {
   media: NonNullable<Verdict["aiMedia"]>;
-  locale: string;
   frameUrls?: string[];
 }) {
-  const tone = MEDIA_TONES[media.level];
-
+  const aiTone = AI_TONES[media.level];
   const frames = media.flaggedFrames.flatMap((frame) => {
     const src = frameUrls?.[frame.index];
     return src ? [{ ...frame, src }] : [];
   });
 
-  const speech = `Was this video made by AI? ${toSpeech([
-    tone.answer,
-    ...media.signals,
-  ])}`;
-
   return (
-    <section>
-      <h3 className="text-xl font-bold tracking-tight">
-        Was this video made by AI?
-      </h3>
-
-      <div
-        className={cn(
-          "mt-3 flex items-center gap-3 rounded-[var(--radius-control)] px-4 py-3",
-          tone.surface,
-          tone.text,
-        )}
-      >
-        <LevelIcon level={tone.level} size={24} />
-        <span className="text-xl font-bold">{tone.answer}</span>
-      </div>
-
+    <section className="p-5 sm:p-7">
+      <h3 className="text-xl font-bold tracking-tight">Why we said &ldquo;{aiTone.word}&rdquo; for AI</h3>
       {media.signals.length > 0 && (
-        <>
-          <h4 className="mt-5 text-lg font-bold">Clues we saw</h4>
-          <ul className="mt-2.5 space-y-2.5">
-            {media.signals.map((signal, index) => (
-              <li key={index} className="flex gap-3 text-lg leading-relaxed">
-                <MagnifyingGlass
-                  size={20}
-                  weight="bold"
-                  className="mt-1 shrink-0 text-ink-faint"
-                  aria-hidden
-                />
-                <span>{signal}</span>
-              </li>
-            ))}
-          </ul>
-        </>
+        <ul className="mt-4 space-y-3">
+          {media.signals.map((signal, index) => (
+            <li key={index} className="flex gap-3 text-lg leading-relaxed">
+              <EvidenceDot tone={aiTone.level} />
+              <span>{signal}</span>
+            </li>
+          ))}
+        </ul>
       )}
 
       {frames.length > 0 && (
@@ -330,14 +307,6 @@ export function VideoVerdict({
           </ul>
         </div>
       )}
-
-      <div className="mt-5">
-        <ReadAloud
-          text={speech}
-          locale={locale}
-          label="Read the video result out loud"
-        />
-      </div>
     </section>
   );
 }

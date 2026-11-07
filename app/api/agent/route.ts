@@ -23,6 +23,7 @@ import {
   type AgentSession,
 } from "@/lib/agent/tools";
 import { analyzeVideo } from "@/lib/agent/investigate";
+import { detectAiFrames } from "@/lib/investigate/detector";
 import { SYSTEM_PROMPT } from "@/lib/prompt";
 import { pickRecording } from "@/lib/agent/demo";
 
@@ -102,7 +103,11 @@ async function replayDemo(request: AgentRequest, events: EventStream) {
 // The real agent
 // ---------------------------------------------------------------------------
 
-function buildUserContent(request: AgentRequest, videoReport: VideoReport | null): BetaContentBlockParam[] {
+function buildUserContent(
+  request: AgentRequest,
+  videoReport: VideoReport | null,
+  pictureReport: VideoReport["detector"] | undefined,
+): BetaContentBlockParam[] {
   const content: BetaContentBlockParam[] = [];
 
   request.images?.forEach((img) => {
@@ -116,6 +121,12 @@ function buildUserContent(request: AgentRequest, videoReport: VideoReport | null
   lines.push(`Language for everything you write: ${request.language}`);
   if (request.images?.length) {
     lines.push(`Screenshots attached: ${request.images.length} (the first ${request.images.length} images).`);
+    lines.push(
+      `AI-detector report for the pictures (stepId "picture"; null = no detector configured):`,
+      "<picture_ai_report>",
+      JSON.stringify(pictureReport ?? null),
+      "</picture_ai_report>",
+    );
   }
   if (request.video) {
     const offset = request.images?.length ?? 0;
@@ -191,8 +202,23 @@ async function runAgent(request: AgentRequest, events: EventStream, signal: Abor
     );
   }
 
+  // Pictures: the same free AI detector the video check uses, on the
+  // screenshots themselves, for the "Made by AI?" answer.
+  let pictureReport: VideoReport["detector"] | undefined;
+  if (request.images?.length) {
+    try {
+      pictureReport = await detectAiFrames(request.images);
+    } catch {
+      pictureReport = { provider: "Sightengine", aiProbability: 0, error: "Check failed." };
+    }
+    session.afterPlan.push(
+      { type: "step_start", id: "picture", label: label(request.language, "picture"), tool: "analyze_picture" },
+      { type: "step_done", id: "picture", ok: Boolean(pictureReport && !pictureReport.error), summary: label(request.language, "pictureDone") },
+    );
+  }
+
   const messages: BetaMessageParam[] = [
-    { role: "user", content: buildUserContent(request, videoReport) },
+    { role: "user", content: buildUserContent(request, videoReport, pictureReport) },
   ];
 
   let jsonRetries = 0;

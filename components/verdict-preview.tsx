@@ -1,4 +1,4 @@
-import { WarningOctagon } from "@phosphor-icons/react";
+import { ShieldCheck, WarningOctagon } from "@phosphor-icons/react";
 import { EvidenceDot } from "@/components/evidence-dot";
 
 /**
@@ -34,17 +34,27 @@ export function VerdictPreview() {
           </p>
         </blockquote>
 
-        {/* The answer, in the same field the real result uses */}
-        <div className="bg-scam px-5 pb-5 pt-4 text-white">
-          <div className="flex items-center gap-3">
-            <WarningOctagon size={36} weight="fill" aria-hidden />
-            <p className="font-serif text-[2.6rem] leading-none">Scam</p>
+        {/* The two answers, in the same fields the real result uses */}
+        <div className="grid grid-cols-2 gap-1 bg-paper">
+          <div className="bg-scam px-4 pb-4 pt-3 text-white sm:px-5">
+            <p className="text-base font-bold opacity-90">Is it a scam?</p>
+            <div className="mt-1.5 flex items-center gap-2">
+              <WarningOctagon size={28} weight="fill" aria-hidden />
+              <p className="font-serif text-[2.1rem] leading-none">Scam</p>
+            </div>
           </div>
-          <p className="mt-3 max-w-[30ch] text-lg font-bold leading-snug">{EXAMPLE.headline}</p>
+          <div className="bg-safe px-4 pb-4 pt-3 text-white sm:px-5">
+            <p className="text-base font-bold opacity-90">Made by AI?</p>
+            <div className="mt-1.5 flex items-center gap-2">
+              <ShieldCheck size={28} weight="fill" aria-hidden />
+              <p className="font-serif text-[2.1rem] leading-none">No signs</p>
+            </div>
+          </div>
         </div>
+        <p className="px-5 pt-4 text-lg font-bold leading-snug">{EXAMPLE.headline}</p>
 
         <figcaption className="sr-only">Example result for the message above</figcaption>
-        <ul className="space-y-2.5 px-5 py-5">
+        <ul className="space-y-2.5 px-5 pb-5 pt-3">
           {EXAMPLE.reasons.map((reason) => (
             <li key={reason} className="flex gap-3 text-lg leading-relaxed">
               <EvidenceDot tone="scam" />

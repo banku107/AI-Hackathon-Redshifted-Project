@@ -1,17 +1,79 @@
 {
   "scam": [
-    { "type": "plan", "steps": ["Read the message for warning signs", "Look up the phone number", "Check how the family member can be reached", "Decide if it's safe"] },
-    { "type": "step_start", "id": "message", "label": "Reading the message for warning signs" },
-    { "type": "evidence", "id": "message", "finding": "It asks for $2,000 in gift cards. Real jails and lawyers never ask for gift cards.", "severity": "red" },
-    { "type": "evidence", "id": "message", "finding": "It says \"don't tell mom\". Scammers ask for secrecy so no one can warn you.", "severity": "red" },
-    { "type": "evidence", "id": "message", "finding": "It pushes you to act right now, which leaves no time to check.", "severity": "yellow" },
-    { "type": "step_done", "id": "message", "ok": true, "summary": "Finished reading the message" },
-    { "type": "step_start", "id": "srvtoolu_mock_1", "label": "Searching the web: “grandson in jail gift cards scam”", "tool": "web_search" },
-    { "type": "step_done", "id": "srvtoolu_mock_1", "ok": true, "summary": "Found 8 results" },
-    { "type": "evidence", "id": "srvtoolu_mock_1", "finding": "The FTC warns about this exact trick, called the \"grandparent scam\".", "severity": "red" },
-    { "type": "step_start", "id": "srvtoolu_mock_2", "label": "Searching the web: “how to report grandparent scam FTC”", "tool": "web_search" },
-    { "type": "step_done", "id": "srvtoolu_mock_2", "ok": true, "summary": "Found 6 results" },
-    { "type": "evidence", "id": "srvtoolu_mock_2", "finding": "You can report it for free at reportfraud.ftc.gov.", "severity": "info" },
+    {
+      "type": "plan",
+      "steps": [
+        "Read the message for warning signs",
+        "Look up the phone number",
+        "Check how the family member can be reached",
+        "Decide if it's safe"
+      ]
+    },
+    {
+      "type": "step_start",
+      "id": "message",
+      "label": "Reading the message for warning signs"
+    },
+    {
+      "type": "evidence",
+      "id": "message",
+      "finding": "It asks for $2,000 in gift cards. Real jails and lawyers never ask for gift cards.",
+      "severity": "red"
+    },
+    {
+      "type": "evidence",
+      "id": "message",
+      "finding": "It says \"don't tell mom\". Scammers ask for secrecy so no one can warn you.",
+      "severity": "red"
+    },
+    {
+      "type": "evidence",
+      "id": "message",
+      "finding": "It pushes you to act right now, which leaves no time to check.",
+      "severity": "yellow"
+    },
+    {
+      "type": "step_done",
+      "id": "message",
+      "ok": true,
+      "summary": "Finished reading the message"
+    },
+    {
+      "type": "step_start",
+      "id": "srvtoolu_mock_1",
+      "label": "Searching the web: “grandson in jail gift cards scam”",
+      "tool": "web_search"
+    },
+    {
+      "type": "step_done",
+      "id": "srvtoolu_mock_1",
+      "ok": true,
+      "summary": "Found 8 results"
+    },
+    {
+      "type": "evidence",
+      "id": "srvtoolu_mock_1",
+      "finding": "The FTC warns about this exact trick, called the \"grandparent scam\".",
+      "severity": "red"
+    },
+    {
+      "type": "step_start",
+      "id": "srvtoolu_mock_2",
+      "label": "Searching the web: “how to report grandparent scam FTC”",
+      "tool": "web_search"
+    },
+    {
+      "type": "step_done",
+      "id": "srvtoolu_mock_2",
+      "ok": true,
+      "summary": "Found 6 results"
+    },
+    {
+      "type": "evidence",
+      "id": "srvtoolu_mock_2",
+      "finding": "You can report it for free at reportfraud.ftc.gov.",
+      "severity": "info"
+    },
     {
       "type": "verdict",
       "verdict": {
@@ -29,7 +91,17 @@
           "Tell a family member you trust about this message."
         ],
         "scamType": "grandparent",
-        "officialContact": { "org": "Federal Trade Commission", "url": "https://reportfraud.ftc.gov" }
+        "officialContact": {
+          "org": "Federal Trade Commission",
+          "url": "https://reportfraud.ftc.gov"
+        },
+        "aiMedia": {
+          "level": "likely_real",
+          "signals": [
+            "No signs of AI were found. Text alone cannot be checked by a machine."
+          ],
+          "flaggedFrames": []
+        }
       }
     },
     {
@@ -42,19 +114,65 @@
         "suggestedAction": "Call Rosa now and remind her not to buy gift cards.",
         "createdAt": "2026-11-07T15:00:00.000Z"
       },
-      "result": { "delivered": true, "channel": "screen" }
+      "result": {
+        "delivered": true,
+        "channel": "screen"
+      }
     },
-    { "type": "done" }
+    {
+      "type": "done"
+    }
   ],
   "safe": [
-    { "type": "plan", "steps": ["Read the message for warning signs", "Check how Chase contacts customers", "Decide if it's safe"] },
-    { "type": "step_start", "id": "message", "label": "Reading the message for warning signs" },
-    { "type": "evidence", "id": "message", "finding": "It does not ask for money, passwords, or codes.", "severity": "green" },
-    { "type": "evidence", "id": "message", "finding": "There is no link to click. It only asks you to reply YES or NO.", "severity": "green" },
-    { "type": "step_done", "id": "message", "ok": true, "summary": "Finished reading the message" },
-    { "type": "step_start", "id": "srvtoolu_mock_3", "label": "Searching the web: “Chase fraud alert text reply YES or NO”", "tool": "web_search" },
-    { "type": "step_done", "id": "srvtoolu_mock_3", "ok": true, "summary": "Found 7 results" },
-    { "type": "evidence", "id": "srvtoolu_mock_3", "finding": "Chase says its real fraud alerts ask you to reply YES or NO, and never ask for your password.", "severity": "green" },
+    {
+      "type": "plan",
+      "steps": [
+        "Read the message for warning signs",
+        "Check how Chase contacts customers",
+        "Decide if it's safe"
+      ]
+    },
+    {
+      "type": "step_start",
+      "id": "message",
+      "label": "Reading the message for warning signs"
+    },
+    {
+      "type": "evidence",
+      "id": "message",
+      "finding": "It does not ask for money, passwords, or codes.",
+      "severity": "green"
+    },
+    {
+      "type": "evidence",
+      "id": "message",
+      "finding": "There is no link to click. It only asks you to reply YES or NO.",
+      "severity": "green"
+    },
+    {
+      "type": "step_done",
+      "id": "message",
+      "ok": true,
+      "summary": "Finished reading the message"
+    },
+    {
+      "type": "step_start",
+      "id": "srvtoolu_mock_3",
+      "label": "Searching the web: “Chase fraud alert text reply YES or NO”",
+      "tool": "web_search"
+    },
+    {
+      "type": "step_done",
+      "id": "srvtoolu_mock_3",
+      "ok": true,
+      "summary": "Found 7 results"
+    },
+    {
+      "type": "evidence",
+      "id": "srvtoolu_mock_3",
+      "finding": "Chase says its real fraud alerts ask you to reply YES or NO, and never ask for your password.",
+      "severity": "green"
+    },
     {
       "type": "verdict",
       "verdict": {
@@ -70,9 +188,21 @@
           "To be extra sure, call the number on the back of your Chase card."
         ],
         "scamType": "none",
-        "officialContact": { "org": "Chase", "url": "https://www.chase.com" }
+        "officialContact": {
+          "org": "Chase",
+          "url": "https://www.chase.com"
+        },
+        "aiMedia": {
+          "level": "likely_real",
+          "signals": [
+            "No signs of AI were found. Text alone cannot be checked by a machine."
+          ],
+          "flaggedFrames": []
+        }
       }
     },
-    { "type": "done" }
+    {
+      "type": "done"
+    }
   ]
 }

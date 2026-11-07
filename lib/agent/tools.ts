@@ -96,7 +96,8 @@ type LabelKey =
   | "lookalike" | "lookalikeHit" | "lookalikeMiss"
   | "reputation" | "reputationHit" | "reputationClean" | "reputationFail"
   | "search" | "searchOk" | "searchFail"
-  | "video" | "videoDone";
+  | "video" | "videoDone"
+  | "picture" | "pictureDone";
 
 const LABELS: Record<"en" | "es", Record<LabelKey, string>> = {
   en: {
@@ -123,6 +124,8 @@ const LABELS: Record<"en" | "es", Record<LabelKey, string>> = {
     searchFail: "The web search didn't work",
     video: "Checking the video file",
     videoDone: "Finished checking the video file",
+    picture: "Checking if the picture was made by AI",
+    pictureDone: "Finished the AI check on the picture",
   },
   es: {
     defaultPlan1: "Leer el mensaje buscando señales de alerta",
@@ -148,6 +151,8 @@ const LABELS: Record<"en" | "es", Record<LabelKey, string>> = {
     searchFail: "La búsqueda no funcionó",
     video: "Revisando el archivo de video",
     videoDone: "Terminé de revisar el archivo de video",
+    picture: "Revisando si la imagen fue hecha con IA",
+    pictureDone: "Terminé la revisión de IA de la imagen",
   },
 };
 
@@ -328,10 +333,15 @@ export function checkVerdict(s: AgentSession, v: Verdict): string[] {
   if (req.alreadyActed && !s.damageControlEvent) {
     problems.push("The person already acted. Call damage_control with a recovery plan before giving the verdict.");
   }
-  if (req.video && !v.aiMedia) {
-    problems.push("A video was checked, so fill aiMedia (level, signals, flaggedFrames).");
+  if (!v.aiMedia) {
+    problems.push('Every check needs the second answer: fill aiMedia (level, signals, flaggedFrames) for "Made by AI?".');
+  } else if (v.aiMedia.signals.length < 1) {
+    problems.push("Give at least one aiMedia.signals reason for the AI answer.");
   }
-  if (v.aiMedia) {
+  if (v.aiMedia && !req.video && v.aiMedia.flaggedFrames.length > 0) {
+    problems.push("aiMedia.flaggedFrames is only for video frames. Use [] here.");
+  }
+  if (v.aiMedia && req.video) {
     const frameCount = req.video?.frames.length ?? req.images?.length ?? 0;
     const bad = v.aiMedia.flaggedFrames.find((f) => f.index >= frameCount);
     if (bad) problems.push(`flaggedFrames index ${bad.index} doesn't exist (there are ${frameCount} frames, numbered from 0).`);
