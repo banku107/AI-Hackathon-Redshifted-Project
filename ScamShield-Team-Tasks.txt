@@ -907,8 +907,11 @@
         dead scam URLs. We are NOT buying a domain.
 
   P4-3  test-data/demo/:
-        1. "Chase: Did you attempt a $42.10 purchase at Target? Reply YES
-           or NO. We'll never ask for your password." -> safe
+        1. "Chase Fraud Services: Did you attempt a $42.10 purchase at
+           TARGET with your card ending in 4821? Reply YES or NO. We will
+           never ask for your password or a code." -> safe
+           (Real Chase alerts show the card's last 4 digits; without them
+           the agent fairly answers "be careful".)
         2. "USPS: Your package is on hold due to an incomplete address.
            Update within 12 hrs: https://usps-package-hold.example/update"
            -> scam,

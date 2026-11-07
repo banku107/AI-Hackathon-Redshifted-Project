@@ -46,7 +46,7 @@
 ### Beat 1: Green, a real bank alert (0:25–0:40)
 
 **▶ CLICK [B]:** Paste the message and tap **Check**.
-> Chase: Did you attempt a $42.10 purchase at Target? Reply YES or NO. We'll never ask for your password.
+> Chase Fraud Services: Did you attempt a $42.10 purchase at TARGET with your card ending in 4821? Reply YES or NO. We will never ask for your password or a code.
 
 **[A]** (while it streams):
 > First, a real bank alert. No link, no money, no password requested.

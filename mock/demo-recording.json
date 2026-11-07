@@ -4,46 +4,46 @@
       "type": "plan",
       "steps": [
         "Read the message for common scam tricks",
-        "Check how Chase really sends fraud alerts by text",
-        "Find Chase's real phone number",
-        "Give you a clear answer and next steps"
+        "Check for links or phone numbers to look up",
+        "Find how Chase really sends fraud alerts",
+        "Find Chase's real phone number"
       ]
     },
     {
       "type": "step_start",
-      "id": "srvtoolu_01ReaMy95iTpZJfi3w7qvPMf",
-      "label": "Searching the web: “Chase fraud alert text message reply YES or NO official”",
+      "id": "srvtoolu_01CfCUz2nwPR4BTFbKMdRirw",
+      "label": "Searching the web: “Chase fraud alert text message reply YES NO how it works”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_01ReaMy95iTpZJfi3w7qvPMf",
+      "id": "srvtoolu_01CfCUz2nwPR4BTFbKMdRirw",
       "ok": true,
       "summary": "Found 9 results"
     },
     {
       "type": "step_start",
-      "id": "srvtoolu_01R3e5bbkz97Qczz4KN2PJPs",
-      "label": "Searching the web: “Chase customer service phone number fraud official”",
+      "id": "srvtoolu_01QxSgfdq9N19XMRZRm4vkip",
+      "label": "Searching the web: “Chase fraud alert text message reply YES NO”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_01R3e5bbkz97Qczz4KN2PJPs",
+      "id": "srvtoolu_01QxSgfdq9N19XMRZRm4vkip",
       "ok": true,
       "summary": "Found 9 results"
     },
     {
       "type": "step_start",
-      "id": "srvtoolu_01K4p7c1P4pzQNsVUAcU2MWW",
-      "label": "Searching the web: “chase.com fraud alerts text reply yes no never ask password”",
+      "id": "srvtoolu_01Rk4DAG12MX935gQF6SM8WT",
+      "label": "Searching the web: “Chase customer service phone number fraud”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_01K4p7c1P4pzQNsVUAcU2MWW",
+      "id": "srvtoolu_01Rk4DAG12MX935gQF6SM8WT",
       "ok": true,
-      "summary": "Found 9 results"
+      "summary": "Found 10 results"
     },
     {
       "type": "step_start",
@@ -53,31 +53,37 @@
     {
       "type": "evidence",
       "id": "message",
-      "finding": "The message has no link to click and no phone number to call. It does not ask for money, a password, a code, or your card number.",
+      "finding": "The message has no link to click and no phone number to call.",
       "severity": "green"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "It only asks you to reply YES or NO, and says Chase will never ask for your password. This matches how real Chase fraud alert texts work.",
+      "finding": "It does not ask for money, a password, a code, or personal details. It only asks you to reply YES or NO, and it says Chase will never ask for your password or a code.",
       "severity": "green"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "Real Chase fraud texts usually show the last 4 digits of your card. This message does not. That's not proof of a scam, but it's worth checking with Chase yourself.",
-      "severity": "yellow"
+      "finding": "This matches how real Chase fraud alerts work: they name the last 4 digits of your card and the purchase amount, and ask you to reply only YES or NO.",
+      "severity": "green"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "Some scammers send a YES/NO text like this and then call pretending to be Chase. A real Chase worker will never ask for your password, a code, or ask you to move money.",
+      "finding": "There are no threats and no \"act now or else\" pressure.",
+      "severity": "green"
+    },
+    {
+      "type": "evidence",
+      "id": "message",
+      "finding": "I could not see which number sent this text. Real Chase alerts come from Chase's usual texting number. To be completely sure, call the number on the back of your card.",
       "severity": "info"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "Chase's official website lists its fraud phone numbers: 1-800-935-9935 (option 8) for checking accounts and debit cards, and 1-800-955-9060 (option 2) for personal credit cards. The number on the back of your card also works.",
+      "finding": "Chase's official customer service and card fraud number is 1-800-935-9935, from Chase's own contact page.",
       "severity": "info"
     },
     {
@@ -90,24 +96,23 @@
       "type": "verdict",
       "verdict": {
         "level": "safe",
-        "confidence": 0.75,
-        "headline": "This looks like a real Chase fraud alert. To be sure, call the number on the back of your card.",
+        "confidence": 0.8,
+        "headline": "This looks like a real Chase fraud alert. It is safe to answer YES or NO.",
         "reasons": [
-          "There is no link, no phone number, and no request for money, a password, or a code.",
-          "It only asks YES or NO, which is how real Chase fraud alerts work.",
-          "One small worry: real Chase texts usually show the last 4 digits of your card, and this one does not."
+          "It has no link and no phone number, and it does not ask for money, a password, or a code.",
+          "It matches how real Chase fraud alerts work: last 4 digits of your card, the amount, and a simple YES or NO reply.",
+          "There are no threats or pressure to act fast."
         ],
         "nextSteps": [
-          "If you have a Chase card and you made this Target purchase, you can reply YES. If you didn't make it, reply NO, or don't reply at all and call Chase instead.",
-          "To be completely sure, call the number on the back of your Chase card, or call 1-800-935-9935 (debit) or 1-800-955-9060 (credit card).",
-          "If someone calls you after this text saying they are from Chase, hang up. Then call the number on the back of your card yourself.",
-          "Never give anyone a password, a code sent by text, or your full card number, and never move money to a \"safe\" account."
+          "If you made this $42.10 Target purchase, reply YES. If you did not, reply NO.",
+          "Only reply with YES or NO. Never send a password, a code, or your card number by text.",
+          "If you are unsure or anyone follows up asking for a code, call Chase at the number on the back of your card (1-800-935-9935)."
         ],
         "scamType": "none",
         "officialContact": {
           "org": "Chase",
-          "phone": "1-800-935-9935 (option 8) for debit cards; 1-800-955-9060 (option 2) for personal credit cards",
-          "url": "https://www.chase.com/digital/resources/privacy-security/security/report-fraud"
+          "phone": "1-800-935-9935",
+          "url": "https://www.chase.com"
         }
       }
     },
@@ -120,7 +125,7 @@
       "type": "plan",
       "steps": [
         "Check where the link really goes",
-        "Check if the website is new or copies USPS",
+        "See how old the website is and if it copies USPS",
         "Look for common scam tricks in the message",
         "Find the real USPS website and phone number"
       ]
@@ -157,6 +162,12 @@
     },
     {
       "type": "step_done",
+      "id": "s2",
+      "ok": false,
+      "summary": "Couldn't find when this website was made"
+    },
+    {
+      "type": "step_done",
       "id": "s3",
       "ok": true,
       "summary": "Looks like a copy of usps.com"
@@ -168,63 +179,21 @@
       "summary": "Couldn't check the scam lists"
     },
     {
-      "type": "step_done",
-      "id": "s2",
-      "ok": false,
-      "summary": "Couldn't find when this website was made"
-    },
-    {
       "type": "step_start",
-      "id": "srvtoolu_01GBFuDAX6KSAHcbAMbjDD4f",
-      "label": "Searching the web: “USPS official phone number contact”",
+      "id": "srvtoolu_01KenMnM2Yq1hENEB6KsFhp8",
+      "label": "Searching the web: “USPS official smishing text message scam report phone number”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_01GBFuDAX6KSAHcbAMbjDD4f",
-      "ok": true,
-      "summary": "Found 9 results"
-    },
-    {
-      "type": "step_start",
-      "id": "srvtoolu_012d5HWi3X5Z2Tq5UvyECJG1",
-      "label": "Searching the web: “USPS official phone number contact”",
-      "tool": "web_search"
-    },
-    {
-      "type": "step_done",
-      "id": "srvtoolu_012d5HWi3X5Z2Tq5UvyECJG1",
-      "ok": true,
-      "summary": "Found 9 results"
-    },
-    {
-      "type": "step_start",
-      "id": "srvtoolu_01J3mhSxbPJy9At3Gk2qx2wB",
-      "label": "Searching the web: “USPS smishing text package on hold incomplete address scam”",
-      "tool": "web_search"
-    },
-    {
-      "type": "step_done",
-      "id": "srvtoolu_01J3mhSxbPJy9At3Gk2qx2wB",
+      "id": "srvtoolu_01KenMnM2Yq1hENEB6KsFhp8",
       "ok": true,
       "summary": "Found 10 results"
     },
     {
-      "type": "step_start",
-      "id": "srvtoolu_01JJT8USuPXzRYptPq9JfcNr",
-      "label": "Searching the web: “USPS smishing will not send text with link unless requested uspis”",
-      "tool": "web_search"
-    },
-    {
-      "type": "step_done",
-      "id": "srvtoolu_01JJT8USuPXzRYptPq9JfcNr",
-      "ok": true,
-      "summary": "Found 9 results"
-    },
-    {
       "type": "evidence",
       "id": "s3",
-      "finding": "The website in the link is not the real USPS website (usps.com). It copies the USPS name and adds extra words to look official.",
+      "finding": "The website in the link pretends to be USPS. It adds extra words (\"package-hold\") to look official, but it is not the real USPS website (usps.com).",
       "severity": "red"
     },
     {
@@ -235,31 +204,19 @@
     {
       "type": "evidence",
       "id": "message",
-      "finding": "This message matches a well-known fake USPS text trick: \"package on hold, incomplete address, click to update.\" News reports warn about this exact message.",
+      "finding": "This message matches a well-known USPS text scam: \"your package is on hold, update your address\" with a link. USPS says its tracking texts never contain a link and it only texts if you signed up.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "USPS says it does not send texts unless you asked for them with a tracking number, and its texts do not have links. This message has a link and no tracking number.",
-      "severity": "red"
-    },
-    {
-      "type": "evidence",
-      "id": "message",
-      "finding": "The message rushes you with a 12-hour deadline. Scammers do this so you act before you stop to think.",
+      "finding": "The message rushes you with a 12-hour deadline. Scammers use short deadlines so you act before you think.",
       "severity": "yellow"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "We could not check how old the website is or follow the link safely. Our tools did not work this time, so we did not count those checks either way.",
-      "severity": "info"
-    },
-    {
-      "type": "evidence",
-      "id": "message",
-      "finding": "The real USPS website is usps.com. USPS Customer Care's phone number is 1-800-275-8777 (1-800-ASK-USPS).",
+      "finding": "We could not safely open the link, check how old the website is, or check it against scam lists. These checks failed, so they prove nothing either way.",
       "severity": "info"
     },
     {
@@ -275,15 +232,15 @@
         "confidence": 0.9,
         "headline": "This is a scam. Do not click the link.",
         "reasons": [
-          "The link goes to a fake website that copies the USPS name. The real USPS website is usps.com.",
-          "This is a well-known fake USPS text: \"package on hold, incomplete address, click to update.\"",
-          "USPS says its texts never have links and only come if you asked for them with a tracking number."
+          "The link goes to a fake website that pretends to be USPS. The real USPS website is usps.com.",
+          "This is a well-known USPS text scam. USPS says its tracking texts never include a link.",
+          "It rushes you with a 12-hour deadline so you act before you think."
         ],
         "nextSteps": [
           "Do not click the link or reply to the text.",
-          "Delete the text. You can forward it to 7726 (SPAM) first to report it.",
-          "If you are waiting for a package, type usps.com yourself or call USPS at 1-800-275-8777.",
-          "If you already clicked and typed in any information, tell us so we can help."
+          "If you are expecting a package, type usps.com yourself and enter your tracking number there.",
+          "Forward the text to 7726 (that spells SPAM) to report it, then delete it.",
+          "If you already typed in any card or personal details, call your bank using the number on the back of your card."
         ],
         "scamType": "delivery",
         "officialContact": {
@@ -302,20 +259,20 @@
       "type": "plan",
       "steps": [
         "Read the message for common scam tricks",
-        "Check how the money is being asked for",
-        "Look up what officials say about this kind of message",
-        "Tell you what to do next"
+        "Check how this kind of message is known to work",
+        "Find the official place to report it",
+        "Give you a clear answer and what to do next"
       ]
     },
     {
       "type": "step_start",
-      "id": "srvtoolu_01MdRifziGSxiMcfWo8WwQJj",
-      "label": "Searching the web: “FTC grandparent scam gift cards jail”",
+      "id": "srvtoolu_01Rf4BoR7osWxMd2iAU8Q2Fw",
+      "label": "Searching the web: “FTC grandparent scam jail gift cards”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_01MdRifziGSxiMcfWo8WwQJj",
+      "id": "srvtoolu_01Rf4BoR7osWxMd2iAU8Q2Fw",
       "ok": true,
       "summary": "Found 9 results"
     },
@@ -327,32 +284,26 @@
     {
       "type": "evidence",
       "id": "message",
-      "finding": "The message asks for $2,000 in gift cards. Real jails, courts, and lawyers never take bail or fees in gift cards. Only scammers ask for this.",
+      "finding": "The message asks for $2,000 in gift cards. Real jails, lawyers, and courts never take gift cards. Only scammers ask for them.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "It says \"don't tell mom.\" Scammers ask for secrecy so you won't check with family and find out the truth.",
+      "finding": "It says \"don't tell mom.\" Scammers ask you to keep it secret so no one can warn you before you pay.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "This matches the well-known \"grandparent scam\" word for word: a grandchild in jail, an urgent need for money, and a plea to keep it secret. The FTC warns about this exact trick.",
+      "finding": "This matches the well-known \"grandparent scam\": a grandchild in jail who needs money fast and wants it kept secret. The FTC warns about exactly this trick.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "The sender never says their name. \"It's me\" lets the scammer get you to say a grandchild's name for them.",
+      "finding": "The message never says the grandchild's name. It just says \"it's me.\" Scammers do this so you fill in the name yourself.",
       "severity": "yellow"
-    },
-    {
-      "type": "evidence",
-      "id": "message",
-      "finding": "The message has no link or phone number for us to check. The words alone are enough to show it is a scam.",
-      "severity": "info"
     },
     {
       "type": "step_done",
@@ -365,21 +316,22 @@
       "verdict": {
         "level": "scam",
         "confidence": 0.97,
-        "headline": "This is a scam. Do not buy or send any gift cards.",
+        "headline": "This is a scam. Please do not buy any gift cards.",
         "reasons": [
-          "It asks for $2,000 in gift cards. Real jails and lawyers never take payment in gift cards.",
-          "It says \"don't tell mom.\" Scammers ask for secrecy so you won't check with family.",
-          "It follows the well-known \"grandparent scam\" that the FTC warns about: a grandchild in jail who needs money fast."
+          "It asks for $2,000 in gift cards. Real jails and courts never take gift cards.",
+          "It says \"don't tell mom.\" Scammers want secrecy so no one can warn you.",
+          "This is the well-known \"grandparent scam\" that the FTC warns about."
         ],
         "nextSteps": [
           "Do not reply and do not buy any gift cards.",
-          "Call your grandchild on the phone number you already have for them, or call their mom or dad.",
-          "If anyone asks for money again, hang up and talk to a family member you trust first.",
-          "You can report the message to the FTC at reportfraud.ftc.gov."
+          "Call your grandchild on the phone number you already have for them.",
+          "Call your grandchild's mom or dad, even though the message said not to.",
+          "Report the message to the FTC at reportfraud.ftc.gov or 1-877-382-4357."
         ],
         "scamType": "grandparent",
         "officialContact": {
           "org": "Federal Trade Commission (FTC)",
+          "phone": "1-877-382-4357",
           "url": "https://reportfraud.ftc.gov"
         }
       }
@@ -388,15 +340,16 @@
       "type": "family_alert",
       "alert": {
         "contactName": "Maria",
-        "summary": "Your family member received a message claiming to be a grandchild in jail, asking for $2,000 in gift cards and saying \"don't tell mom.\" This is a classic grandparent scam. As far as we know, no money has been sent yet.",
+        "summary": "Your family member received a message claiming to be a grandchild in jail, asking for $2,000 in gift cards and saying \"don't tell mom.\" This is a classic grandparent scam. No money has been reported sent yet.",
         "riskLevel": "scam",
         "moneyInvolved": true,
         "suggestedAction": "Please call them soon to reassure them, confirm the grandchild is safe, and make sure no gift cards are bought.",
-        "createdAt": "2026-11-07T17:54:08.240Z"
+        "createdAt": "2026-11-07T20:34:50.181Z"
       },
       "result": {
         "delivered": true,
-        "channel": "screen"
+        "channel": "screen",
+        "error": "No valid phone or email contact was provided. Alert is saved for the family screen."
       }
     },
     {
@@ -408,35 +361,23 @@
       "type": "plan",
       "steps": [
         "Leer el mensaje y buscar trucos comunes de estafa",
-        "Revisar si pide dinero de forma difícil de rastrear",
+        "Revisar si pide dinero de forma difícil de recuperar",
         "Buscar información oficial sobre esta estafa",
         "Avisar a su familiar de confianza",
-        "Darle una respuesta clara y qué hacer"
+        "Darle una respuesta clara y qué hacer ahora"
       ]
     },
     {
       "type": "step_start",
-      "id": "srvtoolu_01RzrGnayxtdnvai2T3B6ZFP",
-      "label": "Buscando en internet: “FTC grandparent scam gift cards jail family emergency”",
+      "id": "srvtoolu_01Y1Eo41CNxbNYacRRL2d8qA",
+      "label": "Buscando en internet: “FTC grandparent scam gift cards jail”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_01RzrGnayxtdnvai2T3B6ZFP",
+      "id": "srvtoolu_01Y1Eo41CNxbNYacRRL2d8qA",
       "ok": true,
-      "summary": "Encontré 10 resultados"
-    },
-    {
-      "type": "step_start",
-      "id": "srvtoolu_01SZYzexCG6xqki2jmPHvWDW",
-      "label": "Buscando en internet: “FTC grandparent scam gift cards jail family emergency”",
-      "tool": "web_search"
-    },
-    {
-      "type": "step_done",
-      "id": "srvtoolu_01SZYzexCG6xqki2jmPHvWDW",
-      "ok": true,
-      "summary": "Encontré 10 resultados"
+      "summary": "Encontré 9 resultados"
     },
     {
       "type": "step_start",
@@ -446,26 +387,26 @@
     {
       "type": "evidence",
       "id": "message",
-      "finding": "Pide $2,000 en tarjetas de regalo. Ni la cárcel ni ningún abogado cobra fianzas con tarjetas de regalo. Este dinero casi nunca se puede recuperar.",
+      "finding": "Pide $2,000 en tarjetas de regalo. Ninguna cárcel ni abogado acepta tarjetas de regalo. Es la forma de pago favorita de los estafadores porque el dinero no se puede recuperar.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "Pide guardar el secreto (\"no le digas a mamá\"). Los estafadores piden esto para que usted no pueda confirmar la historia con la familia.",
+      "finding": "Dice \"no le digas a mamá\". Pedir secreto es un truco para que usted no pueda comprobar la historia con la familia.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "El mensaje no dice el nombre de la persona: solo \"soy yo\". Es la frase típica de la \"estafa del nieto\": un supuesto familiar en problemas que pide dinero urgente.",
+      "finding": "Es el guion conocido de la \"estafa del abuelo\": alguien dice ser el nieto, que está en la cárcel y necesita dinero urgente sin que los padres se enteren. Organizaciones de ayuda a mayores describen este mismo engaño.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "La Comisión Federal de Comercio (FTC) de EE. UU. advierte sobre esta misma estafa: un \"nieto\" que dice estar en la cárcel, pide dinero y pide guardar el secreto.",
-      "severity": "red"
+      "finding": "El mensaje no dice el nombre de la persona (\"soy yo\"). Los estafadores escriben así para que usted misma diga el nombre del nieto.",
+      "severity": "yellow"
     },
     {
       "type": "evidence",
@@ -484,17 +425,17 @@
       "verdict": {
         "level": "scam",
         "confidence": 0.95,
-        "headline": "Esto es una estafa. No compre tarjetas de regalo ni mande dinero.",
+        "headline": "Esto es una estafa. No compre tarjetas de regalo ni envíe dinero.",
         "reasons": [
-          "Pide $2,000 en tarjetas de regalo. Ninguna cárcel ni abogado cobra así, y ese dinero casi nunca se recupera.",
-          "Pide guardar el secreto (\"no le digas a mamá\") para que usted no pueda confirmar la historia.",
-          "Es la conocida \"estafa del nieto\": no dice su nombre, solo \"soy yo\", y cuenta una emergencia para asustarla."
+          "Pide $2,000 en tarjetas de regalo. Ninguna cárcel acepta tarjetas de regalo; solo los estafadores las piden.",
+          "Le pide guardar el secreto (\"no le digas a mamá\") para que usted no pueda comprobar la historia.",
+          "Es el engaño conocido como \"la estafa del abuelo\": alguien finge ser su nieto en problemas."
         ],
         "nextSteps": [
-          "No conteste el mensaje y no compre ninguna tarjeta de regalo.",
-          "Llame a su nieto o nieta al número que usted ya tiene guardado de antes.",
-          "Llame también a la mamá u otro familiar para confirmar que todo está bien, aunque le hayan pedido el secreto.",
-          "Si quiere, reporte el mensaje a la FTC en https://reportfraud.ftc.gov"
+          "No conteste el mensaje y no compre tarjetas de regalo.",
+          "Llame a su nieto o a su hija al número que usted ya tiene guardado, no al que le escribió.",
+          "Si alguien le vuelve a escribir o llamar, cuelgue y hable con su familia.",
+          "Si quiere, reporte el mensaje a la FTC en https://reportfraud.ftc.gov (también hay ayuda en español)."
         ],
         "scamType": "grandparent",
         "officialContact": {
@@ -507,15 +448,16 @@
       "type": "family_alert",
       "alert": {
         "contactName": "Maria",
-        "summary": "Your grandmother received a message from someone claiming to be her grandchild (\"Abuela soy yo\"), saying they are in jail and asking for $2,000 in gift cards, and to keep it secret from \"mamá\". This is a classic grandparent/family emergency scam. There is no sign she has sent any money.",
+        "summary": "Your family member received a text claiming to be their grandchild in jail, asking for $2,000 in gift cards and saying \"don't tell Mom.\" This is a classic grandparent scam. They have NOT reported sending any money.",
         "riskLevel": "scam",
         "moneyInvolved": true,
-        "suggestedAction": "Please call her soon to reassure her, confirm the grandchild is safe, and remind her never to buy gift cards for anyone who asks.",
-        "createdAt": "2026-11-07T17:54:35.522Z"
+        "suggestedAction": "Please call them soon to reassure them, confirm the grandchild is safe, and make sure no gift cards are bought.",
+        "createdAt": "2026-11-07T20:35:12.888Z"
       },
       "result": {
         "delivered": true,
-        "channel": "screen"
+        "channel": "screen",
+        "error": "No valid phone or email contact was provided. Alert is saved for the family screen."
       }
     },
     {
@@ -527,23 +469,10 @@
       "type": "plan",
       "steps": [
         "Read the message for common scam tricks",
-        "Check how this matches known 'grandchild in trouble' scams",
+        "Check if this matches a known family-emergency scam",
         "Make a plan to try to get your $500 back",
-        "Let your family contact know",
-        "Give you a clear answer and next steps"
+        "Let your trusted family member know"
       ]
-    },
-    {
-      "type": "step_start",
-      "id": "srvtoolu_01KRpnRXcnp6JejryMSf6JiL",
-      "label": "Searching the web: “FTC grandparent scam gift cards jail don't tell”",
-      "tool": "web_search"
-    },
-    {
-      "type": "step_done",
-      "id": "srvtoolu_01KRpnRXcnp6JejryMSf6JiL",
-      "ok": true,
-      "summary": "Found 10 results"
     },
     {
       "type": "step_start",
@@ -553,31 +482,25 @@
     {
       "type": "evidence",
       "id": "message",
-      "finding": "The message asks for gift cards. Real jails, courts, and lawyers never take gift cards for bail. Only scammers ask for this.",
+      "finding": "The message asks for gift cards. Real jails, courts, and lawyers never ask for bail in gift cards. Only scammers do.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "It says \"don't tell mom.\" Asking you to keep a secret is a trick to stop you from checking with family.",
+      "finding": "It says \"don't tell mom.\" Keeping it secret, plus a family emergency, plus asking for money, is the classic \"grandparent scam\" script.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "This matches a well-known \"grandchild in jail\" scam that the FTC warns about. A stranger pretends to be your grandchild in trouble and asks for money fast.",
+      "finding": "The sender never says their name, only \"it's me.\" Scammers do this so you fill in a grandchild's name yourself.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "The message never says the grandchild's name. Scammers often write \"Grandma, it's me\" and let you fill in the name.",
-      "severity": "yellow"
-    },
-    {
-      "type": "evidence",
-      "id": "message",
-      "finding": "There are no links or phone numbers in the message to check. The warning signs come from the words themselves.",
+      "finding": "The message has no links or phone numbers for us to check. Our conclusion comes from what the message says.",
       "severity": "info"
     },
     {
@@ -590,18 +513,18 @@
       "type": "verdict",
       "verdict": {
         "level": "scam",
-        "confidence": 0.97,
-        "headline": "This is a scam. Please do not send any more gift cards.",
+        "confidence": 0.95,
+        "headline": "This is a scam. Please don't send any more gift cards.",
         "reasons": [
-          "It asks for gift cards. Real jails and lawyers never take gift cards. Only scammers ask for them.",
-          "It says \"don't tell mom\" so you won't check with family. Keeping it secret is a common scam trick.",
-          "This is the well-known 'grandchild in jail' scam the FTC warns about. A stranger pretends to be your grandchild."
+          "Real jails and lawyers never ask for gift cards. Only scammers do.",
+          "\"Don't tell mom\" is a trick to keep you from checking with the family. It's the well-known \"grandparent scam.\"",
+          "The sender never gives their name. They only say \"it's me\" so you'll guess who it is."
         ],
         "nextSteps": [
-          "Do not send any more money and do not reply.",
-          "Call the gift card company now. Use the number on the back of the card and ask them to freeze the $500.",
-          "Call your grandchild or their parents on the number you already have for them.",
-          "Report it at reportfraud.ftc.gov."
+          "Call the gift card company now, using the number on the back of the card, and ask them to freeze the $500.",
+          "Don't send any more money, and don't reply to the message.",
+          "Call your grandchild or their parent on the number you already have to make sure they're safe.",
+          "Report it to the FTC at reportfraud.ftc.gov."
         ],
         "scamType": "grandparent",
         "officialContact": {
@@ -614,15 +537,16 @@
       "type": "family_alert",
       "alert": {
         "contactName": "Maria",
-        "summary": "Your family member got a message that looked like it was from a grandchild: \"Grandma it's me, I'm in jail, please send $2,000 in gift cards, don't tell mom.\" This is a well-known grandparent scam. She has already sent one $500 gift card.",
+        "summary": "Your family member got a message from someone pretending to be a grandchild in jail. It asked for $2,000 in gift cards and said \"don't tell mom.\" They have already sent one $500 gift card. This is a classic grandparent scam.",
         "riskLevel": "scam",
         "moneyInvolved": true,
-        "suggestedAction": "Please call her now. Tell her the grandchild is safe and help her call the gift card company to freeze the $500. Make sure she sends no more money, then help her report it at reportfraud.ftc.gov.",
-        "createdAt": "2026-11-07T17:55:13.488Z"
+        "suggestedAction": "Please call them now. Help them call the gift card company (number on the back of the card) to freeze the money, confirm the grandchild is safe, and make sure no more is sent.",
+        "createdAt": "2026-11-07T20:35:39.725Z"
       },
       "result": {
         "delivered": true,
-        "channel": "screen"
+        "channel": "screen",
+        "error": "No valid phone or email contact was provided. Alert is saved for the family screen."
       }
     },
     {
@@ -630,38 +554,33 @@
       "plan": {
         "steps": [
           {
-            "title": "Do not send any more gift cards",
-            "detail": "This trick fools many careful people. You did the right thing by checking. Please do not send the other $1,500, and do not reply to the message. If they write or call again, hang up or ignore it.",
+            "title": "Don't send any more money",
+            "detail": "Don't send the rest of the $2,000. Don't reply to the message. If they ask for more, or call back with a 'lawyer' or 'police officer', just hang up.",
             "urgent": true
           },
           {
             "title": "Call the gift card company right now",
-            "detail": "Look on the back of the gift card or the card holder for the company's phone number, or go to the company's official website. Tell them the card was used in a scam and ask them to freeze the money. If the scammer has not spent it yet, you may get it back. Have the card number and receipt ready.",
+            "detail": "Look at the back of the gift card or the card holder for the company's phone number, or go to the company's official website. Tell them you were scammed and ask them to freeze the money on the card. The faster you call, the better your chances.",
             "urgent": true
           },
           {
             "title": "Keep the card and the receipt",
-            "detail": "Keep the gift card, its packaging, and the store receipt. These prove what you bought and help the company find the money. Don't throw anything away.",
+            "detail": "Don't throw away the card, its packaging, or the store receipt. The gift card company needs the card number and receipt to help you.",
             "urgent": true
           },
           {
-            "title": "Call your grandchild on the number you already have",
-            "detail": "Use the phone number you already know is theirs, not one from the message. Or call their mom or dad. You will most likely find out they are safe and not in jail.",
-            "urgent": true
+            "title": "Call your grandchild yourself",
+            "detail": "Call your grandchild, or their parent, on the phone number you already have. You will most likely find out they are safe and not in jail.",
+            "urgent": false
           },
           {
             "title": "Save the message",
-            "detail": "Don't delete the message. Take a picture of it or a screenshot. Write down the date and time it came and who it came from.",
+            "detail": "Don't delete the message. Take a picture or screenshot of it, and write down the number it came from and when you sent the card.",
             "urgent": false
           },
           {
             "title": "Report it",
-            "detail": "Report what happened to the FTC and the FBI. This helps stop the scammers and can help if you need to get your money back. You can use the reports below.",
-            "urgent": false
-          },
-          {
-            "title": "Expect more tricks",
-            "detail": "Scammers often come back pretending to be a lawyer, police officer, or someone who can 'get your money back'. Anyone who asks for more money or gift cards is part of the scam.",
+            "detail": "Report it to the FTC and the FBI using the forms below. You can copy the ready-made text into the forms. Reporting helps stop these scammers.",
             "urgent": false
           }
         ],
@@ -669,12 +588,12 @@
           {
             "agency": "FTC",
             "url": "https://reportfraud.ftc.gov",
-            "prefilledText": "On [date], I got a message that said: \"Grandma it's me, I'm in jail, please send $2,000 in gift cards, don't tell mom.\" The person pretended to be my grandchild. I sent one $500 gift card from [gift card company] that I bought at [store] on [date]. I sent the card number to them by [text / phone call / email] at [phone number or address the message came from]. Card number: [card number]. I did not send the rest of the money."
+            "prefilledText": "On [date], I got a message from [phone number or account] from someone pretending to be my grandchild. The message said: \"Grandma it's me, I'm in jail, please send $2,000 in gift cards, don't tell mom.\" I sent one $500 gift card from [gift card brand], card number [card number], bought at [store] on [date]. I gave the card details by [how you sent it, e.g. text with a photo of the card]. I later found out this was a scam."
           },
           {
             "agency": "IC3",
             "url": "https://www.ic3.gov",
-            "prefilledText": "Grandparent impersonation scam. On [date], I got a message from [phone number or address] that said: \"Grandma it's me, I'm in jail, please send $2,000 in gift cards, don't tell mom.\" I sent one $500 [gift card company] gift card, bought at [store] on [date]. I gave the card details by [text / phone call / email]. Card number: [card number]. Total loss: $500."
+            "prefilledText": "Grandparent scam. On [date], someone at [phone number or account] pretended to be my grandchild in jail and asked for $2,000 in gift cards, telling me not to tell the parent. I sent one $500 [gift card brand] gift card (card number [card number]), bought at [store] on [date], by [how you sent the card details]. No more money was sent after that."
           }
         ]
       }

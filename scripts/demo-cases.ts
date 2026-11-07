@@ -19,7 +19,7 @@ export const DEMO_CASES: DemoCase[] = [
     key: "bank",
     request: {
       language: "en",
-      text: "Chase: Did you attempt a $42.10 purchase at Target? Reply YES or NO. We'll never ask for your password.",
+      text: "Chase Fraud Services: Did you attempt a $42.10 purchase at TARGET with your card ending in 4821? Reply YES or NO. We will never ask for your password or a code.",
     },
     expect: { level: "safe" },
   },

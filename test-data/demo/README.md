@@ -4,7 +4,7 @@ Each file is `{ id, stageOrder, title, request, expected, explanation }`, where 
 
 | # | File | Message | Expected | Expected extra events |
 |---|---|---|---|---|
-| 1 | `demo-1-bank-safe.json` | "Chase: Did you attempt a $42.10 purchase at Target? Reply YES or NO. We'll never ask for your password." | 🟢 `safe` / `none` | — |
+| 1 | `demo-1-bank-safe.json` | "Chase Fraud Services: Did you attempt a $42.10 purchase at TARGET with your card ending in 4821? Reply YES or NO. We will never ask for your password or a code." | 🟢 `safe` / `none` | — |
 | 2 | `demo-2-delivery-scam.json` | "USPS: Your package is on hold due to an incomplete address. Update within 12 hrs: https://usps-package-hold.example/update" | 🔴 `scam` / `delivery` | — |
 | 3 | `demo-3-grandparent-scam.json` | "Grandma it's me, I'm in jail, please send $2,000 in gift cards, don't tell mom" plus a fictional `familyContact` | 🔴 `scam` / `grandparent` | `family_alert` |
 | 3-ES | `demo-3-grandparent-scam-es.json` | "Abuela, soy yo, estoy en la cárcel, por favor mándame $2,000 en tarjetas de regalo, no le digas a mamá" | 🔴 `scam` / `grandparent` | `family_alert` |

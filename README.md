@@ -74,8 +74,10 @@ npm run try:media -- screenshot shot.png
 ScamShield runs only on your laptop: no hosting, no domain, no cloud storage. To
 open it on a phone, put the phone on the same Wi-Fi, run `npm run dev:phone`, and
 open `http://<laptop-ip>:3000` (find the IP with `ipconfig` on Windows). Uploaded
-videos are saved in `.uploads/<videoId>`, which git ignores. Until `/api/upload`
-exists the client falls back to sending video frames as screenshots.
+videos stay on the laptop (in the system temp folder) and are deleted after the
+check. The AI-video detector is Sightengine's free plan: put `DETECTOR_API_USER`
+and `DETECTOR_API_KEY` in `.env.local`; without them the app says it couldn't run
+that check.
 
 `npm run accuracy` runs extra messages through Claude and prints a score; it costs
 a few cents.
@@ -88,7 +90,8 @@ app/                    Pages and API routes
   family/page.tsx       Family alert screen
   damage-control/       Recovery checklist and report
   api/agent/route.ts    POST /api/agent, the live agent stream (SSE)
-  api/upload/route.ts   Saves a video to .uploads/ (Person 2, not written yet)
+  api/upload/route.ts   Saves an uploaded video on the laptop (Person 2)
+  api/family/route.ts   Family alert feed (Person 2)
   layout.tsx            Fonts, metadata, theme boot script
   globals.css           Design tokens, dark theme, text sizes
 components/             App bar, read-aloud, settings, timeline,
@@ -103,9 +106,9 @@ test-data/              Person 4's messages and demo cases
 docs/                   Contract, design notes, HTML copy of this page
 ```
 
-Person 2's investigation tools are not here yet. The brain uses stand-ins in
-`lib/agent/fake-investigate.ts` and switches with one line in
-`lib/agent/investigate.ts`.
+Person 2's investigation tools live in `lib/investigate/` and are switched on in
+`lib/agent/investigate.ts` (the offline stand-ins are in
+`lib/agent/fake-investigate.ts`). `npx tsx scripts/test-tools.ts` tests them.
 
 ## Design
 
