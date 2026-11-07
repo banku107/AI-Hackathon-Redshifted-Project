@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "ScamShield",
+  "version": "0.1.0",
+  "description": "Right-click a message, link, picture or video and ask ScamShield if it is a scam.",
+  "permissions": ["contextMenus", "scripting", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost:3000/*", "http://127.0.0.1:3000/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

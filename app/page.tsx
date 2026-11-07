@@ -283,6 +283,103 @@ export default function HomePage() {
     }
   };
 
+  // Right-click "Check with ScamShield" in the browser extension opens this
+  // page with ?from=extension; its content script posts the clicked item here
+  // (same window, same origin only) and we run the check straight away.
+  const extensionHandled = useRef(false);
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("from") !== "extension") return;
+
+    const ready = () =>
+      window.postMessage({ source: "scamshield-page-ready" }, window.location.origin);
+
+    const onMessage = async (event: MessageEvent) => {
+      if (event.source !== window || event.origin !== window.location.origin) return;
+      const data = event.data as
+        | {
+            source?: string;
+            item?: { kind: "text" | "image" | "video"; text?: string; mime?: string; name?: string };
+            bytes?: ArrayBuffer | null;
+          }
+        | undefined;
+      if (data?.source === "scamshield-extension-hello") {
+        ready();
+        return;
+      }
+      if (data?.source !== "scamshield-extension" || !data.item || extensionHandled.current) return;
+      extensionHandled.current = true;
+      window.history.replaceState(null, "", "/");
+
+      const { item, bytes } = data;
+      const familyContact = readFamilyContact();
+      const base = {
+        language: language as Language,
+        ...(familyContact ? { familyContact } : {}),
+      };
+      const contextText = item.text?.trim() ? { text: item.text.trim().slice(0, 20000) } : {};
+
+      try {
+        if (item.kind === "text" || !bytes) {
+          setText(item.text ?? "");
+          await runInvestigation({ ...base, ...contextText });
+          return;
+        }
+
+        const file = new File([bytes], item.name || "file", { type: item.mime || "" });
+
+        if (item.kind === "image") {
+          const data = await fileToInputImage(file);
+          setImage({ name: file.name, preview: `data:${data.mediaType};base64,${data.base64}`, data });
+          setMode("picture");
+          await runInvestigation({ ...base, ...contextText, images: [data] });
+          return;
+        }
+
+        // Video: same path as an upload from this page.
+        setMode("video");
+        setExtracting(true);
+        setNotice("Pulling the pictures out of the video. That happens on this device.");
+        const result = await extractFrames(file, setExtractProgress);
+        const uploaded = await uploadVideo(file, { onProgress: setUploadProgress });
+        setExtracting(false);
+        setUploadProgress(null);
+        const videoId = uploaded?.videoId ?? null;
+        setVideo({ name: file.name, result, file, videoId });
+        await runInvestigation(
+          videoId
+            ? {
+                ...base,
+                ...contextText,
+                video: {
+                  videoId,
+                  frames: result.frames,
+                  frameTimes: result.frameTimes,
+                  durationSec: result.durationSec,
+                  fileName: file.name.slice(0, 300),
+                },
+              }
+            : {
+                ...base,
+                text: `${item.text ?? ""}\n\n(These are pictures taken from the video. The video file itself could not be saved, so only the pictures can be checked.)`.trim(),
+                images: result.frames.slice(0, 4),
+              },
+        );
+      } catch (error) {
+        setExtracting(false);
+        setUploadProgress(null);
+        setNotice(
+          error instanceof Error
+            ? error.message
+            : "We could not read what you right-clicked. Try saving it and adding it here.",
+        );
+      }
+    };
+
+    window.addEventListener("message", onMessage);
+    ready();
+    return () => window.removeEventListener("message", onMessage);
+  }, [language, runInvestigation]);
+
   const canCheck = hasContent && !busy && !extracting;
 
   return (

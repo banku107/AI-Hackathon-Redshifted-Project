@@ -79,6 +79,9 @@ check. The AI-video detector is Sightengine's free plan: put `DETECTOR_API_USER`
 and `DETECTOR_API_KEY` in `.env.local`; without them the app says it couldn't run
 that check.
 
+**Browser extension:** right-click any text, link, picture or video and choose
+"Check with ScamShield". Install steps are in [extension/README.md](extension/README.md).
+
 `npm run accuracy` runs extra messages through Claude and prints a score; it costs
 a few cents.
 

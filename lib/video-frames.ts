@@ -58,13 +58,27 @@ function loadVideo(file: File): Promise<HTMLVideoElement> {
     video.addEventListener(
       "loadedmetadata",
       () => {
-        // Some browsers report Infinity for fragmented mp4; clamp it.
-        if (!Number.isFinite(video.duration) || video.duration <= 0) {
-          cleanup();
-          reject(new Error("This video has no readable length."));
+        if (Number.isFinite(video.duration) && video.duration > 0) {
+          resolve(video);
           return;
         }
-        resolve(video);
+        // Fragmented mp4 and recorded webm report Infinity until the browser
+        // has scanned to the end. Seeking far past the end makes it work out
+        // the real length; then go back to the start.
+        const fail = () => {
+          cleanup();
+          reject(new Error("This video has no readable length."));
+        };
+        const timer = window.setTimeout(fail, 8000);
+        const onDuration = () => {
+          if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+          window.clearTimeout(timer);
+          video.removeEventListener("durationchange", onDuration);
+          video.addEventListener("seeked", () => resolve(video), { once: true });
+          video.currentTime = 0;
+        };
+        video.addEventListener("durationchange", onDuration);
+        video.currentTime = 1e101;
       },
       { once: true },
     );
