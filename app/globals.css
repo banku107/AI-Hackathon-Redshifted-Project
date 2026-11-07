@@ -1,26 +1,118 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
+
+  /* ScamShield palette. Calm paper, ink text, one teal accent. */
+  --color-paper: #f1f4f2;
+  --color-surface: #ffffff;
+  --color-surface-sunk: #e7ecea;
+  --color-ink: #131f1b;
+  --color-ink-soft: #4a5c55;
+  --color-ink-faint: #6b7d76;
+  --color-line: #d7e0dc;
+  --color-line-strong: #b7c6c0;
+  --color-accent: #0c6a55;
+  --color-accent-hover: #095645;
+  --color-accent-ink: #ffffff;
+  --color-accent-soft: #d5ece4;
+
+  --color-scam: #9e2128;
+  --color-scam-soft: #fae3e4;
+  --color-warn: #7a4c00;
+  --color-warn-soft: #fdefd4;
+  --color-safe: #0d6440;
+  --color-safe-soft: #d8f0e2;
+
+  --radius-card: 18px;
+  --radius-control: 14px;
+
+  /* --- shadcn/ui bridge ------------------------------------------------
+     shadcn primitives speak in these names. They point at the palette above,
+     so there is still exactly one place a colour is defined. `accent` is
+     deliberately left to the teal accent above; shadcn's own "accent" surface
+     is not used by any component we ship. */
+  --color-background: var(--color-paper);
+  --color-foreground: var(--color-ink);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-ink);
+  --color-popover: var(--color-surface);
+  --color-popover-foreground: var(--color-ink);
+  --color-primary: var(--color-accent);
+  --color-primary-foreground: var(--color-accent-ink);
+  --color-secondary: var(--color-surface-sunk);
+  --color-secondary-foreground: var(--color-ink);
+  --color-muted: var(--color-surface-sunk);
+  --color-muted-foreground: var(--color-ink-soft);
+  --color-destructive: var(--color-scam);
+  --color-border: var(--color-line);
+  --color-input: var(--color-line-strong);
+  --color-ring: var(--color-accent);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --color-paper: #0c1311;
+  --color-surface: #141e1b;
+  --color-surface-sunk: #1b2723;
+  --color-ink: #e9f0ed;
+  --color-ink-soft: #a8b9b2;
+  --color-ink-faint: #8a9b94;
+  --color-line: #26332f;
+  --color-line-strong: #394943;
+  --color-accent: #5ec6a6;
+  --color-accent-hover: #79d3b7;
+  --color-accent-ink: #07211a;
+  --color-accent-soft: #16332b;
+
+  --color-scam: #ff9093;
+  --color-scam-soft: #3a1a1c;
+  --color-warn: #f0c063;
+  --color-warn-soft: #32250e;
+  --color-safe: #79d8a5;
+  --color-safe-soft: #13301e;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Large-text mode scales the root so every rem-based size grows together. */
+html[data-text="large"] {
+  font-size: 118%;
+}
+
+html[data-text="xlarge"] {
+  font-size: 134%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-wrap: pretty;
+}
+
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
