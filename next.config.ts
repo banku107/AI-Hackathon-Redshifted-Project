@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   // Lets phones on the same Wi-Fi open the dev server at http://<laptop-ip>:3000
   // (npm run dev:phone). Private home/school network address ranges only.
   allowedDevOrigins: ["192.168.*.*", "10.*.*.*", "172.*.*.*"],
+  serverExternalPackages: ["@contentauth/c2pa-node"],
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
