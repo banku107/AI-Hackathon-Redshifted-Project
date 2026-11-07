@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="780" viewBox="0 0 390 780" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title>ScamShield test fixture techsupport-01 (fictional)</title>
+  <rect width="390" height="780" fill="#1e3a8a"/>
+  <rect x="0" y="0" width="390" height="44" fill="#e5e7eb"/>
+  <rect x="12" y="10" width="366" height="24" rx="12" fill="#ffffff"/>
+  <text x="26" y="27" font-size="12" fill="#6b7280">security-alert.example</text>
+  <rect x="20" y="150" width="350" height="356" rx="6" fill="#ffffff" stroke="#dc2626" stroke-width="4"/>
+  <text x="195" y="210" text-anchor="middle" font-size="40" fill="#dc2626">⚠</text>
+  <text font-size="15" fill="#111827" text-anchor="middle" font-weight="600"><tspan x="195" y="250">MICROSOFT WINDOWS SECURITY</tspan><tspan x="195" y="272">WARNING: Your computer has been</tspan><tspan x="195" y="294">infected with (3) viruses and your</tspan><tspan x="195" y="316">banking information is at risk. Do</tspan><tspan x="195" y="338">NOT turn off your computer. Call</tspan><tspan x="195" y="360">Microsoft Support immediately at</tspan><tspan x="195" y="382">1-888-555-0199 to prevent data</tspan><tspan x="195" y="404">loss.</tspan></text>
+  <rect x="125" y="446" width="140" height="34" rx="4" fill="#dc2626"/>
+  <text x="195" y="468" text-anchor="middle" font-size="14" fill="#fff" font-weight="700">OK</text>
+  <rect x="0" y="746" width="390" height="34" fill="#111827"/>
+  <text x="195" y="768" text-anchor="middle" font-size="12" fill="#fbbf24" font-weight="700" letter-spacing="0.5">TEST FIXTURE · FICTIONAL · NOT A REAL MESSAGE</text>
+</svg>

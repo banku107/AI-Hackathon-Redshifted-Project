@@ -1,0 +1,12 @@
+{
+  "id": "crypto-01",
+  "text": "Hi Dorothy, it was so nice chatting yesterday! As promised, here's the trading platform my uncle uses. I started with $1,000 and now I'm at $14,600 in two months. Minimum deposit is only $500 in Bitcoin. Here is the link: https://coin-growth-vault.example",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "investment_crypto"
+  },
+  "notes": "'Pig-butchering' style: friendly stranger, unrealistic returns, crypto deposit (.example placeholder)."
+}

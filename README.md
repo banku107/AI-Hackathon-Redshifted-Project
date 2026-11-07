@@ -71,10 +71,14 @@ npm run try:media -- screenshot shot.png
 `mock/demo-recording.json` with no network: send `"demo": true` or set
 `DEMO_MODE=true`.
 
-Deploy on [Vercel](https://vercel.com) with the same environment variables. Set
-`BLOB_READ_WRITE_TOKEN` from Vercel Storage if video uploads should work; without it
-`/api/upload` answers 503 and the client falls back to sending video frames as
-screenshots.
+ScamShield runs only on your laptop: no hosting, no domain, no cloud storage. To
+open it on a phone, put the phone on the same Wi-Fi, run `npm run dev:phone`, and
+open `http://<laptop-ip>:3000` (find the IP with `ipconfig` on Windows). Uploaded
+videos are saved in `.uploads/<videoId>`, which git ignores. Until `/api/upload`
+exists the client falls back to sending video frames as screenshots.
+
+`npm run accuracy` runs extra messages through Claude and prints a score; it costs
+a few cents.
 
 ## Project layout
 
@@ -84,7 +88,7 @@ app/                    Pages and API routes
   family/page.tsx       Family alert screen
   damage-control/       Recovery checklist and report
   api/agent/route.ts    POST /api/agent, the live agent stream (SSE)
-  api/upload/route.ts   Uploads a video to Vercel Blob
+  api/upload/route.ts   Saves a video to .uploads/ (Person 2, not written yet)
   layout.tsx            Fonts, metadata, theme boot script
   globals.css           Design tokens, dark theme, text sizes
 components/             App bar, read-aloud, settings, timeline,
@@ -93,14 +97,15 @@ lib/                    contract, prompt, agent/, app-state, family-sync,
                         family-contact, i18n, image, mock-events, run-stream,
                         speech, video-frames, video-upload, utils
 mock/                   Recorded events for demo and tests
-scripts/                try-agent, try-media, test-agent, record-demo
+scripts/                try-agent, try-media, test-agent, record-demo,
+                        eval, accuracy
+test-data/              Person 4's messages and demo cases
 docs/                   Contract, design notes, HTML copy of this page
 ```
 
 Person 2's investigation tools are not here yet. The brain uses stand-ins in
 `lib/agent/fake-investigate.ts` and switches with one line in
-`lib/agent/investigate.ts`. Person 4's `test-data/` and `scripts/eval.ts` are not
-here yet either.
+`lib/agent/investigate.ts`.
 
 ## Design
 

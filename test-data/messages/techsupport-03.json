@@ -1,0 +1,12 @@
+{
+  "id": "techsupport-03",
+  "text": "Hello, this is Mark from Apple Support. We have detected that your iCloud has been hacked. Please download the AnyDesk app and give me the 9-digit code so I can remove the hacker for you.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "tech_support"
+  },
+  "notes": "Unsolicited support contact plus a request to install remote-access software."
+}

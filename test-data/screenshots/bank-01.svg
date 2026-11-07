@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="780" viewBox="0 0 390 780" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title>ScamShield test fixture bank-01 (fictional)</title>
+  <rect width="390" height="780" fill="#ffffff"/>
+  <rect width="390" height="120" fill="#f3f4f6"/>
+  <text x="24" y="30" font-size="14" font-weight="600" fill="#111827">9:41</text>
+  <text x="366" y="30" font-size="13" text-anchor="end" fill="#111827">5G ▮▮▮</text>
+  <text x="22" y="72" font-size="26" fill="#2563eb">‹</text>
+  <circle cx="195" cy="66" r="18" fill="#9ca3af"/>
+  <text x="195" y="72" text-anchor="middle" font-size="16" fill="#fff">👤</text>
+  <text x="195" y="100" text-anchor="middle" font-size="13" fill="#111827" font-weight="600">73981</text>
+  <text x="195" y="152" text-anchor="middle" font-size="11" fill="#6b7280">Text Message · Today 9:38 AM</text>
+  <rect x="24" y="176" width="300" height="200" rx="18" fill="#e5e7eb"/>
+  <text font-size="16" fill="#111827"><tspan x="40" y="200">Wells Fargo ALERT: Your</tspan><tspan x="40" y="222">account has been temporarily</tspan><tspan x="40" y="244">locked due to unusual sign-in</tspan><tspan x="40" y="266">activity. Verify your identity</tspan><tspan x="40" y="288">now to avoid permanent</tspan><tspan x="40" y="310">suspension:</tspan><tspan x="40" y="332">https://wellsfargo-secure-veri</tspan><tspan x="40" y="354">fy.example/login</tspan></text>
+  <rect x="16" y="688" width="358" height="40" rx="20" fill="none" stroke="#d1d5db"/>
+  <text x="34" y="714" font-size="14" fill="#9ca3af">Text Message</text>
+  <rect x="0" y="746" width="390" height="34" fill="#111827"/>
+  <text x="195" y="768" text-anchor="middle" font-size="12" fill="#fbbf24" font-weight="700" letter-spacing="0.5">TEST FIXTURE · FICTIONAL · NOT A REAL MESSAGE</text>
+</svg>

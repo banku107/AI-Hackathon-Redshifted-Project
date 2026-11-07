@@ -1,0 +1,12 @@
+{
+  "id": "bank-02",
+  "text": "This is the Bank of America fraud department. We have stopped a $1,250 transfer from your account. A representative will call you shortly. To secure your funds, you will need to move them to a new protected account and read back the 6-digit code we just sent you.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "bank_impersonation"
+  },
+  "notes": "Subtle, professional tone, no link. Red flags: moving money to a 'safe account' and reading back a one-time code."
+}

@@ -1,0 +1,12 @@
+{
+  "id": "bank-01",
+  "text": "Wells Fargo ALERT: Your account has been temporarily locked due to unusual sign-in activity. Verify your identity now to avoid permanent suspension: https://wellsfargo-secure-verify.example/login",
+  "image": "screenshots/bank-01.png",
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "bank_impersonation"
+  },
+  "notes": "Credential phishing with a lookalike domain (.example placeholder). Threat of suspension creates urgency."
+}

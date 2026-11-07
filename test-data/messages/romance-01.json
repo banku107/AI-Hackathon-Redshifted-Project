@@ -1,0 +1,12 @@
+{
+  "id": "romance-01",
+  "text": "My love, I have been thinking about you all day. The ship's supply payment failed and they won't let me leave the rig until the customs fee is paid. It is only $3,800 and I will repay you the moment I land in Houston. You are the only one I trust. Please don't tell your children, they would not understand us.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "romance"
+  },
+  "notes": "Long-distance romance: offshore-worker story, money for fees, isolation from family."
+}

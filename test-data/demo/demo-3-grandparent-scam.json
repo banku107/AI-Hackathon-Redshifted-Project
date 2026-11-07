@@ -1,0 +1,22 @@
+{
+  "id": "demo-3-grandparent-scam",
+  "stageOrder": 3,
+  "title": "Grandparent emergency → RED (Scam) + family alert",
+  "request": {
+    "text": "Grandma it's me, I'm in jail, please send $2,000 in gift cards, don't tell mom",
+    "language": "en",
+    "familyContact": {
+      "name": "Maria (daughter)",
+      "phone": "+15555550142",
+      "email": "maria.family@example.com"
+    }
+  },
+  "expected": {
+    "level": "scam",
+    "scamType": "grandparent",
+    "events": [
+      "family_alert"
+    ]
+  },
+  "explanation": "Gift cards, secrecy ('don't tell mom'), jail urgency and no name are textbook grandparent-scam signals. familyContact is fictional (555-01xx number, example.com email). A family_alert event is EXPECTED in the stream, but an event in the stream does not prove an SMS/email was delivered; only claim delivery if Person 2/3's notification channel actually sends it and the second phone visibly receives it."
+}

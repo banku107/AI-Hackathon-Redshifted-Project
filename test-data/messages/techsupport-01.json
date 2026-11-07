@@ -1,0 +1,12 @@
+{
+  "id": "techsupport-01",
+  "text": "MICROSOFT WINDOWS SECURITY WARNING: Your computer has been infected with (3) viruses and your banking information is at risk. Do NOT turn off your computer. Call Microsoft Support immediately at 1-888-555-0199 to prevent data loss.",
+  "image": "screenshots/techsupport-01.png",
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "tech_support"
+  },
+  "notes": "Pop-up style warning with a phone number. Microsoft does not put support phone numbers in security warnings. Fictional 555-01xx number."
+}

@@ -1,0 +1,15 @@
+{
+  "id": "demo-2-delivery-scam",
+  "stageOrder": 2,
+  "title": "Fake USPS delivery text → RED (Scam)",
+  "request": {
+    "text": "USPS: Your package is on hold due to an incomplete address. Update within 12 hrs: https://usps-package-hold.example/update",
+    "language": "en"
+  },
+  "expected": {
+    "level": "scam",
+    "scamType": "delivery",
+    "events": []
+  },
+  "explanation": "[TEAM DEMO DOMAIN] is filled with the harmless placeholder usps-package-hold.example (.example is an IANA-reserved TLD that can never be registered or resolve). No lookalike domain was purchased and no fake USPS site exists. Expected evidence: the domain is not usps.com, does not resolve / has no registration record, deadline pressure. If Person 2's link tool reports 'no WHOIS record', the narrator must describe that honestly as 'this domain doesn't exist as a real USPS site', NOT as 'registered 2 days ago'. If the team later controls a real demo domain, replace the URL here and in docs/pitch-script.md."
+}

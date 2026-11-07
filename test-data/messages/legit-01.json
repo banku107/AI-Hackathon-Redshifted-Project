@@ -1,0 +1,12 @@
+{
+  "id": "legit-01",
+  "text": "Chase: Did you attempt a $42.10 purchase at Target? Reply YES or NO. We'll never ask for your password.",
+  "image": "screenshots/legit-01.png",
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "Typical card-fraud confirmation text. No link, no payment, no credentials requested. Same text as stage Demo 1."
+}

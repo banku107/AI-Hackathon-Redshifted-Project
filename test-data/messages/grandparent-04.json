@@ -1,0 +1,12 @@
+{
+  "id": "grandparent-04",
+  "text": "Abuela, soy yo, tu nieto. Estoy en problemas, me detuvieron en la frontera y necesito 1.500 dólares para salir hoy. No le digas nada a mi mamá, por favor, se va a enojar. Mándalo por Western Union a nombre de mi abogado, te paso los datos.",
+  "image": "screenshots/grandparent-04.png",
+  "language": "es",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "grandparent"
+  },
+  "notes": "Spanish grandparent scam: no name given, secrecy, money transfer to a third-party 'lawyer'."
+}

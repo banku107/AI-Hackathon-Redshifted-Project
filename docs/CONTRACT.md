@@ -131,7 +131,7 @@ type ExpandLink = (url: string) => Promise<ExpandLinkResult>;
 type DomainAge = (domain: string) => Promise<DomainAgeResult>;
 type LookalikeCheck = (domain: string) => Promise<LookalikeResult>;
 type CheckReputation = (url: string) => Promise<ReputationResult>;
-type AnalyzeVideo = (blobUrl: string) => Promise<VideoReport>;
+type AnalyzeVideo = (videoId: string) => Promise<VideoReport>; // reads .uploads/<videoId>
 type SendFamilyAlert = (
   contact: FamilyContact,
   alert: FamilyAlert,
@@ -240,7 +240,7 @@ interface InputImage {
 }
 
 interface VideoInput {
-  blobUrl: string;             // Vercel Blob URL of the original video
+  videoId: string;             // from POST /api/upload; file is .uploads/<videoId>
   frames: InputImage[];        // 8-12 JPEG frames, max 768 px wide
   frameTimes: number[];        // seconds, same order as frames
   durationSec: number;
@@ -271,11 +271,14 @@ An invalid body gets a 400 with the list of problems.
 `Language` is `en`, `es`, `fr`, `pt`, `zh`, `hi`, `ar`, `vi`, `ko`, `tl`. The
 settings menu in `lib/i18n.ts` offers the same ten, in native names.
 
-Video uploads: `lib/video-upload.ts` asks `app/api/upload/route.ts` for a Vercel
-Blob token and uploads the clip to `checks/`. The route allows mp4, mov, webm, and
-m4v up to 50 MB. Without `BLOB_READ_WRITE_TOKEN` the route answers 503, the upload
-returns null, and the page sends up to four frames as pictures with a note that the
-video file itself was not checked.
+Video uploads: everything runs on this computer, with no cloud storage.
+`lib/video-upload.ts` POSTs the raw file to `app/api/upload/route.ts` with
+`XMLHttpRequest` (for upload progress) and `Content-Type` set to the file type.
+The route (Person 2) accepts `video/mp4`, `video/quicktime`, and `video/webm` up to
+50 MB, saves it as `.uploads/<uuid>.<ext>` (git ignores `.uploads/`), and answers
+`{ videoId }`. If the route is missing or refuses the file, the upload returns null
+and the page sends up to four frames as pictures with a note that the video file
+itself was not checked.
 
 ## The streaming format
 

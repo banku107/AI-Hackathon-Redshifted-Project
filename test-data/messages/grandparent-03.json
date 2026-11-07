@@ -1,0 +1,12 @@
+{
+  "id": "grandparent-03",
+  "text": "Hi Mum, I dropped my phone in the sink so this is my new number. You can delete the old one. Text me when you get this x",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "suspicious",
+    "scamType": "grandparent"
+  },
+  "notes": "'Hi Mum' new-number opener. No request yet, so 'suspicious' is the honest label: verify via the old number before replying. Tests calibrated uncertainty."
+}

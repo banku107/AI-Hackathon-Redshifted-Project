@@ -1,0 +1,22 @@
+{
+  "id": "demo-3-grandparent-scam-es",
+  "stageOrder": 3,
+  "title": "Grandparent emergency (Spanish) → RED (Scam) + family alert",
+  "request": {
+    "text": "Abuela, soy yo, estoy en la cárcel, por favor mándame $2,000 en tarjetas de regalo, no le digas a mamá",
+    "language": "es",
+    "familyContact": {
+      "name": "Maria (daughter)",
+      "phone": "+15555550142",
+      "email": "maria.family@example.com"
+    }
+  },
+  "expected": {
+    "level": "scam",
+    "scamType": "grandparent",
+    "events": [
+      "family_alert"
+    ]
+  },
+  "explanation": "Spanish version of Demo 3. Verdict text (headline, reasons, nextSteps) should come back in Spanish because language is 'es'. Use this to show multilingual support if time allows."
+}

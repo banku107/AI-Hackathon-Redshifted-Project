@@ -1,0 +1,12 @@
+{
+  "id": "legit-05",
+  "text": "Hi Grandpa! Sunday dinner is still on. Mom says to bring your famous potato salad. Ellie has a soccer game at 2 so we'll eat around 5. Love you!",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "Ordinary family message: no money, no secrecy, no urgency."
+}

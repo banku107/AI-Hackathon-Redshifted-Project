@@ -456,7 +456,9 @@ npm run try:media -- screenshot shot.png</code></pre>
 
     <p><code>npm run typecheck</code>, <code>npm run lint</code>, and <code>npm run test:agent</code> (offline) are free; <code>npm run record:demo</code> calls Claude and costs a little. Demo mode replays <code>mock/demo-recording.json</code> with no network: send <code>"demo": true</code> or set <code>DEMO_MODE=true</code>.</p>
 
-    <p>Deploy on <a href="https://vercel.com" rel="noopener noreferrer" target="_blank">Vercel</a> with the same environment variables. Set <code>BLOB_READ_WRITE_TOKEN</code> from Vercel Storage if video uploads should work; without it <code>/api/upload</code> answers 503 and the client falls back to sending video frames as screenshots.</p>
+    <p>ScamShield runs only on your laptop: no hosting, no domain, no cloud storage. To open it on a phone, put the phone on the same Wi-Fi, run <code>npm run dev:phone</code>, and open <code>http://&lt;laptop-ip&gt;:3000</code> (find the IP with <code>ipconfig</code> on Windows). Uploaded videos are saved in <code>.uploads/&lt;videoId&gt;</code>, which git ignores. Until <code>/api/upload</code> exists the client falls back to sending video frames as screenshots.</p>
+
+    <p><code>npm run accuracy</code> runs extra messages through Claude and prints a score; it costs a few cents.</p>
 
     <h2>Design</h2>
 
@@ -477,7 +479,7 @@ npm run try:media -- screenshot shot.png</code></pre>
   family/page.tsx       Family alert screen
   damage-control/       Recovery checklist and report
   api/agent/route.ts    POST /api/agent, the live agent stream (SSE)
-  api/upload/route.ts   Uploads a video to Vercel Blob
+  api/upload/route.ts   Saves a video to .uploads/ (Person 2, not written yet)
   layout.tsx            Fonts, metadata, theme boot script
   globals.css           Design tokens, dark theme, text sizes
 components/             App bar, read-aloud, settings, timeline,
@@ -488,7 +490,7 @@ lib/                    contract, prompt, agent/, app-state, family-sync,
 mock/                   Recorded events for demo and tests
 scripts/                try-agent, try-media, test-agent, record-demo
 docs/                   Contract, design notes, this page</code></pre>
-      <p>Person 2's investigation tools are not here yet. The brain uses stand-ins in <code>lib/agent/fake-investigate.ts</code> and switches with one line in <code>lib/agent/investigate.ts</code>. Person 4's <code>test-data/</code> and <code>scripts/eval.ts</code> are not here yet either.</p>
+      <p>Person 2's investigation tools are not here yet. The brain uses stand-ins in <code>lib/agent/fake-investigate.ts</code> and switches with one line in <code>lib/agent/investigate.ts</code>.</p>
     </details>
 
     <h2>Team and branches</h2>

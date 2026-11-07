@@ -1,0 +1,12 @@
+{
+  "id": "legit-10",
+  "text": "Bonjour Mamie ! On a bien reçu ton colis pour l'anniversaire de Léa, elle était ravie. On t'appelle dimanche. Bisous.",
+  "image": null,
+  "language": "fr",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "French ordinary family message; tests multilingual handling of benign content."
+}

@@ -61,7 +61,7 @@ export default function HomePage() {
     name: string;
     result: FrameExtraction;
     file: File;
-    uploadedUrl: string | null;
+    videoId: string | null;
   } | null>(null);
   const [extracting, setExtracting] = useState(false);
   const [extractProgress, setExtractProgress] = useState(0);
@@ -155,10 +155,10 @@ export default function HomePage() {
       ...(text.trim() ? { text: text.trim() } : {}),
       ...(mode === "picture" && image ? { images: [image.data] } : {}),
       ...(mode === "video" && video
-        ? video.uploadedUrl
+        ? video.videoId
           ? {
               video: {
-                blobUrl: video.uploadedUrl,
+                videoId: video.videoId,
                 frames: video.result.frames,
                 frameTimes: video.result.frameTimes,
                 durationSec: video.result.durationSec,
@@ -166,7 +166,7 @@ export default function HomePage() {
               },
             }
           : {
-              // No blob store on this deployment, so there is no video file for
+              // The upload did not go through, so there is no video file for
               // the server to inspect. The frames are the pictures the agent
               // reads anyway, so send them as screenshots and say so.
               text: `${text.trim() ? `${text.trim()}\n\n` : ""}(These are ${video.result.frames.length} pictures taken from a video the person uploaded. The video file itself was not uploaded, so only the pictures can be checked.)`,
@@ -244,20 +244,20 @@ export default function HomePage() {
     try {
       const result = await extractFrames(file, setExtractProgress);
 
-      // The file checks the agent runs need a URL it can reach. Where the blob
-      // store is configured, send the clip; otherwise keep going on the frames.
-      let uploadedUrl: string | null = null;
+      // The file checks the agent runs need the clip on this computer. Save it
+      // through /api/upload; if that fails, keep going on the frames.
+      let videoId: string | null = null;
       setUploadProgress(0);
       const uploaded = await uploadVideo(file, {
         onProgress: setUploadProgress,
       });
-      uploadedUrl = uploaded?.url ?? null;
+      videoId = uploaded?.videoId ?? null;
 
-      setVideo({ name: file.name, result, file, uploadedUrl });
+      setVideo({ name: file.name, result, file, videoId });
       setNotice(
-        uploadedUrl
+        videoId
           ? null
-          : "The pictures are ready. This deployment cannot look at the video file itself, so only the pictures will be checked.",
+          : "The pictures are ready. The video file itself could not be saved, so only the pictures will be checked.",
       );
     } catch (error) {
       setVideo(null);

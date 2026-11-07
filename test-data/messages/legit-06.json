@@ -1,0 +1,12 @@
+{
+  "id": "legit-06",
+  "text": "Netflix: A new device signed in to your account from Smart TV - Living Room. If this was you, you don't need to do anything. If not, open the Netflix app and go to Account > Manage access and devices.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "Genuine-style security notice that directs the user to the app rather than to a link."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "demo-4-already-acted",
+  "stageOrder": 4,
+  "title": "Rosa already sent a $500 gift card → RED + damage-control checklist",
+  "request": {
+    "text": "Grandma it's me, I'm in jail, please send $2,000 in gift cards, don't tell mom",
+    "language": "en",
+    "alreadyActed": true,
+    "actionDetails": "I already sent one $500 gift card",
+    "familyContact": {
+      "name": "Maria (daughter)",
+      "phone": "+15555550142",
+      "email": "maria.family@example.com"
+    }
+  },
+  "expected": {
+    "level": "scam",
+    "scamType": "grandparent",
+    "events": [
+      "family_alert",
+      "damage_control"
+    ]
+  },
+  "explanation": "Follow-up to Demo 3. Expected damage-control guidance (non-blaming tone): stop sending money and stop replying; contact the gift card issuer immediately with the card number and receipt to ask for a freeze/refund; keep receipts and screenshots; report to the FTC (ReportFraud.ftc.gov) and FBI IC3 (ic3.gov); call the real grandson/family on a known number; alert family. Must not promise the money will be recovered."
+}

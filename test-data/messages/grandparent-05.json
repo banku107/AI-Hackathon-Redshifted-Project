@@ -1,0 +1,12 @@
+{
+  "id": "grandparent-05",
+  "text": "Hola tía, soy Carlos. Cambié de número. Tengo una emergencia: tengo que pagar una factura hoy y mi banco me bloqueó la app. ¿Me puedes hacer una transferencia de 900 euros? Te lo devuelvo mañana sin falta. Te mando la cuenta ahora.",
+  "image": null,
+  "language": "es",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "grandparent"
+  },
+  "notes": "Spanish 'new number + urgent bill' family impersonation. Subtle: plausible story, but new number plus transfer to an unknown account."
+}

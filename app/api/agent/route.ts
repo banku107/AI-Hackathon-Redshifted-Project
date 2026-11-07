@@ -176,7 +176,7 @@ async function runAgent(request: AgentRequest, events: EventStream, signal: Abor
   let videoReport: VideoReport | null = null;
   if (request.video) {
     try {
-      videoReport = await analyzeVideo(request.video.blobUrl);
+      videoReport = await analyzeVideo(request.video.videoId);
     } catch {
       videoReport = {
         credentials: { found: false, error: "Check failed." },
@@ -196,6 +196,7 @@ async function runAgent(request: AgentRequest, events: EventStream, signal: Abor
   ];
 
   let jsonRetries = 0;
+  let netRetries = 0;
   for (let turn = 0; turn < MAX_TURNS; turn++) {
     if (events.closed || signal.aborted) return;
 
@@ -231,6 +232,7 @@ async function runAgent(request: AgentRequest, events: EventStream, signal: Abor
     try {
       message = await stream.finalMessage();
       jsonRetries = 0;
+      netRetries = 0;
       console.log(
         `[agent] turn ${turn + 1}: ${message.stop_reason} in ${((Date.now() - turnStarted) / 1000).toFixed(1)}s,` +
           ` tools=[${message.content.filter((b) => b.type === "tool_use" || b.type === "server_tool_use").map((b) => ("name" in b ? b.name : "")).join(",")}]`,
@@ -238,6 +240,12 @@ async function runAgent(request: AgentRequest, events: EventStream, signal: Abor
     } catch (err) {
       if (signal.aborted || events.closed) return;
       console.error(`[agent] turn ${turn + 1} failed after ${((Date.now() - turnStarted) / 1000).toFixed(1)}s`, err);
+      // A short network drop: wait a moment and try this turn again (max 2 times).
+      if (err instanceof Anthropic.APIConnectionError && netRetries++ < 2) {
+        await new Promise((r) => setTimeout(r, 1500 * netRetries));
+        turn--;
+        continue;
+      }
       if (err instanceof Anthropic.RateLimitError) {
         events.send({ type: "error", message: FRIENDLY.busy, recoverable: true });
         return;
