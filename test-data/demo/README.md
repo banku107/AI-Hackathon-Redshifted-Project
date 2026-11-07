@@ -64,6 +64,6 @@ As of 2026-11-07:
 
 - **Done:** all five fixtures pass the API's request schema. They were run through the real `/api/agent` route with `DEMO_MODE=true`, which replays Person 1's recordings; all 5 returned the expected verdicts and events. Family alerts came back on `channel: "screen"`, meaning shown in the app, not texted.
 - **Not done:** that replay checks the plumbing, not live accuracy. A **live** run (real Claude, with the shared key) is still to do at a check-in: `npx tsx scripts/eval.ts --suite demo`.
-- **Different link:** Person 1's `scripts/demo-cases.ts` uses a different USPS link (`usps-redeliver-help.xyz`). See `docs/team-handoff.md`.
+- **Same link:** Person 1's `scripts/demo-cases.ts` now uses the same `usps-package-hold.example` link. The team decided not to buy a domain; the app runs locally only.
 
 Note on `demo: true`: the contract has an optional `demo` flag. These fixtures leave it **unset** so they test the real agent. If Person 1's API has a canned "demo mode", use it only as a stage fallback, and say so if asked.

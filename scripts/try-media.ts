@@ -4,7 +4,7 @@
 //   npm run try:media -- screenshot path/to/image.png
 //   npm run try:media -- video frame1.jpg frame2.jpg ...
 //
-// "video" mode uses a fake blob URL, so it tests the brain's video handling
+// "video" mode uses a fake video id, so it tests the brain's video handling
 // with Person 2's stand-in video checks. Needs `npm run dev` running.
 
 import { readFileSync } from "node:fs";
@@ -31,7 +31,7 @@ async function main() {
       : {
           language: "en",
           video: {
-            blobUrl: "https://example.com/test-video.mp4",
+            videoId: "test-video.mp4",
             frames: images,
             frameTimes: images.map((_, i) => i * 2),
             durationSec: images.length * 2,

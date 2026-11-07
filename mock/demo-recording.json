@@ -120,7 +120,7 @@
       "type": "plan",
       "steps": [
         "Check where the link really goes",
-        "See how old the website is and if it copies USPS",
+        "Check if the website is new or copies USPS",
         "Look for common scam tricks in the message",
         "Find the real USPS website and phone number"
       ]
@@ -140,13 +140,13 @@
     {
       "type": "step_start",
       "id": "s2",
-      "label": "Checking how old the website usps-redeliver-help.xyz is",
+      "label": "Checking how old the website usps-package-hold.example is",
       "tool": "domain_age"
     },
     {
       "type": "step_start",
       "id": "s3",
-      "label": "Checking if usps-redeliver-help.xyz copies a real company",
+      "label": "Checking if usps-package-hold.example copies a real company",
       "tool": "lookalike_check"
     },
     {
@@ -175,56 +175,56 @@
     },
     {
       "type": "step_start",
-      "id": "srvtoolu_01Cs4BTd2KUb2FFjRxKVpwgp",
-      "label": "Searching the web: “USPS official phone number customer service”",
+      "id": "srvtoolu_01GBFuDAX6KSAHcbAMbjDD4f",
+      "label": "Searching the web: “USPS official phone number contact”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_01Cs4BTd2KUb2FFjRxKVpwgp",
+      "id": "srvtoolu_01GBFuDAX6KSAHcbAMbjDD4f",
       "ok": true,
       "summary": "Found 9 results"
     },
     {
       "type": "step_start",
-      "id": "srvtoolu_013LLomcXC1Dvm3XN8w1W3BG",
-      "label": "Searching the web: “USPS official phone number customer service”",
+      "id": "srvtoolu_012d5HWi3X5Z2Tq5UvyECJG1",
+      "label": "Searching the web: “USPS official phone number contact”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_013LLomcXC1Dvm3XN8w1W3BG",
+      "id": "srvtoolu_012d5HWi3X5Z2Tq5UvyECJG1",
       "ok": true,
       "summary": "Found 9 results"
     },
     {
       "type": "step_start",
-      "id": "srvtoolu_01YPAWRAE3xPGdmPV4nfqwEf",
+      "id": "srvtoolu_01J3mhSxbPJy9At3Gk2qx2wB",
       "label": "Searching the web: “USPS smishing text package on hold incomplete address scam”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_01YPAWRAE3xPGdmPV4nfqwEf",
+      "id": "srvtoolu_01J3mhSxbPJy9At3Gk2qx2wB",
       "ok": true,
       "summary": "Found 10 results"
     },
     {
       "type": "step_start",
-      "id": "srvtoolu_01PoUsBoaGX53ReHEfYt7uU2",
-      "label": "Searching the web: “USPS will not send texts or emails without customer request smishing uspis”",
+      "id": "srvtoolu_01JJT8USuPXzRYptPq9JfcNr",
+      "label": "Searching the web: “USPS smishing will not send text with link unless requested uspis”",
       "tool": "web_search"
     },
     {
       "type": "step_done",
-      "id": "srvtoolu_01PoUsBoaGX53ReHEfYt7uU2",
+      "id": "srvtoolu_01JJT8USuPXzRYptPq9JfcNr",
       "ok": true,
       "summary": "Found 9 results"
     },
     {
       "type": "evidence",
       "id": "s3",
-      "finding": "The website in the link (usps-redeliver-help.xyz) is not the real USPS website. It copies the USPS name by adding extra words. The real website is usps.com.",
+      "finding": "The website in the link is not the real USPS website (usps.com). It copies the USPS name and adds extra words to look official.",
       "severity": "red"
     },
     {
@@ -235,31 +235,31 @@
     {
       "type": "evidence",
       "id": "message",
-      "finding": "The Postal Inspection Service says USPS does not text you unless you asked for updates with a tracking number, and its texts will NOT contain a link. This text has a link and no tracking number.",
+      "finding": "This message matches a well-known fake USPS text trick: \"package on hold, incomplete address, click to update.\" News reports warn about this exact message.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "This matches a well-known scam text: \"package on hold because of an incomplete address.\" It is widely reported as a trick to steal card and personal details.",
+      "finding": "USPS says it does not send texts unless you asked for them with a tracking number, and its texts do not have links. This message has a link and no tracking number.",
       "severity": "red"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "The message rushes you with a 12-hour deadline. Scammers use deadlines so you act before you think.",
+      "finding": "The message rushes you with a 12-hour deadline. Scammers do this so you act before you stop to think.",
       "severity": "yellow"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "Some of our checks did not work this time: we could not see when the website was made, where the link leads, or whether it is on scam lists. These failed checks prove nothing either way.",
+      "finding": "We could not check how old the website is or follow the link safely. Our tools did not work this time, so we did not count those checks either way.",
       "severity": "info"
     },
     {
       "type": "evidence",
       "id": "message",
-      "finding": "The real USPS phone number is 1-800-275-8777 (1-800-ASK-USPS). The real website is usps.com.",
+      "finding": "The real USPS website is usps.com. USPS Customer Care's phone number is 1-800-275-8777 (1-800-ASK-USPS).",
       "severity": "info"
     },
     {
@@ -275,15 +275,15 @@
         "confidence": 0.9,
         "headline": "This is a scam. Do not click the link.",
         "reasons": [
-          "The link goes to a fake website (usps-redeliver-help.xyz) that copies the USPS name. The real USPS website is usps.com.",
-          "USPS says its texts never contain a link, and it only texts you if you asked for updates with a tracking number.",
-          "This is a well-known scam text about a package \"on hold\" for an \"incomplete address,\" with a rush deadline to make you hurry."
+          "The link goes to a fake website that copies the USPS name. The real USPS website is usps.com.",
+          "This is a well-known fake USPS text: \"package on hold, incomplete address, click to update.\"",
+          "USPS says its texts never have links and only come if you asked for them with a tracking number."
         ],
         "nextSteps": [
           "Do not click the link or reply to the text.",
-          "Delete the text. You can forward it to 7726 (SPAM) to report it to your phone company.",
-          "If you are expecting a package, check it yourself at usps.com or call USPS at 1-800-275-8777.",
-          "If you already clicked and typed in card details, call your bank using the number on the back of your card."
+          "Delete the text. You can forward it to 7726 (SPAM) first to report it.",
+          "If you are waiting for a package, type usps.com yourself or call USPS at 1-800-275-8777.",
+          "If you already clicked and typed in any information, tell us so we can help."
         ],
         "scamType": "delivery",
         "officialContact": {

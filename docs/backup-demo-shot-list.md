@@ -45,7 +45,7 @@
 
 ## Recording checklist
 
-- [ ] Use the **deployed** build (Vercel URL) or `npm run build && npm start` locally. Do not use dev mode, which shows the Next.js dev overlay.
+- [ ] Use a local production build: `npm run build && npm start`. Do not use dev mode, which shows the Next.js dev overlay.
 - [ ] Run `npx tsx scripts/eval.ts --suite demo` against the same URL first. All demos should pass.
 - [ ] Browser: clean profile, 100% zoom, no extensions, bookmarks bar hidden, notifications off.
 - [ ] Phone frame window at **390×844**, or mirror a real phone.

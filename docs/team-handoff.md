@@ -22,10 +22,7 @@ The plumbing test checks the **parsing only**. Replays are recordings, so they s
   - Safe messages must return `scamType: "none"`.
   - Delivery-fee texts should be `delivery`, not `phishing_other`.
   - Prize texts should be `prize_lottery`; crypto pitches should be `investment_crypto`.
-- **USPS demo link differs.**
-  - `scripts/demo-cases.ts` uses `usps-redeliver-help[.]xyz/track` (written defanged here so nobody clicks it). `.xyz` is a real, registrable TLD, so someone could own that name, and nobody on the team has checked who does.
-  - Person 4's fixture uses `https://usps-package-hold.example/update`, which is reserved and can never resolve.
-  - Person 4 has **not** bought a lookalike domain. Please decide together which link goes on stage, and keep the two files in sync.
+- **USPS demo link: decided.** No domain will be bought, and the app runs locally only. Both `scripts/demo-cases.ts` and Person 4's fixture use `https://usps-package-hold.example/update`, which is reserved and can never resolve.
 - **Family alert delivery.** The recorded demo alerts come back `channel: "screen"`, meaning shown in the app, not texted. The evaluator now reports "sent by SMS/email" separately from "shown on screen only". The pitch says "her daughter got a heads-up" **only** if the second phone really buzzes.
 - **Mismatches:** log them in the table below after each live run.
 
@@ -40,12 +37,12 @@ The plumbing test checks the **parsing only**. Replays are recordings, so they s
 - **Detector:** read `docs/detector-choice.md`. It recommends **Sightengine**.
   - The free plan has **no video**.
   - Option A (free): call the image `genai` model on 4 frames extracted inside `analyzeVideo`.
-  - Option B ($29/mo Starter): pass the Blob URL as `stream_url` to the video endpoint.
+  - Option B ($29/mo Starter): upload the local file (`.uploads/<videoId>`) as `media` to the video endpoint.
   - Keys go in `.env.local` as `DETECTOR_API_USER` / `DETECTOR_API_KEY`, the names already in `.env.example`.
   - No keys → `detector: null`. A failed call → set the `error` field. Never fake a score.
 - **Payment:** nothing has been purchased. Option B needs a team decision.
 - **Test links:** the test messages use `.example` domains. Your RDAP/WHOIS tools will find no record for them; please make sure that produces sensible evidence text rather than a crash.
-- **Video evaluation:** needs real uploads (a `blobUrl` and frames). See `test-data/videos/README.md`.
+- **Video evaluation:** needs real uploads (a `videoId` and frames, on the laptop that did the upload). See `test-data/videos/README.md`.
 
 ## Person 3 (The Screens)
 
@@ -64,4 +61,4 @@ The plumbing test checks the **parsing only**. Replays are recordings, so they s
 - **Never commit:**
   - `.env.local` (already ignored by `.gitignore`);
   - video files;
-  - `test-data/videos/requests/` (it contains uploaded blob URLs and frames).
+  - `test-data/videos/requests/` (it contains video ids and frames; already in `.gitignore`).

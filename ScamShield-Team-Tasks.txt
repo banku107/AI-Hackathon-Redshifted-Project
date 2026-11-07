@@ -53,16 +53,19 @@
                     this website is".
   Verdict ......... The final answer: SCAM, SUSPICIOUS, or LOOKS REAL.
   Frontend ........ The part people see: buttons, screens, text.
-  Backend / server  The hidden part that runs on a computer online and
-                    does the work.
+  Backend / server  The hidden part that runs on the laptop and does
+                    the work.
   Repo ............ The shared project folder on GitHub.
   Branch .......... Your own copy of the project so you don't break
                     anyone else's work. We combine them later.
   Commit .......... Saving a checkpoint of your work with a short note.
   Push ............ Uploading your commits to GitHub.
   Merge ........... Combining branches into the main project.
-  Deploy .......... Putting the app online so anyone can open it.
-  Vercel .......... The free website host we use to put the app online.
+  Localhost ....... The app running on your own laptop. Open it at
+                    http://localhost:3000. Nothing is put online.
+  Laptop IP ....... Your laptop's address on the Wi-Fi (like
+                    192.168.1.23). Phones on the SAME Wi-Fi use it to
+                    open the app: http://192.168.1.23:3000
   Next.js ......... The tool we use to build the website.
   Mock / fake data  Pretend data, so you can build before the real
                     parts are ready.
@@ -183,7 +186,6 @@
   [ ] VS Code .................... https://code.visualstudio.com
   [ ] Claude Code ................ follow Anthropic's install guide
   [ ] A GitHub account ........... https://github.com
-  [ ] A Vercel account ........... https://vercel.com (sign in with GitHub)
 
   Check it worked. Open a terminal (in VS Code: Terminal > New Terminal)
   and type:
@@ -211,7 +213,7 @@
   5:30          CHECK-IN 2 (15 min): STOP adding new features.
                 After this, only fix and polish.
   5:45 - 7:00   Fix, test, polish, record a backup video
-  7:00 - 8:00   ALL TOGETHER: put it online, practice the pitch, submit
+  7:00 - 8:00   ALL TOGETHER: set up the demo laptop, practice, submit
 
 
 =====================================================================
@@ -244,9 +246,9 @@
            Person 2:  git checkout -b tools
            Person 3:  git checkout -b ui
            Person 4:  git checkout -b demo
-  [ ] 8. One person connects the repo to Vercel (vercel.com > Add New >
-         Project > pick the repo) and adds ANTHROPIC_API_KEY under
-         Settings > Environment Variables.
+  [ ] 8. Nothing goes online. The app only runs on our laptops
+         (http://localhost:3000). To open it on a phone, see
+         "OPENING THE APP ON A PHONE" in the last-hour section.
 
   It works when: all 4 laptops show the page, and everyone is on their
   own branch.
@@ -256,8 +258,13 @@
       node_modules/next/dist/docs before writing Next.js code.
       Route files must NOT export `runtime` (not allowed with Cache
       Components); route handlers already run on Node.js.
+    - LOCAL ONLY: no Vercel, no hosting, no domain. The app runs with
+      npm run dev (or npm run dev:phone so phones on the same Wi-Fi can
+      open http://<laptop-ip>:3000; next.config.ts allowedDevOrigins
+      already lists private network ranges). Uploaded videos are saved
+      to the .uploads/ folder (git-ignored), not to cloud storage.
     - Installed: @anthropic-ai/sdk, zod (v4), tsx. Not yet installed
-      (add when needed): @vercel/blob, tldts, shadcn/ui.
+      (add when needed): tldts, shadcn/ui.
     - Scripts: npm run dev | typecheck | lint | test:agent |
       try:agent -- <case|"text"> | try:media -- <screenshot|video> files |
       record:demo
@@ -447,7 +454,7 @@
         `export * from "@/lib/investigate";`, then npm run typecheck,
         npm run test:agent, and npm run record:demo.
 
-  P1-8  Video: if request.video exists, call P2 analyzeVideo(blobUrl)
+  P1-8  Video: if request.video exists, call P2 analyzeVideo(videoId)
         first (step "Checking the video file"). Send frames as images,
         plus the VideoReport JSON and frame times. Prompt rules:
         - C2PA credentials naming an AI generator = strong proof of AI.
@@ -527,7 +534,7 @@
     It works when: you see PASS for every test.
 
   >>> 3:00 CHECK-IN 1 <<<
-    Also put the app online and check your tools work there too.
+    Run the whole app on one laptop and check your tools work there.
     Tell the team if anything breaks.
 
   STEP 6 (3:15-3:45) - Video upload
@@ -602,12 +609,17 @@
   P2-6  scripts/test-tools.ts: real and fake examples for each tool,
         printing PASS/FAIL. Run with npx tsx scripts/test-tools.ts.
 
-  P2-7  app/api/upload/route.ts: Vercel Blob client uploads (handleUpload
-        from @vercel/blob/client; check the current @vercel/blob docs).
-        Only video/mp4, video/quicktime, video/webm. Max 50 MB.
+  P2-7  app/api/upload/route.ts: POST takes the video as the raw request
+        body (Content-Type header = the video type). Only video/mp4,
+        video/quicktime, video/webm. Max 50 MB (check Content-Length and
+        stop reading past 50 MB). Save it as .uploads/<random id>.<ext>
+        (crypto.randomUUID(); never use the user's file name in the
+        path). Return { videoId: "<random id>.<ext>" }. No cloud
+        storage: everything stays on the laptop.
 
   P2-8  lib/investigate/video.ts -> export const analyzeVideo: AnalyzeVideo.
-        Download the blob to /tmp (max 50 MB), then run in parallel, each
+        Read the file at .uploads/<videoId> (the agent's zod schema only
+        allows safe names like abc-123.mp4), then run in parallel, each
         in its own try/catch:
         a) C2PA: read the manifest with the official C2PA Node library
            (check npm for the current package name) or the c2patool
@@ -618,8 +630,9 @@
            camera make/model", "Encoded by X", "Created by X").
         c) The detector API Person 4 chose. aiProbability 0-1. No key ->
            detector: null.
-        Delete the temp file afterwards. If a)/b) can't run on Vercel,
-        return error fields and tell the human.
+        Keep the file until the check is done, then it may be deleted.
+        If a)/b) can't run on the laptop, return error fields and tell
+        the human.
 
   P2-9  lib/investigate/familyAlert.ts -> export const sendFamilyAlert.
         Twilio env vars + phone -> SMS (under 300 chars, starts with
@@ -633,6 +646,8 @@
         error text.
 
   P2-12 Prove http://localhost:3000 and http://169.254.169.254 are blocked.
+        (This matters even though the app only runs locally: a scam link
+        must never make the tools open pages on the laptop or the Wi-Fi.)
 
 
 #####################################################################
@@ -712,7 +727,8 @@
 
   STEP 7 (5:45-7:00) - Polish
     Tell Claude: "Do steps P3-12, P3-13 and P3-14."
-    Test on real phones (iPhone and Android) using the online link.
+    Test on real phones (iPhone and Android) on the same Wi-Fi, using
+    the laptop's address (see "OPENING THE APP ON A PHONE").
 
   ------------------------------------------------------------------
   FOR CLAUDE - PERSON 3 DETAILED STEPS
@@ -750,8 +766,10 @@
 
   P3-6  Video: accept mp4/quicktime/webm, max 50 MB, max 60 s (check
         duration with a <video> element, friendly message if too long).
-        Upload with upload() from @vercel/blob/client to /api/upload,
-        with a progress bar.
+        Upload with XMLHttpRequest POST to /api/upload (raw file as the
+        body, Content-Type = file.type) so upload.onprogress can drive a
+        progress bar. The reply is { videoId }; put it in
+        AgentRequest.video.videoId.
 
   P3-7  lib/frames.ts: extractFrames(file, count=10) returns
         {frames: InputImage[], frameTimes, durationSec}. Use a hidden
@@ -775,7 +793,8 @@
   P3-11 ?demo=1 in the URL sends {demo:true} so P1's route replays the
         recording (no internet needed for Claude).
 
-  P3-12 Test on real phones at the Vercel URL.
+  P3-12 Test on real phones on the same Wi-Fi at
+        http://<laptop-ip>:3000 (start with npm run dev:phone).
   P3-13 Loading, error and empty states. Error event -> calm message +
         "Try again". Stream drops -> "Connection lost. Please don't act
         on the message yet."
@@ -881,13 +900,15 @@
         for money, delivery updates, appointment reminders, 2FA codes,
         normal family texts). At least 5 in Spanish, at least 6 as
         screenshots (the human makes them). Only harmless links:
-        team-owned domains, example.com variants, or dead scam URLs.
+        .example addresses (reserved, can never open a real site) or
+        dead scam URLs. We are NOT buying a domain.
 
   P4-3  test-data/demo/:
         1. "Chase: Did you attempt a $42.10 purchase at Target? Reply YES
            or NO. We'll never ask for your password." -> safe
         2. "USPS: Your package is on hold due to an incomplete address.
-           Update within 12 hrs: <team lookalike domain>" -> scam,
+           Update within 12 hrs: https://usps-package-hold.example/update"
+           -> scam,
            delivery
         3. "Grandma it's me, I'm in jail, please send $2,000 in gift
            cards, don't tell mom" (plus a Spanish version) -> scam,
@@ -932,10 +953,12 @@
 
   [ ] Combine everyone's work into main (ask Claude: "merge my branch
       into main and fix any conflicts").
-  [ ] Put it online with Vercel. Make sure all the keys are added in
-      Vercel's settings.
-  [ ] Run the scoring script one last time on the online version. Put
-      the score on the slides.
+  [ ] Pick ONE demo laptop. Pull main, check .env.local has the keys,
+      run npm install, then npm run dev:phone.
+  [ ] Run the scoring script one last time on the demo laptop. Put the
+      score on the slides.
+  [ ] Bring a phone hotspot in case the venue Wi-Fi blocks phones from
+      reaching each other (the laptop and phones join the hotspot).
   [ ] Go through the DONE LIST below on a real phone.
   [ ] Test the backup demo mode (add ?demo=1 to the link).
   [ ] Practice the pitch 2-3 times with a timer. Submit.
@@ -946,7 +969,18 @@
       video is not flagged.
   [ ] The family warning shows up on the second phone.
   [ ] The score is ready, with ZERO real messages called scams.
-  [ ] The app works on a phone using the online link.
+  [ ] The app works on a phone using the laptop's address.
+
+  OPENING THE APP ON A PHONE (no internet hosting needed):
+    1. Laptop and phone must be on the SAME Wi-Fi (or the phone hotspot).
+    2. On the laptop run:  npm run dev:phone
+    3. Find the laptop's address. Windows: run ipconfig and look for
+       "IPv4 Address" (like 192.168.1.23). Mac: System Settings > Wi-Fi
+       > Details.
+    4. On the phone open:  http://192.168.1.23:3000  (your number).
+    5. If it won't load: allow Node.js through the laptop's firewall
+       (Windows asks the first time; pick "Private networks"), or use
+       the hotspot. Many school/venue Wi-Fis block this.
   [ ] The pitch fits in 3 minutes, and the backup video is ready.
 
 
@@ -963,7 +997,8 @@
                                   others aren't blocked
   Video checker costs money ..... skip it. The app still works with
                                   the other video checks.
-  Video tools don't work online . run the app on a laptop for the demo
+  Phone can't open the app ...... same Wi-Fi? firewall allowed? try
+                                  the phone hotspot
   Git says "conflict" ........... ask Claude: "help me fix this merge
                                   conflict, explain it simply"
   Claude changed someone else's
@@ -1010,7 +1045,7 @@ export interface InputImage {
 }
 
 export interface VideoInput {
-  blobUrl: string;               // Vercel Blob URL of the original video
+  videoId: string;               // returned by POST /api/upload; file is .uploads/<videoId>
   frames: InputImage[];          // 8-12 JPEG frames, max 768px wide
   frameTimes: number[];          // seconds, same order as frames
   durationSec: number;
@@ -1079,7 +1114,8 @@ export interface VideoReport {
     error?: string;
   } | null;                      // null = no detector configured
 }
-export type AnalyzeVideo = (blobUrl: string) => Promise<VideoReport>;
+// Reads the uploaded file from .uploads/<videoId> on this computer.
+export type AnalyzeVideo = (videoId: string) => Promise<VideoReport>;
 
 export interface FamilyAlertResult {
   delivered: boolean;
@@ -1201,7 +1237,6 @@ export type AgentEvent =
   ANTHROPIC_API_KEY=        everyone (shared team key)
   DETECTOR_API_KEY=         Person 2 (AI-video checker from Person 4)
   DETECTOR_API_USER=        Person 2 (only if the checker needs it)
-  BLOB_READ_WRITE_TOKEN=    Person 2/3 (Vercel > Storage > Blob)
   TWILIO_ACCOUNT_SID=       Person 2 (optional, for real texts)
   TWILIO_AUTH_TOKEN=        Person 2 (optional)
   TWILIO_FROM_NUMBER=       Person 2 (optional)

@@ -23,7 +23,7 @@ export interface InputImage {
 }
 
 export interface VideoInput {
-  blobUrl: string;               // Vercel Blob URL of the original video
+  videoId: string;               // returned by POST /api/upload; file is .uploads/<videoId>
   frames: InputImage[];          // 8-12 JPEG frames, max 768px wide
   frameTimes: number[];          // seconds, same order as frames
   durationSec: number;
@@ -92,7 +92,8 @@ export interface VideoReport {
     error?: string;
   } | null;                      // null = no detector configured
 }
-export type AnalyzeVideo = (blobUrl: string) => Promise<VideoReport>;
+// Reads the uploaded file from .uploads/<videoId> on this computer.
+export type AnalyzeVideo = (videoId: string) => Promise<VideoReport>;
 
 export interface FamilyAlertResult {
   delivered: boolean;

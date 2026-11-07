@@ -12,6 +12,8 @@ cp .env.example .env.local     # then put the Anthropic API key in .env.local
 npm run dev                    # http://localhost:3000
 ```
 
+ScamShield runs **only on your laptop**: no hosting, no domain. To open it on a phone, put the phone on the same Wi-Fi, run `npm run dev:phone`, and open `http://<laptop-ip>:3000` (find the IP with `ipconfig` on Windows). Uploaded videos are saved in `.uploads/`, which git ignores.
+
 Try the brain from a second terminal while `npm run dev` is running:
 
 ```bash

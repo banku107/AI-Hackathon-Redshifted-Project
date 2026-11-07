@@ -73,11 +73,11 @@ ffmpeg -i ai-01.mp4 -map_metadata -1 -c:v libx264 ai-05.mp4
 
 ## Running the video evaluation
 
-The contract's `VideoInput` requires a `blobUrl` (an already-uploaded file) plus client-extracted `frames`. The evaluator cannot upload by itself, because it would need the app's storage token. So:
+The contract's `VideoInput` requires a `videoId` (a file already uploaded through the app's `/api/upload`, saved in `.uploads/` on the laptop) plus client-extracted `frames`. The evaluator does not upload by itself. So:
 
 1. Upload a clip through the ScamShield UI, with DevTools → Network open.
 2. Copy the JSON body of the `POST /api/agent` request and save it as `test-data/videos/requests/<name>.json`, e.g. `requests/ai-01.json`. It needs at least `{"video": {...}, "language": "en"}`.
-   - These request files contain base64 frames and a blob URL. **Do not commit them**; add `test-data/videos/requests/` to the team's `.gitignore`, or delete them after the run.
+   - These request files contain base64 frames and a video id. **Do not commit them**; `test-data/videos/requests/` is already in `.gitignore`. Run the evaluator on the same laptop that did the upload, because the file only exists in that laptop's `.uploads/` folder.
 3. Run `npx tsx scripts/eval.ts --videos`. Clips without a request file are listed as SKIPPED.
 
 **Current status (2026-11-07):** no clips collected, no detector integrated, so video evaluation is **SKIPPED**. Do not quote any video accuracy until a real run exists in `test-data/results/`.

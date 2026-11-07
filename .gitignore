@@ -34,6 +34,12 @@ yarn-error.log*
 .env*
 !.env.example
 
+# uploaded videos (saved locally by /api/upload)
+/.uploads/
+
+# Person 4 video requests (contain frames)
+/test-data/videos/requests/
+
 # vercel
 .vercel
 

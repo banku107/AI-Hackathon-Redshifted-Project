@@ -30,7 +30,8 @@ export const AgentRequestSchema = z
     images: z.array(InputImageSchema).max(4).optional(),
     video: z
       .object({
-        blobUrl: z.string().url(),
+        // Only a safe file name, so a request can never point at another file.
+        videoId: z.string().regex(/^[A-Za-z0-9_-]{1,100}\.(mp4|mov|webm)$/),
         frames: z.array(InputImageSchema).min(1).max(12),
         frameTimes: z.array(z.number().nonnegative()),
         durationSec: z.number().positive(),

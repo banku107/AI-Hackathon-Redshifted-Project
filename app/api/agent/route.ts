@@ -176,7 +176,7 @@ async function runAgent(request: AgentRequest, events: EventStream, signal: Abor
   let videoReport: VideoReport | null = null;
   if (request.video) {
     try {
-      videoReport = await analyzeVideo(request.video.blobUrl);
+      videoReport = await analyzeVideo(request.video.videoId);
     } catch {
       videoReport = {
         credentials: { found: false, error: "Check failed." },

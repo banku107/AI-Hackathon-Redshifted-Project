@@ -319,9 +319,9 @@ interface ManifestEntry { file: string; isAI: boolean; isScam: boolean; hasCrede
 interface VideoPlan { entries: ManifestEntry[]; runnable: { entry: ManifestEntry; request: AgentRequest }[]; skipped: { file: string; reason: string }[]; problems: string[] }
 
 /**
- * The contract's VideoInput needs a blobUrl (file already uploaded by the app's
- * upload flow) plus client-extracted frames. The evaluator cannot do the upload
- * itself without the app's storage credentials, so it runs a video only when a
+ * The contract's VideoInput needs a videoId (file already uploaded through the
+ * app's /api/upload, saved in .uploads/) plus client-extracted frames. The
+ * evaluator does not upload by itself, so it runs a video only when a
  * prepared request exists at test-data/videos/requests/<name>.json containing
  * { "video": VideoInput, "text"?: string, "language"?: Language } — e.g. copied
  * from the browser DevTools Network tab after uploading the clip in the UI.
@@ -346,11 +346,11 @@ function planVideos(): VideoPlan {
     const entry: ManifestEntry = { file: e.file, isAI: e.isAI, isScam: e.isScam, hasCredentials: e.hasCredentials, notes: e.notes };
     plan.entries.push(entry);
     const reqPath = join(DATA, "videos", "requests", `${basename(e.file, extname(e.file))}.json`);
-    if (!existsSync(reqPath)) { plan.skipped.push({ file: e.file, reason: "no prepared request (videos/requests/<name>.json with an uploaded blobUrl + frames)" }); return; }
+    if (!existsSync(reqPath)) { plan.skipped.push({ file: e.file, reason: "no prepared request (videos/requests/<name>.json with an uploaded videoId + frames)" }); return; }
     try {
       const r = JSON.parse(readFileSync(reqPath, "utf8"));
       const v = r?.video;
-      if (!isObj(v) || typeof v.blobUrl !== "string" || !Array.isArray(v.frames) || !Array.isArray(v.frameTimes) ||
+      if (!isObj(v) || typeof v.videoId !== "string" || !Array.isArray(v.frames) || !Array.isArray(v.frameTimes) ||
           typeof v.durationSec !== "number" || typeof v.fileName !== "string") {
         plan.skipped.push({ file: e.file, reason: "prepared request is missing VideoInput fields" }); return;
       }
@@ -835,7 +835,7 @@ async function main(): Promise<void> {
 
   let videoSkipReason: string | null = null;
   if (!opts.videos) videoSkipReason = "not requested (run with --videos once prepared requests exist).";
-  else if (!videoPlan.runnable.length) videoSkipReason = "no runnable videos. Needs: (1) clips in the shared drive, (2) Person 2's detector live with API key, (3) each clip uploaded via the app so a blobUrl + frames exist, saved as test-data/videos/requests/<name>.json.";
+  else if (!videoPlan.runnable.length) videoSkipReason = "no runnable videos. Needs: (1) clips in the shared drive, (2) Person 2's detector live with API key, (3) each clip uploaded via the app so a videoId + frames exist, saved as test-data/videos/requests/<name>.json.";
 
   // 2. Dry run: show what would be sent; no network.
   if (opts.dryRun) {
@@ -872,7 +872,7 @@ async function main(): Promise<void> {
   } catch (err) {
     console.error(red(`\n✖ Cannot reach ${redactUrl(baseUrl)} (${(err as Error & { cause?: { code?: string } }).cause?.code ?? (err as Error).message}).`));
     console.error("  Start the app first:  npm install  →  npm run dev   (needs .env.local with the team's API keys)");
-    console.error("  Or point at a deployment:  BASE_URL=https://<your-app>.vercel.app npx tsx scripts/eval.ts");
+    console.error("  Or point at another laptop on the Wi-Fi:  BASE_URL=http://<laptop-ip>:3000 npx tsx scripts/eval.ts");
     process.exit(3);
   }
 

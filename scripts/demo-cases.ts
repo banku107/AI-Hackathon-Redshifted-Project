@@ -1,6 +1,6 @@
 // scripts/demo-cases.ts  (Person 1)
 // The stage demo messages (from the team guide) and what they should return.
-// Person 4 can replace the USPS link with the team's real lookalike domain.
+// The USPS link uses a reserved .example address, so it can never open a real site.
 
 import type { AgentRequest, VerdictLevel } from "@/lib/contract";
 
@@ -27,7 +27,7 @@ export const DEMO_CASES: DemoCase[] = [
     key: "usps",
     request: {
       language: "en",
-      text: "USPS: Your package is on hold due to an incomplete address. Update within 12 hrs: https://usps-redeliver-help.xyz/track",
+      text: "USPS: Your package is on hold due to an incomplete address. Update within 12 hrs: https://usps-package-hold.example/update",
     },
     expect: { level: "scam" },
   },

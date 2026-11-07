@@ -17,7 +17,7 @@ Legend: **[V]** = verified on the official page cited · **[NV]** = not verified
 | Option | Cost | What it gives | Recommended when |
 |---|---|---|---|
 | **A. Free — frame-based (default)** | $0 (free account, API key required) | Sightengine **image** AI-generated detection (`models=genai`) on 4 frames that `analyzeVideo` extracts from the downloaded clip | We don't want to spend money. |
-| **B. Paid — true video endpoint** | Sightengine **Starter $29/month** [V] | `video/check-sync.json` with `stream_url` = the Blob URL, `models=genai` (and `deepfake`) across the whole clip. The simplest fit for `analyzeVideo(blobUrl)` | The team agrees to pay. **Person 4 / the team lead must decide; nothing has been purchased.** |
+| **B. Paid — true video endpoint** | Sightengine **Starter $29/month** [V] | `video/check-sync.json` with the uploaded file sent as `media`, `models=genai` (and `deepfake`) across the whole clip. The simplest fit for `analyzeVideo(videoId)` | The team agrees to pay. **Person 4 / the team lead must decide; nothing has been purchased.** |
 | Not recommended | Reality Defender video ≥ $399/mo [V]; Hive video = "Contact Sales" [V] | — | — |
 
 Option A is honest about what it is. It analyses sampled **frames**, not motion or audio, and the UI and pitch should describe it that way: "checks frames from the video for signs of AI generation".
@@ -122,7 +122,7 @@ DETECTOR_API_KEY=      # Sightengine "API secret"
 The contract fixes the shape (`lib/contract.ts`):
 
 ```ts
-export type AnalyzeVideo = (blobUrl: string) => Promise<VideoReport>;
+export type AnalyzeVideo = (videoId: string) => Promise<VideoReport>; // file is .uploads/<videoId>
 // VideoReport.detector: { provider: string; aiProbability: number /* 0-1 */; error?: string } | null
 //   null = no detector configured
 ```
@@ -134,7 +134,7 @@ The team guide (P2-8) already has `analyzeVideo` download the blob to `/tmp` (ma
 
 ### 4.3 Option A: free plan, frame-based
 
-`analyzeVideo` only receives `blobUrl`; the frames in `VideoInput.frames` go straight to Claude. So under Option A, Person 2 extracts 4 frames from the downloaded file with `ffmpeg-static`, then sends each to the image endpoint, `POST https://api.sightengine.com/1.0/check.json` with `models=genai`.
+`analyzeVideo` only receives `videoId`; the frames in `VideoInput.frames` go straight to Claude. So under Option A, Person 2 extracts 4 frames from the downloaded file with `ffmpeg-static`, then sends each to the image endpoint, `POST https://api.sightengine.com/1.0/check.json` with `models=genai`.
 
 - [V] The model name and endpoint family are documented.
 - [NV] Whether the Free plan's "AI Detection" covers this exact model needs confirming in the dashboard after signup.
@@ -159,18 +159,17 @@ Example response shape (image). The field names follow the docs; the values are 
 }
 ```
 
-### 4.4 Option B: paid Starter plan, full video endpoint (the simplest fit for `analyzeVideo(blobUrl)`)
+### 4.4 Option B: paid Starter plan, full video endpoint (the simplest fit for `analyzeVideo(videoId)`)
 
-The Vercel Blob URL can be passed directly as `stream_url`, so no download is needed for the detector.
+The app runs only on the laptop, so there is no public URL for Sightengine to fetch. Upload the file itself as `media`.
 
 ```bash
 curl -X POST 'https://api.sightengine.com/1.0/video/check-sync.json' \
-  -F 'stream_url=https://<store>.public.blob.vercel-storage.com/clip.mp4' \
+  -F 'media=@.uploads/<videoId>' \
   -F 'models=genai' \
   -F 'interval=1' \
   -F 'api_user={DETECTOR_API_USER}' \
   -F 'api_secret={DETECTOR_API_KEY}'
-# Or upload the file instead of a URL with: -F 'media=@clip.mp4'
 # interval accepts 0.5 | 1 | 2 | 3 | 4 | 5 (seconds between analysed frames). Sync = clips under 60 s.
 ```
 
@@ -206,12 +205,13 @@ function creds() {
   return user && secret ? { user, secret } : null;
 }
 
-/** Option B (paid Starter): send the Blob URL to the video endpoint. */
-export async function detectVideoByUrl(blobUrl: string): Promise<Detector> {
+/** Option B (paid Starter): upload the local video file to the video endpoint. */
+export async function detectVideoFile(path: string): Promise<Detector> {   // path = .uploads/<videoId>
   const c = creds();
   if (!c) return null;                                   // contract: null = no detector configured
   const fd = new FormData();
-  fd.append("stream_url", blobUrl);
+  const bytes = await readFile(path);                   // import { readFile } from "node:fs/promises"
+  fd.append("media", new Blob([new Uint8Array(bytes)]), "clip.mp4");
   fd.append("models", "genai");
   fd.append("interval", "1");
   fd.append("api_user", c.user);
@@ -302,6 +302,6 @@ The agent (Person 1) maps `aiProbability` to the verdict's `aiMedia.level`. A wi
 
 | Item | Detail |
 |---|---|
-| Account | A Sightengine **free account** created by the team member who owns API keys. Person 4 coordinates privately. Keys go only into `.env.local` / Vercel env vars as `DETECTOR_API_USER` / `DETECTOR_API_KEY`, never into Git or chat. |
+| Account | A Sightengine **free account** created by the team member who owns API keys. Person 4 coordinates privately. Keys go only into `.env.local` as `DETECTOR_API_USER` / `DETECTOR_API_KEY`, never into Git or chat. |
 | Decision | Whether to pay for Starter ($29/mo, Option B). **Default: no, use Option A.** |
 | Test clips | The labelled clips in the shared drive (`test-data/videos/manifest.json`), to run `npx tsx scripts/eval.ts --videos` once the upload pathway exists. |
