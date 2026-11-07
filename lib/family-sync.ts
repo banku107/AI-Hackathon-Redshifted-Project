@@ -26,12 +26,10 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === "string");
 }
 
-function isPayload(value: unknown): value is FamilyAlertPayload {
+/** Shape check for a FamilyAlert from storage, a broadcast or the network. */
+export function isFamilyAlert(value: unknown): value is FamilyAlert {
   if (typeof value !== "object" || value === null) return false;
-  const candidate = value as Record<string, unknown>;
-  const alert = candidate.alert as Record<string, unknown> | undefined;
-  if (typeof alert !== "object" || alert === null) return false;
-
+  const alert = value as Record<string, unknown>;
   return (
     typeof alert.contactName === "string" &&
     typeof alert.summary === "string" &&
@@ -40,7 +38,16 @@ function isPayload(value: unknown): value is FamilyAlertPayload {
       alert.riskLevel === "safe") &&
     typeof alert.moneyInvolved === "boolean" &&
     typeof alert.suggestedAction === "string" &&
-    typeof alert.createdAt === "string" &&
+    typeof alert.createdAt === "string"
+  );
+}
+
+function isPayload(value: unknown): value is FamilyAlertPayload {
+  if (typeof value !== "object" || value === null) return false;
+  const candidate = value as Record<string, unknown>;
+
+  return (
+    isFamilyAlert(candidate.alert) &&
     typeof candidate.sentAt === "number" &&
     isStringArray(candidate.reasons) &&
     isStringArray(candidate.nextSteps) &&

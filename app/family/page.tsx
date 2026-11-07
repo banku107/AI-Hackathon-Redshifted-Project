@@ -7,6 +7,7 @@ import {
   Clock,
   Phone,
   ShieldCheck,
+  UserCircle,
   Warning,
   WarningOctagon,
 } from "@phosphor-icons/react";
@@ -21,6 +22,18 @@ import {
   subscribeFamilyAlerts,
   type FamilyAlertPayload,
 } from "@/lib/family-sync";
+import {
+  buildFamilyFeed,
+  feedItemFromPayload,
+  readSeenAlerts,
+  readWatchedPerson,
+  saveSeenAlerts,
+  saveWatchedPerson,
+  telHref,
+  useServerFamilyAlerts,
+  type FamilyFeedItem,
+  type WatchedPerson,
+} from "@/lib/family-feed";
 import { cn } from "@/lib/utils";
 
 const TONES = {
@@ -69,10 +82,15 @@ function levelHeading(level: VerdictLevel, name: string): string {
   return `${name} may have been targeted`;
 }
 
+const SOMEONE = "Someone you protect";
+
 export default function FamilyPage() {
   const { run } = useAppState();
+  const serverAlerts = useServerFamilyAlerts(3000);
   const [liveAlert, setLiveAlert] = useState<FamilyAlertPayload | null>(null);
   const [ignoredRunKey, setIgnoredRunKey] = useState<string | null>(null);
+  const [seen, setSeen] = useState<ReadonlySet<string>>(() => new Set());
+  const [watched, setWatched] = useState<WatchedPerson | null>(null);
   const [hydrated, setHydrated] = useState(false);
   // Both start at 0 so prerendering never reads the clock. The mount effect
   // below fills them in, and nothing time-relative renders before then.
@@ -91,7 +109,7 @@ export default function FamilyPage() {
     return {
       alert:
         run.familyAlert ?? {
-          contactName: "Someone you protect",
+          contactName: SOMEONE,
           summary: verdict.headline,
           riskLevel: verdict.level,
           moneyInvolved: false,
@@ -106,10 +124,12 @@ export default function FamilyPage() {
   }, [run.verdict, run.familyAlert, run.sourceText, mountedAt]);
 
   useEffect(() => {
-    // Reading sessionStorage once after mount is the only way to hydrate the
-    // last alert without the server and client renders disagreeing.
+    // Reading browser storage once after mount is the only way to hydrate
+    // without the server and client renders disagreeing.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLiveAlert(readLastAlert());
+    setSeen(readSeenAlerts());
+    setWatched(readWatchedPerson());
     const startedAt = Date.now();
     setMountedAt(startedAt);
     setNow(startedAt);
@@ -128,14 +148,38 @@ export default function FamilyPage() {
     return () => window.clearInterval(id);
   }, []);
 
-  const alert =
-    liveAlert ?? (runAlertKey && runAlertKey !== ignoredRunKey ? runAlert : null);
+  const localItems = useMemo(() => {
+    const items: FamilyFeedItem[] = [];
+    if (liveAlert) items.push(feedItemFromPayload(liveAlert));
+    if (runAlert && runAlertKey && runAlertKey !== ignoredRunKey) {
+      items.push(feedItemFromPayload(runAlert));
+    }
+    return items;
+  }, [liveAlert, runAlert, runAlertKey, ignoredRunKey]);
 
-  function dismissAlert() {
-    clearLastAlert();
-    setLiveAlert(null);
-    if (runAlertKey) setIgnoredRunKey(runAlertKey);
+  const feed = useMemo(
+    () => buildFamilyFeed(serverAlerts, localItems, seen),
+    [serverAlerts, localItems, seen],
+  );
+
+  function dismissAlert(item: FamilyFeedItem) {
+    const next = new Set(seen);
+    next.add(item.key);
+    setSeen(next);
+    saveSeenAlerts(next);
+    if (liveAlert && feedItemFromPayload(liveAlert).key === item.key) {
+      clearLastAlert();
+      setLiveAlert(null);
+    }
+    if (runAlert && feedItemFromPayload(runAlert).key === item.key && runAlertKey) {
+      setIgnoredRunKey(runAlertKey);
+    }
   }
+
+  // contactName is the person being warned (whoever reads this page), so the
+  // heading names the person this reader looks after, if they told us.
+  const watchedName = watched?.name ?? SOMEONE;
+  const callHref = watched ? telHref(watched.phone) : null;
 
   return (
     <div className="min-h-[100dvh]">
@@ -164,154 +208,22 @@ export default function FamilyPage() {
               <div className="mt-3 h-4 w-full rounded bg-surface-sunk" />
               <div className="mt-2 h-4 w-5/6 rounded bg-surface-sunk" />
             </div>
-          ) : alert ? (
-            <div className="space-y-5">
-              {/* One sheet: who, what, when, and the single next action. The
-                  colour stripe repeats a meaning that is also spelled out in
-                  the chip, so nothing here depends on colour alone. */}
-              <section
-                aria-labelledby="alert-heading"
-                className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface"
-              >
-                <div
-                  className={cn("h-1.5", TONES[alert.alert.riskLevel].stripe)}
-                  aria-hidden
-                />
-                <div className="p-5 sm:p-6">
-                  <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                    <span
-                      className={cn(
-                        "inline-flex min-h-8 items-center gap-1.5 rounded-full border px-3 text-sm font-bold",
-                        TONES[alert.alert.riskLevel].chip,
-                      )}
-                    >
-                      {(() => {
-                        const Icon = TONES[alert.alert.riskLevel].icon;
-                        return <Icon size={16} weight="fill" aria-hidden />;
-                      })()}
-                      {TONES[alert.alert.riskLevel].word}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 text-sm font-bold text-ink-soft">
-                      <Clock size={16} weight="bold" aria-hidden />
-                      <time dateTime={alert.alert.createdAt || undefined}>
-                        {relativeTime(alert.sentAt, now)}
-                      </time>
-                    </span>
-                  </div>
-
-                  <h2
-                    id="alert-heading"
-                    className="mt-3 text-[1.5rem] font-bold leading-[1.18] tracking-tight text-balance sm:text-[1.75rem]"
-                  >
-                    {levelHeading(alert.alert.riskLevel, alert.alert.contactName)}
-                  </h2>
-
-                  <p className="mt-2.5 text-lg leading-relaxed">
-                    {alert.alert.summary}
-                  </p>
-                </div>
-
-                {alert.alert.suggestedAction && (
-                  <div className="border-t border-line bg-accent-soft/70 px-5 py-4 sm:px-6">
-                    <p className="flex items-start gap-3">
-                      <span
-                        className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-accent"
-                        aria-hidden
-                      >
-                        <Phone size={20} weight="fill" />
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-sm font-bold text-accent">
-                          Do this now
-                        </span>
-                        <span className="mt-0.5 block text-lg font-semibold leading-relaxed">
-                          {alert.alert.suggestedAction}
-                        </span>
-                      </span>
-                    </p>
-                  </div>
-                )}
-              </section>
-
-              {/* Findings and actions belong to one another, so they share one
-                  border instead of two stacked cards. */}
-              {(alert.reasons.length > 0 || alert.nextSteps.length > 0) && (
-                <StackedSection>
-                  {alert.reasons.length > 0 && (
-                    <div className="p-5 sm:p-6">
-                      <h3 className="text-xl font-bold tracking-tight">
-                        {TONES[alert.alert.riskLevel].heading}
-                      </h3>
-                      <ul className="mt-3.5 space-y-3">
-                        {alert.reasons.map((reason, index) => (
-                          <li key={index} className="flex gap-3 text-lg leading-relaxed">
-                            <span
-                              className="mt-[0.7rem] size-1.5 shrink-0 rounded-full bg-ink-faint"
-                              aria-hidden
-                            />
-                            <span>{reason}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {alert.nextSteps.length > 0 && (
-                    <div className="p-5 sm:p-6">
-                      <h3 className="text-xl font-bold tracking-tight">
-                        What you can do
-                      </h3>
-                      <ol className="mt-3.5 space-y-3.5">
-                        {alert.nextSteps.map((step, index) => (
-                          <li key={index} className="flex gap-3 text-lg leading-relaxed">
-                            <span
-                              className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-base font-bold tabular-nums text-accent"
-                              aria-hidden
-                            >
-                              {index + 1}
-                            </span>
-                            <span>{step}</span>
-                          </li>
-                        ))}
-                      </ol>
-
-                      {alert.alert.riskLevel !== "safe" && (
-                        <Link
-                          href="/damage-control"
-                          className="mt-4 flex min-h-12 items-center justify-between gap-3 rounded-[var(--radius-control)] border-2 border-line-strong px-4 py-2.5 text-base font-bold text-accent hover:border-accent"
-                        >
-                          <span className="min-w-0">
-                            Already sent money or card numbers? Open the recovery
-                            steps
-                          </span>
-                          <ArrowRight
-                            size={20}
-                            weight="bold"
-                            className="shrink-0"
-                            aria-hidden
-                          />
-                        </Link>
-                      )}
-                    </div>
-                  )}
-                </StackedSection>
-              )}
-
-              {alert.sourceText.trim() && (
-                <Panel tone="sunk">
-                  <h3 className="text-base font-bold">The message they checked</h3>
-                  <blockquote className="mt-2.5 border-l-4 border-line-strong pl-4">
-                    <p className="whitespace-pre-wrap break-words text-lg leading-relaxed text-ink-soft">
-                      {alert.sourceText}
-                    </p>
-                  </blockquote>
-                </Panel>
-              )}
-
-              <Button variant="quiet" onClick={dismissAlert} className="w-full sm:w-auto">
-                I have seen this
-              </Button>
-            </div>
+          ) : feed.length > 0 ? (
+            <ol className="space-y-8" aria-label="Alerts, newest first">
+              {feed.map((item, index) => (
+                <li key={item.key}>
+                  <AlertCard
+                    item={item}
+                    index={index}
+                    now={now}
+                    watchedName={watchedName}
+                    callHref={callHref}
+                    showDetails={index === 0}
+                    onDismiss={() => dismissAlert(item)}
+                  />
+                </li>
+              ))}
+            </ol>
           ) : (
             <div className="rounded-[var(--radius-card)] border border-line bg-surface">
               <div className="p-6 sm:p-7">
@@ -355,7 +267,312 @@ export default function FamilyPage() {
             </div>
           )}
         </div>
+
+        {hydrated && (
+          <WatchedPersonPanel
+            key={watched ? `${watched.name}|${watched.phone}` : "none"}
+            watched={watched}
+            onSave={(person) => {
+              saveWatchedPerson(person);
+              setWatched(person);
+            }}
+          />
+        )}
       </main>
     </div>
+  );
+}
+
+/**
+ * One alert, laid out like a phone notification: who, what, when, and the
+ * single next action. The colour stripe repeats a meaning that is also spelled
+ * out in the chip, so nothing here depends on colour alone.
+ */
+function AlertCard({
+  item,
+  index,
+  now,
+  watchedName,
+  callHref,
+  showDetails,
+  onDismiss,
+}: {
+  item: FamilyFeedItem;
+  index: number;
+  now: number;
+  watchedName: string;
+  callHref: string | null;
+  showDetails: boolean;
+  onDismiss: () => void;
+}) {
+  const { alert } = item;
+  const tone = TONES[alert.riskLevel];
+  const Icon = tone.icon;
+  const headingId = `alert-heading-${index}`;
+  const isNewest = index === 0;
+
+  return (
+    <div className="space-y-5">
+      <section
+        aria-labelledby={headingId}
+        className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface"
+      >
+        <div className={cn("h-1.5", tone.stripe)} aria-hidden />
+        <div className="p-5 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <span
+              className={cn(
+                "inline-flex min-h-8 items-center gap-1.5 rounded-full border px-3 text-sm font-bold",
+                tone.chip,
+              )}
+            >
+              <Icon size={16} weight="fill" aria-hidden />
+              {tone.word}
+            </span>
+            {item.sentAt !== null && now > 0 && (
+              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-ink-soft">
+                <Clock size={16} weight="bold" aria-hidden />
+                <time dateTime={alert.createdAt || undefined}>
+                  {relativeTime(item.sentAt, now)}
+                </time>
+              </span>
+            )}
+          </div>
+
+          <h2
+            id={headingId}
+            className="mt-3 text-[1.5rem] font-bold leading-[1.18] tracking-tight text-balance sm:text-[1.75rem]"
+          >
+            {levelHeading(alert.riskLevel, watchedName)}
+          </h2>
+
+          <p className="mt-2.5 text-lg leading-relaxed">{alert.summary}</p>
+        </div>
+
+        {(alert.suggestedAction || callHref) && (
+          <div className="border-t border-line bg-accent-soft/70 px-5 py-4 sm:px-6">
+            {alert.suggestedAction && (
+              <p className="flex items-start gap-3">
+                <span
+                  className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-surface text-accent"
+                  aria-hidden
+                >
+                  <Phone size={20} weight="fill" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-bold text-accent">
+                    Do this now
+                  </span>
+                  <span className="mt-0.5 block text-lg font-semibold leading-relaxed">
+                    {alert.suggestedAction}
+                  </span>
+                </span>
+              </p>
+            )}
+
+            {/* Only a number this reader saved on this device. Never one from
+                the alert or the checked message, which may be the scammer's. */}
+            {callHref && (
+              <Button
+                asChild
+                size={isNewest ? "lg" : "md"}
+                variant={isNewest ? "primary" : "secondary"}
+                className={cn("w-full", alert.suggestedAction && "mt-4")}
+              >
+                <a href={callHref}>
+                  <Phone size={isNewest ? 24 : 20} weight="fill" aria-hidden />
+                  Call {watchedName}
+                </a>
+              </Button>
+            )}
+          </div>
+        )}
+      </section>
+
+      {/* Findings and actions belong to one another, so they share one border
+          instead of two stacked cards. */}
+      {showDetails && (item.reasons.length > 0 || item.nextSteps.length > 0) && (
+        <StackedSection>
+          {item.reasons.length > 0 && (
+            <div className="p-5 sm:p-6">
+              <h3 className="text-xl font-bold tracking-tight">{tone.heading}</h3>
+              <ul className="mt-3.5 space-y-3">
+                {item.reasons.map((reason, i) => (
+                  <li key={i} className="flex gap-3 text-lg leading-relaxed">
+                    <span
+                      className="mt-[0.7rem] size-1.5 shrink-0 rounded-full bg-ink-faint"
+                      aria-hidden
+                    />
+                    <span>{reason}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {item.nextSteps.length > 0 && (
+            <div className="p-5 sm:p-6">
+              <h3 className="text-xl font-bold tracking-tight">What you can do</h3>
+              <ol className="mt-3.5 space-y-3.5">
+                {item.nextSteps.map((step, i) => (
+                  <li key={i} className="flex gap-3 text-lg leading-relaxed">
+                    <span
+                      className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-base font-bold tabular-nums text-accent"
+                      aria-hidden
+                    >
+                      {i + 1}
+                    </span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+
+              {alert.riskLevel !== "safe" && (
+                <Link
+                  href="/damage-control"
+                  className="mt-4 flex min-h-12 items-center justify-between gap-3 rounded-[var(--radius-control)] border-2 border-line-strong px-4 py-2.5 text-base font-bold text-accent hover:border-accent"
+                >
+                  <span className="min-w-0">
+                    Already sent money or card numbers? Open the recovery steps
+                  </span>
+                  <ArrowRight size={20} weight="bold" className="shrink-0" aria-hidden />
+                </Link>
+              )}
+            </div>
+          )}
+        </StackedSection>
+      )}
+
+      {showDetails && item.sourceText.trim() && (
+        <Panel tone="sunk">
+          <h3 className="text-base font-bold">The message they checked</h3>
+          <blockquote className="mt-2.5 border-l-4 border-line-strong pl-4">
+            <p className="whitespace-pre-wrap break-words text-lg leading-relaxed text-ink-soft">
+              {item.sourceText}
+            </p>
+          </blockquote>
+        </Panel>
+      )}
+
+      <Button variant="quiet" onClick={onDismiss} className="w-full sm:w-auto">
+        I have seen this
+      </Button>
+    </div>
+  );
+}
+
+const FIELD =
+  "mt-2 min-h-12 w-full rounded-[var(--radius-control)] border-2 border-line-strong bg-surface px-3 text-lg font-semibold text-ink placeholder:font-normal placeholder:text-ink-faint focus:border-accent focus:outline-none";
+
+/**
+ * Where the "Call" number comes from. Alerts carry no phone number, so the
+ * reader types in the number of the person they look after, once, on this
+ * device.
+ */
+function WatchedPersonPanel({
+  watched,
+  onSave,
+}: {
+  watched: WatchedPerson | null;
+  onSave: (person: WatchedPerson) => void;
+}) {
+  const [editing, setEditing] = useState(!watched);
+  const [name, setName] = useState(watched?.name ?? "");
+  const [phone, setPhone] = useState(watched?.phone ?? "");
+  const [error, setError] = useState<string | null>(null);
+
+  function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const trimmedName = name.trim();
+    const trimmedPhone = phone.trim();
+    if (!trimmedName) {
+      setError("Please type their name.");
+      return;
+    }
+    if (!telHref(trimmedPhone)) {
+      setError("That number does not look right. Try it with the area code.");
+      return;
+    }
+    setError(null);
+    setEditing(false);
+    onSave({ name: trimmedName, phone: trimmedPhone });
+  }
+
+  if (watched && !editing) {
+    return (
+      <Panel tone="sunk" className="mt-8">
+        <h2 className="flex items-center gap-2 text-base font-bold">
+          <UserCircle size={20} weight="bold" aria-hidden />
+          The Call button phones
+        </h2>
+        <p className="mt-2 text-lg leading-relaxed">
+          {watched.name}, <span className="tabular-nums">{watched.phone}</span>
+        </p>
+        <Button
+          variant="secondary"
+          onClick={() => setEditing(true)}
+          className="mt-4 w-full sm:w-auto"
+        >
+          Change this
+        </Button>
+      </Panel>
+    );
+  }
+
+  return (
+    <Panel tone="sunk" className="mt-8">
+      <h2 className="flex items-center gap-2 text-base font-bold">
+        <UserCircle size={20} weight="bold" aria-hidden />
+        Who do you look after?
+      </h2>
+      <p className="mt-2 max-w-[46ch] text-lg leading-relaxed text-ink-soft">
+        Add their name and number to get a Call button on every alert. It stays
+        on this phone only.
+      </p>
+      <form onSubmit={submit} noValidate className="mt-4 space-y-4">
+        <label className="block text-base font-bold">
+          Their name
+          <input
+            type="text"
+            autoComplete="off"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Mom"
+            className={FIELD}
+          />
+        </label>
+        <label className="block text-base font-bold">
+          Their phone number
+          <input
+            type="tel"
+            inputMode="tel"
+            autoComplete="off"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+1 555 123 4567"
+            className={FIELD}
+          />
+        </label>
+        {error && (
+          <p role="alert" className="text-base font-bold text-ink">
+            {error}
+          </p>
+        )}
+        <div className="flex flex-wrap gap-3">
+          <Button type="submit" variant="secondary" className="w-full sm:w-auto">
+            Save
+          </Button>
+          {watched && (
+            <Button
+              variant="quiet"
+              onClick={() => setEditing(false)}
+              className="w-full sm:w-auto"
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
+      </form>
+    </Panel>
   );
 }

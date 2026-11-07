@@ -75,6 +75,7 @@ export default function HomePage() {
   const [busy, setBusy] = useState(false);
 
   const abortRef = useRef<AbortController | null>(null);
+  const [lastRequest, setLastRequest] = useState<AgentRequest | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -113,29 +114,38 @@ export default function HomePage() {
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
+      setLastRequest(request);
 
-      setNotice(null);
+      setNotice(
+        request.demo ? "Demo mode: this replays a recorded check, not a live one." : null,
+      );
       setBusy(true);
       setStep("reading");
       beginRun(request.text ?? "");
 
+      // The stream always ends with a "done" event. If it stops before that,
+      // the connection dropped and whatever arrived is not a finished answer.
+      let finished = false;
       try {
         await runAgent(request, {
           signal: controller.signal,
-          onEvent: applyEvent,
+          onEvent: (event) => {
+            if (event.type === "done") finished = true;
+            applyEvent(event);
+          },
         });
-      } catch (error) {
+        if (!finished && !controller.signal.aborted) {
+          setNotice("Connection lost. Please don't act on the message yet.");
+        }
+      } catch {
         if (controller.signal.aborted) return;
-        // The route is missing or refused the request. A recorded run keeps the
-        // demo alive and says plainly that this is a saved example.
+        // Never show a recorded verdict for the reader's own message: it would
+        // be an answer about something else. Say so and offer a retry.
         setNotice(
-          error instanceof Error
-            ? `${error.message} Showing a saved example instead.`
-            : "The check could not start. Showing a saved example instead.",
+          finished
+            ? null
+            : "We could not reach the checker. Please don't act on the message yet.",
         );
-        await playMock(MOCK_STREAMS.jail, applyEvent, {
-          signal: controller.signal,
-        });
       }
 
       if (!controller.signal.aborted) {
@@ -178,6 +188,10 @@ export default function HomePage() {
         ? { actionDetails: actionDetails.trim() }
         : {}),
       ...(familyContact ? { familyContact } : {}),
+      // ?demo=1 asks the agent route to replay its recording (no internet).
+      ...(new URLSearchParams(window.location.search).get("demo") === "1"
+        ? { demo: true }
+        : {}),
     };
 
     void runInvestigation(request);
@@ -647,6 +661,15 @@ export default function HomePage() {
                   Nothing is wrong with what you sent. Try again, and if it keeps
                   happening, call someone you trust before you act on the message.
                 </p>
+                {lastRequest && (
+                  <Button
+                    className="mt-4"
+                    onClick={() => void runInvestigation(lastRequest)}
+                  >
+                    <ArrowCounterClockwise size={22} weight="bold" aria-hidden />
+                    Try again
+                  </Button>
+                )}
               </Panel>
             )}
 
