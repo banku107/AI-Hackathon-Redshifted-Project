@@ -17,9 +17,12 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",
+    "@contentauth/c2pa-node": "^0.10.0",
+    "ffprobe-static": "^3.1.0",
     "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "tldts": "^7.4.19",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -32,5 +35,8 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "@contentauth/c2pa-node@0.10.0": true
   }
 }
