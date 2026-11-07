@@ -1,0 +1,12 @@
+{
+  "id": "legit-07",
+  "text": "CVS Pharmacy: Your prescription is ready for pickup at 1420 Main St. Pick up within 7 days. Reply STOP to opt out of text alerts.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "Routine pharmacy notification (fictional address)."
+}

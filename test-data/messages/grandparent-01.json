@@ -1,0 +1,12 @@
+{
+  "id": "grandparent-01",
+  "text": "Grandma it's me. I'm in trouble, I got arrested after a car accident and they took my phone. Please don't tell Mom and Dad. My lawyer says I need $2,000 for bail today. Can you get Target gift cards and send me pictures of the backs? Please hurry",
+  "image": "screenshots/grandparent-01.png",
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "grandparent"
+  },
+  "notes": "Classic jail/bail story: secrecy ('don't tell Mom'), urgency, gift-card payment, unknown number, no name used."
+}

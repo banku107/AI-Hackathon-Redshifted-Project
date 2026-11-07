@@ -1,0 +1,82 @@
+[
+  {
+    "file": "real-01.mp4",
+    "isAI": false,
+    "isScam": false,
+    "hasCredentials": false,
+    "status": "not_collected",
+    "notes": "Real video of a consenting teammate saying a harmless greeting (~10 s, phone camera, face visible). Baseline: should be likely_real + safe. hasCredentials stays false unless the recording device signs Content Credentials AND contentcredentials.org/verify confirms it."
+  },
+  {
+    "file": "real-02.mp4",
+    "isAI": false,
+    "isScam": false,
+    "hasCredentials": false,
+    "status": "not_collected",
+    "notes": "Real video with no face: teammate filming a kitchen or street scene (~10 s). Tests that a detector does not call ordinary footage AI. If recorded on a phone that writes C2PA Content Credentials, verify and set hasCredentials=true; otherwise leave false. Missing credentials are NOT evidence of fakery."
+  },
+  {
+    "file": "real-03.mp4",
+    "isAI": false,
+    "isScam": true,
+    "hasCredentials": false,
+    "status": "not_collected",
+    "notes": "Real consenting teammate reading a FICTIONAL investment pitch: 'I turned $500 into $9,000 in a month on coin-growth-vault.example, deposit in Bitcoin today'. Genuine video used for a scam claim. Expected: aiMedia likely_real, level scam (investment_crypto). Clip must start with an on-screen 'TEST — FICTIONAL SCAM SCRIPT' card in the shared-drive copy description."
+  },
+  {
+    "file": "real-04.mp4",
+    "isAI": false,
+    "isScam": false,
+    "hasCredentials": false,
+    "status": "not_collected",
+    "notes": "Real consenting teammate giving an ordinary family update ('Hi Grandma, I got the job! Call you Sunday'). Harmless genuine family video; should not be flagged."
+  },
+  {
+    "file": "real-05.mp4",
+    "isAI": false,
+    "isScam": true,
+    "hasCredentials": false,
+    "status": "not_collected",
+    "notes": "Real consenting teammate acting a FICTIONAL grandparent emergency: 'Grandma, I'm in jail, send gift cards, don't tell Mom'. Real person + scam claim. Expected: likely_real (or unclear) + scam (grandparent). Proves ScamShield judges the claim, not only the pixels."
+  },
+  {
+    "file": "ai-01.mp4",
+    "isAI": true,
+    "isScam": false,
+    "hasCredentials": true,
+    "status": "not_collected",
+    "notes": "AI-generated FICTIONAL person (not resembling any real/famous person) saying a harmless greeting, exported unmodified from a generator that embeds C2PA Content Credentials. hasCredentials=true is the EXPECTED value only; confirm with contentcredentials.org/verify after download and correct it if the export carries no manifest. Expected: likely_ai + safe."
+  },
+  {
+    "file": "ai-02.mp4",
+    "isAI": true,
+    "isScam": true,
+    "hasCredentials": false,
+    "status": "not_collected",
+    "notes": "AI-generated FICTIONAL 'financial advisor' promoting a fictional crypto platform (coin-growth-vault.example) with guaranteed returns. Metadata-stripped controlled variant (see README). Expected: likely_ai + scam (investment_crypto). Never use a celebrity or real person's likeness."
+  },
+  {
+    "file": "ai-03.mp4",
+    "isAI": true,
+    "isScam": false,
+    "hasCredentials": false,
+    "status": "not_collected",
+    "notes": "AI-generated harmless nature scene with no people (e.g. waves on a beach). Metadata-stripped controlled variant. Tests AI detection without faces. Expected: likely_ai + safe — AI-generated does NOT mean scam."
+  },
+  {
+    "file": "ai-04.mp4",
+    "isAI": true,
+    "isScam": true,
+    "hasCredentials": false,
+    "status": "not_collected",
+    "notes": "AI-generated FICTIONAL 'bank security officer' telling the viewer to move savings into a 'protected account'. Metadata-stripped controlled variant. Expected: likely_ai + scam (bank_impersonation). Must not use any real bank's logo."
+  },
+  {
+    "file": "ai-05.mp4",
+    "isAI": true,
+    "isScam": false,
+    "hasCredentials": false,
+    "status": "not_collected",
+    "notes": "Controlled variant of ai-01.mp4 with metadata stripped (ffmpeg -map_metadata -1). Same content, no Content Credentials. Tests whether the pixel detector still flags AI when provenance is absent. Keep ai-01.mp4 original untouched."
+  }
+]

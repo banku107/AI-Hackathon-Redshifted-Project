@@ -1,0 +1,12 @@
+{
+  "id": "legit-04",
+  "text": "Your Google verification code is 482913. Don't share this code with anyone.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "Standard 2FA code message. Legitimate on its own (risk arises only if someone asks you to read it back)."
+}

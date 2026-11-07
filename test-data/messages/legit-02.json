@@ -1,0 +1,12 @@
+{
+  "id": "legit-02",
+  "text": "Your Amazon package was delivered. It was left near the front door or porch.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "Ordinary delivery confirmation with no link or request."
+}

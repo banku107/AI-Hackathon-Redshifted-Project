@@ -1,0 +1,12 @@
+{
+  "id": "legit-09",
+  "text": "Recordatorio: su cita de vacunación contra la gripe es el jueves 20 de noviembre a las 9:15 en el Centro de Salud San Isidro. Si no puede asistir, llame al centro para cambiar la cita.",
+  "image": null,
+  "language": "es",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "Spanish clinic vaccination reminder (fictional clinic)."
+}

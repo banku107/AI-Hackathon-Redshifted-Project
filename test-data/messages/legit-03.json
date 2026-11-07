@@ -1,0 +1,12 @@
+{
+  "id": "legit-03",
+  "text": "Reminder: You have an appointment with Dr. Patel at Riverside Family Medicine on Tue, Nov 18 at 10:30 AM. Please arrive 15 minutes early. Reply C to confirm or call the office to reschedule.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "Routine appointment reminder; fictional clinic and doctor."
+}

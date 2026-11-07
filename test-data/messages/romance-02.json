@@ -1,0 +1,12 @@
+{
+  "id": "romance-02",
+  "text": "Querida Elena, desde que te conocí en Facebook mi vida cambió. Soy médico en una misión de la ONU y por ahora no puedo hacer videollamadas por seguridad. Quiero visitarte en diciembre, pero necesito ayuda para pagar el permiso de salida. ¿Podrías ayudarme con una tarjeta de regalo de Apple?",
+  "image": null,
+  "language": "es",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "romance"
+  },
+  "notes": "Spanish romance scam: never video-calls, 'UN doctor' cover story, gift-card request."
+}

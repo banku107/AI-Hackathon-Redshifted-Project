@@ -1,0 +1,12 @@
+{
+  "id": "delivery-02",
+  "text": "FedEx: Hi, ur package #7781-2290 could not be deliver. A redelivery fee of $1.99 is required. Pay here http://fdx-parcel-fee.example/pay",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "delivery"
+  },
+  "notes": "Poorly written; small 'redelivery fee' used for card harvesting. Harmless .example domain."
+}

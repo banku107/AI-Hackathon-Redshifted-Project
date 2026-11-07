@@ -1,0 +1,12 @@
+{
+  "id": "delivery-04",
+  "text": "Amazon: We were unable to deliver your order #112-4410392. To reschedule, confirm your identity by replying with the card number used for the purchase and its expiration date.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "delivery"
+  },
+  "notes": "Subtle: no link at all. Requests card details by text; real retailers never ask for full card numbers via SMS. Tests reasoning beyond link analysis."
+}

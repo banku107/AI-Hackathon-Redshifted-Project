@@ -1,0 +1,12 @@
+{
+  "id": "legit-08",
+  "text": "Hola mamá, ya llegamos bien a Guadalajara. El vuelo estuvo tranquilo. Mañana te llamo para contarte todo. Un beso.",
+  "image": null,
+  "language": "es",
+  "alreadyActed": false,
+  "expected": {
+    "level": "safe",
+    "scamType": "none"
+  },
+  "notes": "Spanish ordinary family check-in. No request of any kind."
+}

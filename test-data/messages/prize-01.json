@@ -1,0 +1,12 @@
+{
+  "id": "prize-01",
+  "text": "CONGRATULATIONS! You have been selected as the 2nd place winner of the National Prize Sweepstakes: $750,000 and a new Mercedes-Benz. To release your prize, a processing and insurance fee of $499 must be paid by gift card. Reply WIN to claim.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "prize_lottery"
+  },
+  "notes": "Fee-to-claim prize. Legitimate sweepstakes never charge winners to collect."
+}

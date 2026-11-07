@@ -1,0 +1,12 @@
+{
+  "id": "grandparent-02",
+  "text": "Hello Mrs. Alvarez, this is Officer Daniel Brooks with the public defender's office. Your grandson was involved in a traffic incident and is being held. There is a gag order on this case so please do not discuss it with other family members. Bond is $8,500. A courier will come to your home this afternoon to collect it in cash. Please reply to confirm you are home.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "grandparent"
+  },
+  "notes": "Professionally written 'lawyer/officer' variant. Gag-order secrecy and courier cash pickup are major indicators. Role confusion (officer vs public defender)."
+}

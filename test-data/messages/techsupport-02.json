@@ -1,0 +1,12 @@
+{
+  "id": "techsupport-02",
+  "text": "Geek Squad: Thank you for your purchase. Your annual Total Tech Protection plan has been renewed for $399.99. If you did not authorize this charge, call our refund desk at 1-866-555-0123 within 24 hours.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "tech_support"
+  },
+  "notes": "Fake renewal invoice designed to make the victim call; the 'refund' typically leads to remote-access software."
+}

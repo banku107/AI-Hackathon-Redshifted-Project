@@ -1,0 +1,12 @@
+{
+  "id": "delivery-01",
+  "text": "USPS: Your parcel is held at our warehouse due to an incomplete address. Please update your details within 24 hours or it will be returned: https://usps-redelivery-center.example/track",
+  "image": "screenshots/delivery-01.png",
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "delivery"
+  },
+  "notes": "Lookalike domain on the reserved .example TLD (harmless placeholder, cannot resolve). USPS does not text unsolicited links asking for address or payment updates."
+}

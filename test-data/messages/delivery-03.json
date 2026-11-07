@@ -1,0 +1,12 @@
+{
+  "id": "delivery-03",
+  "text": "Correos: Su paquete no pudo ser entregado por falta de pago de aranceles aduaneros (2,99 €). Realice el pago antes de 48 horas para evitar la devolución: https://correos-aduanas.example/pago",
+  "image": null,
+  "language": "es",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "delivery"
+  },
+  "notes": "Spanish customs-fee delivery scam. Small fee, deadline, non-official domain (.example placeholder)."
+}

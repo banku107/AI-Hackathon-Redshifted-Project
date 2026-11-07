@@ -1,0 +1,15 @@
+{
+  "id": "demo-1-bank-safe",
+  "stageOrder": 1,
+  "title": "Legitimate bank notification → GREEN (Looks real)",
+  "request": {
+    "text": "Chase: Did you attempt a $42.10 purchase at Target? Reply YES or NO. We'll never ask for your password.",
+    "language": "en"
+  },
+  "expected": {
+    "level": "safe",
+    "scamType": "none",
+    "events": []
+  },
+  "explanation": "Shows ScamShield does not flag every bank message. Real card-fraud alerts ask a YES/NO question, contain no link, request no money and explicitly say they will never ask for a password. Expected advice: if unsure, call the number on the back of your card."
+}

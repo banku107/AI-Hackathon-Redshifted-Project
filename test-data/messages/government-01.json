@@ -1,0 +1,12 @@
+{
+  "id": "government-01",
+  "text": "SOCIAL SECURITY ADMINISTRATION: Your SSN has been suspended due to suspicious activity linked to your name in Texas. To avoid arrest and freezing of your assets call our legal department immediately at (202) 555-0147.",
+  "image": null,
+  "language": "en",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "government_impersonation"
+  },
+  "notes": "SSA impersonation: 'suspended SSN' and arrest threats. Fictional 555-01xx number."
+}

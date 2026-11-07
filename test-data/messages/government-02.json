@@ -1,0 +1,12 @@
+{
+  "id": "government-02",
+  "text": "Agencia Tributaria: Usted tiene derecho a un reembolso de impuestos de 412,50 €. Para recibirlo, complete sus datos bancarios antes del viernes en: https://agenciatributaria-reembolso.example",
+  "image": "screenshots/government-02.png",
+  "language": "es",
+  "alreadyActed": false,
+  "expected": {
+    "level": "scam",
+    "scamType": "government_impersonation"
+  },
+  "notes": "Spanish tax-refund phishing. Tax agencies do not request bank details through SMS links (.example placeholder)."
+}
