@@ -3,7 +3,8 @@ import { execFile } from "node:child_process";
 import { rm, stat } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { z } from "zod";
-import type { AnalyzeVideo, VideoReport } from "@/lib/contract";
+import type { AnalyzeVideo, InputImage, VideoReport } from "@/lib/contract";
+import { detectAiFrames } from "@/lib/investigate/detector";
 import { resolveLocalVideoId } from "@/lib/investigate/localVideo";
 
 const require = createRequire(import.meta.url);
@@ -192,33 +193,25 @@ async function analyzeMetadata(path: string): Promise<VideoReport["metadata"]> {
   }
 }
 
-async function analyzeDetector(): Promise<VideoReport["detector"]> {
+// Free Sightengine image check on the browser-extracted frames (see detector.ts).
+async function analyzeDetector(frames?: InputImage[]): Promise<VideoReport["detector"]> {
   try {
-    if (!process.env.DETECTOR_API_KEY?.trim()) return null;
-    return {
-      provider: "Unconfigured",
-      aiProbability: 0,
-      error: "The AI-video detector provider has not been selected or configured.",
-    };
+    return await detectAiFrames(frames);
   } catch {
-    return {
-      provider: "Unconfigured",
-      aiProbability: 0,
-      error: "The AI-video detector is unavailable.",
-    };
+    return { provider: "Sightengine", aiProbability: 0, error: "The AI detector is unavailable." };
   }
 }
 
-async function analyzeVideoFile(path: string, mimeType: string): Promise<VideoReport> {
+async function analyzeVideoFile(path: string, mimeType: string, frames?: InputImage[]): Promise<VideoReport> {
   const [credentials, metadata, detector] = await Promise.all([
     analyzeC2pa(path, mimeType),
     analyzeMetadata(path),
-    analyzeDetector(),
+    analyzeDetector(frames),
   ]);
   return { credentials, metadata, detector };
 }
 
-export const analyzeVideo: AnalyzeVideo = async (videoId) => {
+export const analyzeVideo: AnalyzeVideo = async (videoId, frames) => {
   const fallback = failedReport("Video analysis could not be completed.");
   try {
     const validated = inputSchema.safeParse(videoId);
@@ -231,12 +224,12 @@ export const analyzeVideo: AnalyzeVideo = async (videoId) => {
       if (!details.isFile() || details.size === 0 || details.size > MAX_FILE_BYTES) {
         throw new VideoInputError("The local video is empty or exceeds the 50 MB limit.");
       }
-      return await analyzeVideoFile(localVideo.path, localVideo.mimeType);
+      return await analyzeVideoFile(localVideo.path, localVideo.mimeType, frames);
     } catch (error) {
       const message = error instanceof VideoInputError
         ? error.message
         : "The local video upload is unavailable or invalid.";
-      return { ...failedReport(message), detector: await analyzeDetector() };
+      return { ...failedReport(message), detector: await analyzeDetector(frames) };
     } finally {
       await rm(localVideo.path, { force: true });
     }

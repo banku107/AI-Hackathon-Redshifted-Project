@@ -1,5 +1,5 @@
 import { getFamilyAlerts } from "@/lib/investigate/familyAlert";
-import { isLocalNetworkHost } from "@/lib/investigate/localNetwork";
+import { browserRequestUrl, isLocalNetworkHost } from "@/lib/investigate/localNetwork";
 
 const RESPONSE_HEADERS = {
   "Cache-Control": "no-store, private",
@@ -9,7 +9,7 @@ const RESPONSE_HEADERS = {
 
 function isAllowedLocalRequest(request: Request): boolean {
   try {
-    const requestUrl = new URL(request.url);
+    const requestUrl = browserRequestUrl(request);
     if (
       !isLocalNetworkHost(requestUrl.hostname)
       || (requestUrl.protocol !== "http:" && requestUrl.protocol !== "https:")

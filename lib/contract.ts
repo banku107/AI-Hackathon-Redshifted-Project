@@ -23,7 +23,7 @@ export interface InputImage {
 }
 
 export interface VideoInput {
-  videoId: string;               // returned by POST /api/upload; file is .uploads/<videoId>
+  videoId: string;               // { videoId } from POST /api/upload; the file stays on this computer
   frames: InputImage[];          // 8-12 JPEG frames, max 768px wide
   frameTimes: number[];          // seconds, same order as frames
   durationSec: number;
@@ -92,8 +92,9 @@ export interface VideoReport {
     error?: string;
   } | null;                      // null = no detector configured
 }
-// Reads the uploaded file from .uploads/<videoId> on this computer.
-export type AnalyzeVideo = (videoId: string) => Promise<VideoReport>;
+// Reads the uploaded file on this computer. frames = VideoInput.frames, used by
+// the free AI detector (it checks still frames, not the whole video).
+export type AnalyzeVideo = (videoId: string, frames?: InputImage[]) => Promise<VideoReport>;
 
 export interface FamilyAlertResult {
   delivered: boolean;

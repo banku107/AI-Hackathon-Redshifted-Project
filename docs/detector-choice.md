@@ -10,6 +10,8 @@ Legend: **[V]** = verified on the official page cited · **[NV]** = not verified
 
 ## 1. Executive recommendation
 
+> **Decision (2026-11-07): free Option A, built in `lib/investigate/detector.ts`.** It checks 4 frames the browser already extracted, so no ffmpeg is needed.
+>
 > **Use Sightengine.** It is the only one of the three with documented, self-serve, AI-generated-*video* detection at a hackathon-friendly price, a single `multipart/form-data` POST, and synchronous results for clips under 60 s.
 
 **Important honesty note: none of the three providers offers video detection on a free plan.**

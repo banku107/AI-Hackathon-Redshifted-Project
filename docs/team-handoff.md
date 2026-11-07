@@ -40,7 +40,7 @@ The plumbing test checks the **parsing only**. Replays are recordings, so they s
   - Option B ($29/mo Starter): upload the local file (`.uploads/<videoId>`) as `media` to the video endpoint.
   - Keys go in `.env.local` as `DETECTOR_API_USER` / `DETECTOR_API_KEY`, the names already in `.env.example`.
   - No keys → `detector: null`. A failed call → set the `error` field. Never fake a score.
-- **Payment:** nothing has been purchased. Option B needs a team decision.
+- **Payment: decided, free.** The team uses Option A. It's built in `lib/investigate/detector.ts`: 4 of the browser's frames go to Sightengine's free image check (`genai`). Someone just needs to make a free Sightengine account and put the keys in `.env.local`.
 - **Test links:** the test messages use `.example` domains. Your RDAP/WHOIS tools will find no record for them; please make sure that produces sensible evidence text rather than a crash.
 - **Video evaluation:** needs real uploads (a `videoId` and frames, on the laptop that did the upload). See `test-data/videos/README.md`.
 

@@ -11,7 +11,7 @@ import {
   LOCAL_VIDEO_DIRECTORY,
   type VideoContentType,
 } from "@/lib/investigate/localVideo";
-import { isLocalNetworkHost } from "@/lib/investigate/localNetwork";
+import { browserRequestUrl, isLocalNetworkHost } from "@/lib/investigate/localNetwork";
 
 const MAX_FILE_BYTES = 50 * 1024 * 1024;
 const MAX_AGE_MS = 60 * 60 * 1000;
@@ -23,7 +23,7 @@ function isSameOriginLocalRequest(request: Request): boolean {
   const origin = request.headers.get("origin");
   if (!origin) return false;
   try {
-    const requestUrl = new URL(request.url);
+    const requestUrl = browserRequestUrl(request);
     const originUrl = new URL(origin);
     return originUrl.origin === requestUrl.origin
       && isLocalNetworkHost(requestUrl.hostname)

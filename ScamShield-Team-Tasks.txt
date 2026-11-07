@@ -628,8 +628,11 @@
         b) ffprobe (ffprobe-static package): -v quiet -print_format json
            -show_format -show_streams. Turn it into plain clues ("No
            camera make/model", "Encoded by X", "Created by X").
-        c) The detector API Person 4 chose. aiProbability 0-1. No key ->
-           detector: null.
+        c) DONE (lib/investigate/detector.ts): free Sightengine plan.
+           Scores 4 of the browser's frames with the image model genai
+           (the free plan has no video endpoint). aiProbability = highest
+           frame score. No keys -> detector: null. Failed call -> error.
+           Keys: DETECTOR_API_USER / DETECTOR_API_KEY in .env.local.
         Keep the file until the check is done, then it may be deleted.
         If a)/b) can't run on the laptop, return error fields and tell
         the human.
@@ -1045,7 +1048,7 @@ export interface InputImage {
 }
 
 export interface VideoInput {
-  videoId: string;               // returned by POST /api/upload; file is .uploads/<videoId>
+  videoId: string;               // { videoId } from POST /api/upload; the file stays on this computer
   frames: InputImage[];          // 8-12 JPEG frames, max 768px wide
   frameTimes: number[];          // seconds, same order as frames
   durationSec: number;
@@ -1114,8 +1117,9 @@ export interface VideoReport {
     error?: string;
   } | null;                      // null = no detector configured
 }
-// Reads the uploaded file from .uploads/<videoId> on this computer.
-export type AnalyzeVideo = (videoId: string) => Promise<VideoReport>;
+// Reads the uploaded file on this computer. frames = VideoInput.frames, used by
+// the free AI detector (it checks still frames, not the whole video).
+export type AnalyzeVideo = (videoId: string, frames?: InputImage[]) => Promise<VideoReport>;
 
 export interface FamilyAlertResult {
   delivered: boolean;

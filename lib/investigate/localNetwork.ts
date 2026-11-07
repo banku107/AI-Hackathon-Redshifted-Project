@@ -18,3 +18,15 @@ export function isLocalNetworkHost(hostname: string): boolean {
 
   return false;
 }
+
+/**
+ * The URL the browser actually used. With `next dev -H 0.0.0.0` (npm run
+ * dev:phone), request.url reports host 0.0.0.0, so take the host from the
+ * Host header instead (e.g. 10.0.0.5:3000 from a phone on the same Wi-Fi).
+ */
+export function browserRequestUrl(request: Request): URL {
+  const url = new URL(request.url);
+  const host = request.headers.get("host");
+  if (host) url.host = host;
+  return url;
+}
